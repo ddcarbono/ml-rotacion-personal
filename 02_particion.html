@@ -1,0 +1,655 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2. Partición &#8212; Rotación voluntaria de personal</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '02_particion';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. EDA del objetivo: univariado y bivariado" href="03_eda_objetivo.html" />
+    <link rel="prev" title="1. Datos" href="01_datos.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Rotación voluntaria de personal</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introducción
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_datos.html">1. Datos</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Partición</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_eda_objetivo.html">3. EDA del objetivo: univariado y bivariado</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_eda_multivariado.html">4. EDA multivariado</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_eda_temporal.html">5. EDA temporal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_auditoria_fuga.html">6. Auditoría de fuga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_modelo_base.html">7. Modelo base</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/02_particion.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Partición</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-un-corte-en-el-tiempo">2.1. Por qué un corte en el tiempo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-previo-del-panel-completo">2.2. Uso previo del panel completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-dentro-del-entrenamiento">2.3. Validación dentro del entrenamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicados-y-entidades-entre-particiones">2.4. Duplicados y entidades entre particiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">2.5. Síntesis</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="particion">
+<h1><span class="section-number">2. </span>Partición<a class="headerlink" href="#particion" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Alcance</p>
+<p>El corte se decidió antes del análisis exploratorio: el conjunto de prueba (<em>test</em>) son los
+últimos cuatro meses, de mayo a agosto de 2026 (constante <code class="docutils literal notranslate"><span class="pre">CORTE</span></code> en <code class="docutils literal notranslate"><span class="pre">comun.py</span></code>).</p>
+</div>
+<section id="por-que-un-corte-en-el-tiempo">
+<h2><span class="section-number">2.1. </span>Por qué un corte en el tiempo<a class="headerlink" href="#por-que-un-corte-en-el-tiempo" title="Permalink to this heading">#</a></h2>
+<p>El modelo se usaría para predecir, con la información disponible hoy, quién renuncia el mes
+siguiente, y la evaluación debe reproducir ese uso. Una partición aleatoria por filas pondría meses
+futuros en el entrenamiento (el modelo aprendería de agosto para predecir marzo) y meses de una
+misma persona en los dos conjuntos. Con el corte cronológico, todo lo que el modelo ve es anterior
+a lo que predice.</p>
+<p>Las mismas personas aparecen en entrenamiento y en test, porque es un panel y quien estaba en abril
+sigue en mayo. Esto no constituye una fuga: en producción el modelo también puntúa a personas que
+ya conoce. Habría fuga si la etiqueta de un mes de test entrara al entrenamiento, y el corte lo
+impide.</p>
+</section>
+<section id="uso-previo-del-panel-completo">
+<h2><span class="section-number">2.2. </span>Uso previo del panel completo<a class="headerlink" href="#uso-previo-del-panel-completo" title="Permalink to this heading">#</a></h2>
+<p>Para construir el panel se exploraron todos los meses: se definieron las exclusiones, se unificaron
+los cargos, se descartaron campos redundantes y se revisaron las fugas. Son decisiones de calidad de
+datos (qué es un aprendiz, qué campo repite a otro, qué dato está mal registrado) y ninguna se tomó
+según su capacidad predictiva. A partir de aquí el test queda reservado: el análisis exploratorio,
+la selección de variables y el ajuste usan solo el entrenamiento, y el test se usa una vez, en el
+capítulo 7.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">comun</span> <span class="kn">import</span> <span class="p">(</span><span class="n">cargar</span><span class="p">,</span> <span class="n">particion</span><span class="p">,</span> <span class="n">estilo</span><span class="p">,</span> <span class="n">etiquetar</span><span class="p">,</span> <span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">PREDICTORAS</span><span class="p">,</span> <span class="n">CORTE</span><span class="p">,</span>
+                   <span class="n">VERDE</span><span class="p">,</span> <span class="n">ORO</span><span class="p">,</span> <span class="n">BORDE</span><span class="p">)</span>
+
+<span class="n">estilo</span><span class="p">()</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">cargar</span><span class="p">()</span>
+<span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">particion</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="n">resumen</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;meses&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">nunique</span><span class="p">(),</span> <span class="n">te</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">nunique</span><span class="p">()],</span>
+    <span class="s1">&#39;desde&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">te</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">min</span><span class="p">()],</span>
+    <span class="s1">&#39;hasta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">te</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span>
+    <span class="s1">&#39;filas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">tr</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">te</span><span class="p">)],</span>
+    <span class="s1">&#39;</span><span class="si">% f</span><span class="s1">ilas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">te</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="mi">1</span><span class="p">)],</span>
+    <span class="s1">&#39;personas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="o">.</span><span class="n">nunique</span><span class="p">(),</span> <span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="o">.</span><span class="n">nunique</span><span class="p">()],</span>
+    <span class="s1">&#39;renuncias&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">te</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())],</span>
+    <span class="s1">&#39;prevalencia %&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">te</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)],</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;entrenamiento&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">])</span>
+<span class="n">resumen</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>meses</th>
+      <th>desde</th>
+      <th>hasta</th>
+      <th>filas</th>
+      <th>% filas</th>
+      <th>personas</th>
+      <th>renuncias</th>
+      <th>prevalencia %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>entrenamiento</th>
+      <td>16</td>
+      <td>2025-01</td>
+      <td>2026-04</td>
+      <td>67530</td>
+      <td>79.2</td>
+      <td>5508</td>
+      <td>730</td>
+      <td>1.08</td>
+    </tr>
+    <tr>
+      <th>test</th>
+      <td>4</td>
+      <td>2026-05</td>
+      <td>2026-08</td>
+      <td>17693</td>
+      <td>20.8</td>
+      <td>4622</td>
+      <td>162</td>
+      <td>0.92</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">en_ambos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="p">))</span>
+<span class="n">nuevas</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">),</span> <span class="s1">&#39;persona_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;personas en los dos conjuntos: </span><span class="si">{</span><span class="n">en_ambos</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> | &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;personas que solo aparecen en test (ingresos nuevos): </span><span class="si">{</span><span class="n">nuevas</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">por_mes</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">filas</span><span class="o">=</span><span class="p">(</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">),</span> <span class="n">renuncias</span><span class="o">=</span><span class="p">(</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">))</span>
+<span class="n">colores</span> <span class="o">=</span> <span class="p">[</span><span class="n">VERDE</span> <span class="k">if</span> <span class="n">mes</span> <span class="o">&lt;</span> <span class="n">CORTE</span> <span class="k">else</span> <span class="n">ORO</span> <span class="k">for</span> <span class="n">mes</span> <span class="ow">in</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">por_mes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">renuncias</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colores</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
+<span class="n">etiquetar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">barras</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Renuncias por mes (verde: entrenamiento, dorado: test; &#39;</span>
+             <span class="sa">f</span><span class="s1">&#39;total </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">por_mes</span><span class="o">.</span><span class="n">renuncias</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span>
+       <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Número de renuncias&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>personas en los dos conjuntos: 4,383 | personas que solo aparecen en test (ingresos nuevos): 239
+</pre></div>
+</div>
+<img alt="_images/1afe493848596c40371e06a2effbe633068c13c6dabc41feb8b7e607bc1851cf.png" src="_images/1afe493848596c40371e06a2effbe633068c13c6dabc41feb8b7e607bc1851cf.png" />
+</div>
+</div>
+</section>
+<section id="validacion-dentro-del-entrenamiento">
+<h2><span class="section-number">2.3. </span>Validación dentro del entrenamiento<a class="headerlink" href="#validacion-dentro-del-entrenamiento" title="Permalink to this heading">#</a></h2>
+<p>La validación cruzada sigue la misma lógica de la partición: es cronológica, con ventana creciente
+por mes y un mes de separación (<code class="docutils literal notranslate"><span class="pre">gap</span></code>). Cada pliegue valida un mes, de septiembre de 2025 a abril de
+2026, y entrena con todos los meses anteriores salvo el inmediatamente previo. La separación se
+debe a que una renuncia puede quedar registrada en SAP ya entrado el mes siguiente, de modo que al
+predecir el mes <em>t</em> la etiqueta de <em>t−1</em> puede no estar disponible. Con esta validación se eligen el
+hiperparámetro y el tamaño de la lista (capítulo 7).</p>
+<p>Como complemento se usa una validación de cinco pliegues agrupada por persona (<code class="docutils literal notranslate"><span class="pre">GroupKFold</span></code>), en la
+que todos los meses de una persona caen en el mismo pliegue. Mide si el modelo generaliza a personas
+que no vio.</p>
+</section>
+<section id="duplicados-y-entidades-entre-particiones">
+<h2><span class="section-number">2.4. </span>Duplicados y entidades entre particiones<a class="headerlink" href="#duplicados-y-entidades-entre-particiones" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;filas persona-mes duplicadas en el panel:&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">duplicated</span><span class="p">([</span><span class="s1">&#39;persona_id&#39;</span><span class="p">,</span> <span class="s1">&#39;mes&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="n">pares_tr</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">,</span> <span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="p">))</span>
+<span class="n">pares_te</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="p">,</span> <span class="n">te</span><span class="o">.</span><span class="n">mes</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pares (persona, mes) en entrenamiento y test a la vez:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pares_tr</span> <span class="o">&amp;</span> <span class="n">pares_te</span><span class="p">))</span>
+
+<span class="c1"># vectores de predictoras del test que aparecen idénticos en el entrenamiento</span>
+<span class="n">vec_tr</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">tr</span><span class="p">[</span><span class="n">PREDICTORAS</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()))</span>
+<span class="n">vec_te</span> <span class="o">=</span> <span class="n">te</span><span class="p">[</span><span class="n">PREDICTORAS</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">igual</span> <span class="o">=</span> <span class="n">vec_te</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">vec_tr</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filas de test con un vector idéntico en entrenamiento: </span><span class="si">{</span><span class="n">igual</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">te</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">igual</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> %)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  antigüedad mediana: </span><span class="si">{</span><span class="n">te</span><span class="p">[</span><span class="n">igual</span><span class="p">]</span><span class="o">.</span><span class="n">antig_meses</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> meses &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;(resto del test: </span><span class="si">{</span><span class="n">te</span><span class="p">[</span><span class="o">~</span><span class="n">igual</span><span class="p">]</span><span class="o">.</span><span class="n">antig_meses</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">operario</span> <span class="o">=</span> <span class="n">te</span><span class="p">[</span><span class="n">igual</span><span class="p">]</span><span class="o">.</span><span class="n">oficio</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;operario_campo_general&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  operario_campo_general: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">operario</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  personas que también están en entrenamiento: &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">te</span><span class="p">[</span><span class="n">igual</span><span class="p">]</span><span class="o">.</span><span class="n">persona_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas persona-mes duplicadas en el panel: 0
+pares (persona, mes) en entrenamiento y test a la vez: 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas de test con un vector idéntico en entrenamiento: 1,732 de 17,693 (10 %)
+  antigüedad mediana: 13 meses (resto del test: 46)
+  operario_campo_general: 41 %
+  personas que también están en entrenamiento: 91 %
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ninguna fila está en los dos conjuntos. Un 10 % de las filas de test tiene un vector de predictoras
+idéntico a alguno del entrenamiento; como se vio en la sección 1.5, son personas distintas con el
+mismo perfil, frecuentes en fincas con muchos operarios del mismo tipo. No hay fuga, porque la
+etiqueta de test corresponde a un mes posterior.</p>
+</section>
+<section id="sintesis">
+<h2><span class="section-number">2.5. </span>Síntesis<a class="headerlink" href="#sintesis" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>El test son los cuatro últimos meses (17.693 filas y 162 renuncias) y se usa una sola vez.</p></li>
+<li><p>La validación dentro del entrenamiento es temporal, con un mes de separación; la agrupada por
+persona es un complemento.</p></li>
+<li><p>Desde aquí, todas las tablas y figuras del análisis exploratorio usan solo el entrenamiento.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ml_venv"
+        },
+        kernelOptions: {
+            name: "ml_venv",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ml_venv'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_datos.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Datos</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03_eda_objetivo.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>EDA del objetivo: univariado y bivariado</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-un-corte-en-el-tiempo">2.1. Por qué un corte en el tiempo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-previo-del-panel-completo">2.2. Uso previo del panel completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-dentro-del-entrenamiento">2.3. Validación dentro del entrenamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicados-y-entidades-entre-particiones">2.4. Duplicados y entidades entre particiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">2.5. Síntesis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Daniel Carbonó y Luis Pérez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

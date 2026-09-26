@@ -1,0 +1,1131 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5. EDA temporal &#8212; Rotación voluntaria de personal</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '05_eda_temporal';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Auditoría de fuga" href="06_auditoria_fuga.html" />
+    <link rel="prev" title="4. EDA multivariado" href="04_eda_multivariado.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Rotación voluntaria de personal</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introducción
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_datos.html">1. Datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_particion.html">2. Partición</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_eda_objetivo.html">3. EDA del objetivo: univariado y bivariado</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_eda_multivariado.html">4. EDA multivariado</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. EDA temporal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_auditoria_fuga.html">6. Auditoría de fuga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_modelo_base.html">7. Modelo base</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/05_eda_temporal.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>EDA temporal</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#la-serie-mensual">5.1. La serie mensual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estacionalidad">5.2. Estacionalidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estacionariedad-y-autocorrelacion">5.3. Estacionariedad y autocorrelación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-de-la-poblacion">5.4. Deriva de la población</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-del-mes-y-tasa-futura">5.5. Composición del mes y tasa futura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-del-concepto">5.6. Deriva del concepto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-por-linea-de-negocio">5.7. Series por línea de negocio</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">5.8. Síntesis</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="eda-temporal">
+<h1><span class="section-number">5. </span>EDA temporal<a class="headerlink" href="#eda-temporal" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Alcance</p>
+<p>Este capítulo usa solo el entrenamiento: 16 meses, de enero de 2025 a abril de 2026. Con una serie
+tan corta las pruebas tienen poca potencia, y sus resultados se leen como indicios.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span><span class="p">,</span> <span class="n">kpss</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="kn">import</span> <span class="n">logit</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">comun</span> <span class="kn">import</span> <span class="p">(</span><span class="n">cargar</span><span class="p">,</span> <span class="n">particion</span><span class="p">,</span> <span class="n">estilo</span><span class="p">,</span> <span class="n">tasa_ic</span><span class="p">,</span> <span class="n">etiquetar</span><span class="p">,</span> <span class="n">puntos</span><span class="p">,</span> <span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">NUM</span><span class="p">,</span>
+                   <span class="n">PREDICTORAS</span><span class="p">,</span> <span class="n">NOMBRE</span><span class="p">,</span> <span class="n">VERDE</span><span class="p">,</span> <span class="n">ORO</span><span class="p">,</span> <span class="n">GRIS</span><span class="p">,</span> <span class="n">BORDE</span><span class="p">)</span>
+
+<span class="n">estilo</span><span class="p">()</span>
+
+<span class="n">tr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">particion</span><span class="p">(</span><span class="n">cargar</span><span class="p">())</span>
+<span class="n">serie</span> <span class="o">=</span> <span class="n">tasa_ic</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="s1">&#39;mes&#39;</span><span class="p">)</span>
+<span class="n">serie</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">(</span><span class="n">serie</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="la-serie-mensual">
+<h2><span class="section-number">5.1. </span>La serie mensual<a class="headerlink" href="#la-serie-mensual" title="Permalink to this heading">#</a></h2>
+<p>Primero verificamos la variable temporal: formato, frecuencia, huecos y duplicados.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meses</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+<span class="n">esperados</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">meses</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">meses</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+<span class="n">huecos</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">esperados</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">meses</span><span class="p">))</span> <span class="ow">or</span> <span class="s1">&#39;ninguno&#39;</span>
+<span class="n">filas_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;formato: AAAA-MM, sin zona horaria (foto del día 1 de cada mes) | frecuencia: mensual&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;meses: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">meses</span><span class="p">)</span><span class="si">}</span><span class="s1"> de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">esperados</span><span class="p">)</span><span class="si">}</span><span class="s1"> esperados entre </span><span class="si">{</span><span class="n">meses</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s1"> y </span><span class="si">{</span><span class="n">meses</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s1"> | &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;huecos: </span><span class="si">{</span><span class="n">huecos</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;persona-mes repetidas: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">duplicated</span><span class="p">([</span><span class="s2">&quot;persona_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mes&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filas por mes: mínimo </span><span class="si">{</span><span class="n">filas_mes</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">, máximo </span><span class="si">{</span><span class="n">filas_mes</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>formato: AAAA-MM, sin zona horaria (foto del día 1 de cada mes) | frecuencia: mensual
+meses: 16 de 16 esperados entre 2025-01 y 2026-04 | huecos: ninguno
+persona-mes repetidas: 0
+filas por mes: mínimo 3,992, máximo 4,433
+</pre></div>
+</div>
+</div>
+</div>
+<p>La serie es mensual y regular, sin huecos ni duplicados. El número de personas activas crece de
+forma suave (de 3.992 a 4.433), sin saltos que indiquen cargas incompletas.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">serie</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tasa mensual&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="o">.</span><span class="n">ic_bajo</span><span class="p">,</span> <span class="n">serie</span><span class="o">.</span><span class="n">ic_alto</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">)</span>
+<span class="n">puntos</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">ORO</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Media móvil de 3 meses&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">c</span><span class="o">=</span><span class="n">GRIS</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Tasa de renuncia mensual&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Tasa (%)&#39;</span><span class="p">)</span>
+
+<span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="o">.</span><span class="n">filas</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
+<span class="n">etiquetar</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">barras</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:,.0f}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Personas activas al inicio del mes&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Número de personas&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Media móvil (4 meses)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Desviación estándar móvil (4 meses)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Media y desviación estándar móviles de la tasa&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Puntos porcentuales&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">serie</span><span class="p">[[</span><span class="s1">&#39;filas&#39;</span><span class="p">,</span> <span class="s1">&#39;renuncias&#39;</span><span class="p">,</span> <span class="s1">&#39;tasa_%&#39;</span><span class="p">,</span> <span class="s1">&#39;ic_bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;ic_alto&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/80096ebf70389e00f37baa0152860692bab9ffe7bc782bbc5e2561a93ef797ef.png" src="_images/80096ebf70389e00f37baa0152860692bab9ffe7bc782bbc5e2561a93ef797ef.png" />
+<img alt="_images/c6b95ffe3257fa9883461402a89710501be428bda7157e16c9679d5fc4b83587.png" src="_images/c6b95ffe3257fa9883461402a89710501be428bda7157e16c9679d5fc4b83587.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>mes</th>
+      <th>2025-01</th>
+      <th>2025-02</th>
+      <th>2025-03</th>
+      <th>2025-04</th>
+      <th>2025-05</th>
+      <th>2025-06</th>
+      <th>2025-07</th>
+      <th>2025-08</th>
+      <th>2025-09</th>
+      <th>2025-10</th>
+      <th>2025-11</th>
+      <th>2025-12</th>
+      <th>2026-01</th>
+      <th>2026-02</th>
+      <th>2026-03</th>
+      <th>2026-04</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>filas</th>
+      <td>3992.00</td>
+      <td>4070.00</td>
+      <td>4065.00</td>
+      <td>4077.00</td>
+      <td>4112.00</td>
+      <td>4152.00</td>
+      <td>4190.00</td>
+      <td>4219.00</td>
+      <td>4256.00</td>
+      <td>4253.00</td>
+      <td>4295.00</td>
+      <td>4288.00</td>
+      <td>4329.00</td>
+      <td>4376.00</td>
+      <td>4423.00</td>
+      <td>4433.00</td>
+    </tr>
+    <tr>
+      <th>renuncias</th>
+      <td>57.00</td>
+      <td>55.00</td>
+      <td>55.00</td>
+      <td>42.00</td>
+      <td>46.00</td>
+      <td>32.00</td>
+      <td>55.00</td>
+      <td>44.00</td>
+      <td>49.00</td>
+      <td>32.00</td>
+      <td>41.00</td>
+      <td>41.00</td>
+      <td>66.00</td>
+      <td>40.00</td>
+      <td>35.00</td>
+      <td>40.00</td>
+    </tr>
+    <tr>
+      <th>tasa_%</th>
+      <td>1.43</td>
+      <td>1.35</td>
+      <td>1.35</td>
+      <td>1.03</td>
+      <td>1.12</td>
+      <td>0.77</td>
+      <td>1.31</td>
+      <td>1.04</td>
+      <td>1.15</td>
+      <td>0.75</td>
+      <td>0.95</td>
+      <td>0.96</td>
+      <td>1.52</td>
+      <td>0.91</td>
+      <td>0.79</td>
+      <td>0.90</td>
+    </tr>
+    <tr>
+      <th>ic_bajo</th>
+      <td>1.10</td>
+      <td>1.04</td>
+      <td>1.04</td>
+      <td>0.76</td>
+      <td>0.84</td>
+      <td>0.55</td>
+      <td>1.01</td>
+      <td>0.78</td>
+      <td>0.87</td>
+      <td>0.53</td>
+      <td>0.70</td>
+      <td>0.71</td>
+      <td>1.20</td>
+      <td>0.67</td>
+      <td>0.57</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <th>ic_alto</th>
+      <td>1.85</td>
+      <td>1.75</td>
+      <td>1.76</td>
+      <td>1.39</td>
+      <td>1.49</td>
+      <td>1.09</td>
+      <td>1.70</td>
+      <td>1.40</td>
+      <td>1.52</td>
+      <td>1.06</td>
+      <td>1.29</td>
+      <td>1.29</td>
+      <td>1.93</td>
+      <td>1.24</td>
+      <td>1.10</td>
+      <td>1.23</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="estacionalidad">
+<h2><span class="section-number">5.2. </span>Estacionalidad<a class="headerlink" href="#estacionalidad" title="Permalink to this heading">#</a></h2>
+<p>Una descomposición STL con periodo anual necesita al menos dos ciclos completos (24 meses) y aquí
+hay 16, por lo que la componente estacional no se puede estimar. Comparamos en cambio los cuatro meses
+que aparecen en los dos años (enero a abril de 2025 y de 2026).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">anio</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">m</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<span class="n">dos_anios</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;anio&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">dos_anios</span> <span class="o">=</span> <span class="n">dos_anios</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">dos_anios</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ene&#39;</span><span class="p">,</span> <span class="s1">&#39;feb&#39;</span><span class="p">,</span> <span class="s1">&#39;mar&#39;</span><span class="p">,</span> <span class="s1">&#39;abr&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dos_anios</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">spearmanr</span><span class="p">(</span><span class="n">dos_anios</span><span class="p">[</span><span class="s1">&#39;2025&#39;</span><span class="p">],</span> <span class="n">dos_anios</span><span class="p">[</span><span class="s1">&#39;2026&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">correlación de rangos entre los dos años (4 meses): </span><span class="si">{</span><span class="n">rho</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># enero frente al resto del año</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">&#39;enero&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;01&#39;</span>
+<span class="n">chi</span><span class="p">,</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">enero</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">correction</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">t_enero</span> <span class="o">=</span> <span class="n">tasa_ic</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">enero</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="kc">True</span><span class="p">:</span> <span class="s1">&#39;enero&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;resto del año&#39;</span><span class="p">}))</span>
+<span class="n">razon</span> <span class="o">=</span> <span class="n">t_enero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;enero&#39;</span><span class="p">,</span> <span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">t_enero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;resto del año&#39;</span><span class="p">,</span> <span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t_enero</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;chi-cuadrado enero frente al resto: </span><span class="si">{</span><span class="n">chi</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">, p = </span><span class="si">{</span><span class="n">pv</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">; razón de tasas </span><span class="si">{</span><span class="n">razon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>anio  2025  2026
+ene   1.43  1.52
+feb   1.35  0.91
+mar   1.35  0.79
+abr   1.03  0.90
+
+correlación de rangos entre los dos años (4 meses): 0.40
+               filas  renuncias  tasa_%  ic_bajo  ic_alto
+enero                                                    
+enero           8321        123    1.48     1.24     1.76
+resto del año  59209        607    1.03     0.95     1.11
+chi-cuadrado enero frente al resto: 14.0, p = 0.0002; razón de tasas 1.44
+</pre></div>
+</div>
+</div>
+</div>
+<p>Enero es el mes más alto en los dos años (1,48 % frente a 1,03 %). Es coherente con el calendario
+laboral colombiano: la prima de diciembre y las vacaciones de fin de año se cobran antes de cambiar
+de trabajo. Con dos repeticiones no es una estacionalidad demostrada, pero justifica incluir el mes
+del año como variable del modelo.</p>
+</section>
+<section id="estacionariedad-y-autocorrelacion">
+<h2><span class="section-number">5.3. </span>Estacionariedad y autocorrelación<a class="headerlink" href="#estacionariedad-y-autocorrelacion" title="Permalink to this heading">#</a></h2>
+<p>Las pruebas ADF y KPSS tienen hipótesis nulas opuestas: ADF supone raíz unitaria (serie no
+estacionaria) y KPSS supone estacionariedad. Leerlas juntas evita tomar un “no rechazo” como una
+confirmación.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_serie</span> <span class="o">=</span> <span class="n">serie</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">adf</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">y_serie</span><span class="p">,</span> <span class="n">maxlag</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">autolag</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">kpss</span><span class="p">(</span><span class="n">y_serie</span><span class="p">,</span> <span class="n">regression</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ADF:  estadístico </span><span class="si">{</span><span class="n">adf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, p = </span><span class="si">{</span><span class="n">adf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">  (H0: raíz unitaria)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;KPSS: estadístico </span><span class="si">{</span><span class="n">kp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, p = </span><span class="si">{</span><span class="n">kp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">  &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;(H0: estacionaria; p acotado entre 0,01 y 0,10 por la tabla)&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">y_serie</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">vlines_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;colors&#39;</span><span class="p">:</span> <span class="n">VERDE</span><span class="p">})</span>
+<span class="n">plot_pacf</span><span class="p">(</span><span class="n">y_serie</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ywm&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">vlines_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;colors&#39;</span><span class="p">:</span> <span class="n">VERDE</span><span class="p">})</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Autocorrelación de la tasa mensual&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Rezago (meses)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Autocorrelación parcial&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Rezago (meses)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ADF:  estadístico -3.65, p = 0.005  (H0: raíz unitaria)
+KPSS: estadístico 0.35, p = 0.097  (H0: estacionaria; p acotado entre 0,01 y 0,10 por la tabla)
+</pre></div>
+</div>
+<img alt="_images/107c5951d3ff0263b8118074ca37b2e3ae9116a2d7f6b0510cd6de2a679f2b13.png" src="_images/107c5951d3ff0263b8118074ca37b2e3ae9116a2d7f6b0510cd6de2a679f2b13.png" />
+</div>
+</div>
+<p>ADF rechaza la raíz unitaria (p = 0,005) y KPSS no rechaza la estacionariedad (p ≈ 0,10); ambas
+apuntan a una serie estacionaria en nivel, que oscila alrededor de su media sin tendencia. Con 16
+puntos, las bandas de la autocorrelación son anchas (±0,5) y ninguna la supera: no hay evidencia de
+que la tasa agregada de un mes anticipe la del siguiente, y no se agregan rezagos de la tasa
+global como variables.</p>
+<p>Tampoco hay un cambio de régimen visible: la serie no muestra saltos de nivel y las dos pruebas son
+compatibles con una media constante. Con 16 puntos no se puede fechar un punto de cambio con
+precisión, y una diferencia moderada de nivel pasaría inadvertida. El test (0,92 % mensual) queda
+algo por debajo del entrenamiento (1,08 %); su efecto sobre el modelo se revisa en los residuos del
+capítulo 7. El efecto de calendario identificado es el de enero (sección 5.2).</p>
+</section>
+<section id="deriva-de-la-poblacion">
+<h2><span class="section-number">5.4. </span>Deriva de la población<a class="headerlink" href="#deriva-de-la-poblacion" title="Permalink to this heading">#</a></h2>
+<p>Para un corte temporal, el riesgo principal es que la población cambie: si el test tiene otra mezcla
+de contratos o de antigüedades, el modelo se evalúa sobre personas distintas de las que usó para
+aprender. Lo medimos con el índice de estabilidad poblacional (PSI) entre el primer semestre de 2025
+y los meses de 2026 del entrenamiento. Con <span class="math notranslate nohighlight">\(a_j\)</span> y <span class="math notranslate nohighlight">\(b_j\)</span> la proporción de filas en la categoría (o
+el tramo) <em>j</em> en cada periodo,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{PSI} = \sum_{j} (a_j - b_j) \ln \frac{a_j}{b_j} ,
+\]</div>
+<p>que es una versión simétrica de la divergencia de Kullback-Leibler. La regla usual es: PSI &lt; 0,1
+estable, de 0,1 a 0,25 cambio moderado y &gt; 0,25 cambio grande.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">pa</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">pb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">categorias</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">pb</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">pa</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">categorias</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-4</span>
+    <span class="n">pb</span> <span class="o">=</span> <span class="n">pb</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">categorias</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-4</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(((</span><span class="n">pa</span> <span class="o">-</span> <span class="n">pb</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pa</span> <span class="o">/</span> <span class="n">pb</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+
+<span class="n">inicio</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span> <span class="o">&lt;=</span> <span class="s1">&#39;2025-06&#39;</span><span class="p">]</span>
+<span class="n">fin</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">mes</span> <span class="o">&gt;=</span> <span class="s1">&#39;2026-01&#39;</span><span class="p">]</span>
+<span class="n">filas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">PREDICTORAS</span><span class="p">:</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">inicio</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">fin</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NUM</span><span class="p">:</span>
+        <span class="n">cortes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)))</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">cortes</span><span class="p">,</span> <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">cortes</span><span class="p">,</span> <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">filas</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s1">&#39;PSI&#39;</span><span class="p">:</span> <span class="n">psi</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))})</span>
+<span class="n">deriva</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">filas</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;PSI&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">deriva</span><span class="p">[</span><span class="s1">&#39;lectura&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">deriva</span><span class="o">.</span><span class="n">PSI</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">99</span><span class="p">],</span>
+                           <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;estable&#39;</span><span class="p">,</span> <span class="s1">&#39;moderado&#39;</span><span class="p">,</span> <span class="s1">&#39;grande&#39;</span><span class="p">])</span>
+<span class="n">deriva</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>variable</th>
+      <th>PSI</th>
+      <th>lectura</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>antig_meses</th>
+      <td>0.355</td>
+      <td>grande</td>
+    </tr>
+    <tr>
+      <th>sociedad</th>
+      <td>0.174</td>
+      <td>moderado</td>
+    </tr>
+    <tr>
+      <th>ubicacion</th>
+      <td>0.038</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>oficio</th>
+      <td>0.016</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>proceso_planta</th>
+      <td>0.015</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>contrato</th>
+      <td>0.012</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>traslado_12m</th>
+      <td>0.006</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>area_funcional</th>
+      <td>0.004</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>familia_cargo</th>
+      <td>0.003</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>nivel</th>
+      <td>0.003</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>linea</th>
+      <td>0.003</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>edad</th>
+      <td>0.002</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>tipo_unidad</th>
+      <td>0.001</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>tipo_costos</th>
+      <td>0.001</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>genero</th>
+      <td>0.001</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>estado_civil</th>
+      <td>0.000</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>primer_mes</th>
+      <td>0.000</td>
+      <td>estable</td>
+    </tr>
+    <tr>
+      <th>reingreso</th>
+      <td>0.000</td>
+      <td>estable</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">por_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">contrato</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="s1">&#39;Termino Fijo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Término fijo&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Personas (%)&#39;</span><span class="p">)</span>
+<span class="n">por_mes</span><span class="o">.</span><span class="n">antig_meses</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Antigüedad mediana&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Meses&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">linea</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="s1">&#39;banano&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Personal en banano&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Personas (%)&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/80294930994e2c32a3150e6f4f939e4514b95a23b6a4c156dc29fcfee5f9ceaa.png" src="_images/80294930994e2c32a3150e6f4f939e4514b95a23b6a4c156dc29fcfee5f9ceaa.png" />
+</div>
+</div>
+<p>Dos variables superan el umbral de estabilidad, en ambos casos por razones distintas a un cambio en
+la composición del personal:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">antig_meses</span></code> (PSI 0,36) refleja el envejecimiento del panel. Una cohorte grande que en 2025 tenía
+entre 66 y 85 meses (15 % de las filas) pasó en 2026 al tramo de 85 a 108: son las mismas personas
+con un año más, y la mediana casi no cambia (de 40 a 37 meses). En el test habrá más personas con
+antigüedad alta, donde el riesgo es menor y más estable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sociedad</span></code> (PSI 0,17) corresponde a un traslado de nómina: S09 pasa de 3,8 % a 0,1 % de las filas
+y S05 sube de 6,2 % a 10,0 %, mientras la línea de negocio se mantiene (PSI 0,003). Si una
+sociedad desaparece en el test, el modelo pierde su estimación; conviene que no dependa
+solo de esta variable.</p></li>
+</ul>
+</section>
+<section id="composicion-del-mes-y-tasa-futura">
+<h2><span class="section-number">5.5. </span>Composición del mes y tasa futura<a class="headerlink" href="#composicion-del-mes-y-tasa-futura" title="Permalink to this heading">#</a></h2>
+<p>Agregamos por mes algunas características de la población y las correlacionamos con la tasa del
+mismo mes y de los tres siguientes: una correlación cruzada entre cada predictora agregada y el
+objetivo con rezagos de 0 a 3 meses, <span class="math notranslate nohighlight">\(
+ho_k = \operatorname{corr}(x_t, y_{t+k})\)</span>. Con 16 meses, una correlación debe superar ±0,5 aproximadamente
+para distinguirse del azar.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agregado</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;</span><span class="si">% f</span><span class="s1">ijo&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">contrato</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="s1">&#39;Termino Fijo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+    <span class="s1">&#39;antigüedad mediana&#39;</span><span class="p">:</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">antig_meses</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span>
+    <span class="s1">&#39;% banano&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">linea</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="s1">&#39;banano&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+    <span class="s1">&#39;% primer mes&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">primer_mes</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+    <span class="s1">&#39;personas activas&#39;</span><span class="p">:</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span>
+<span class="p">})</span>
+<span class="n">tasa_mes</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">cruzada</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="n">agregado</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">tasa_mes</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+                        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">agregado</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;tasa en t+</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cruzada</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;oro_verde&#39;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Correlación de la composición del mes t con la tasa en t+k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6df3e0edaa7ca7d886e4a510895d9494e1b56f3db3b6d35287cf2acae4a6e652.png" src="_images/6df3e0edaa7ca7d886e4a510895d9494e1b56f3db3b6d35287cf2acae4a6e652.png" />
+</div>
+</div>
+<p>Las correlaciones más altas están en el límite del azar y tienen el signo contrario al efecto
+individual: los meses con más término fijo tienen menos renuncias (−0,54), aunque a nivel de persona
+el término fijo renuncia 3,7 veces más. La diferencia corresponde a una falacia ecológica: a lo largo
+de la ventana crecen la población activa y la proporción de término fijo mientras la tasa desciende
+levemente. La composición agregada del mes no anticipa la tasa, y no se incluyen rezagos agregados.</p>
+</section>
+<section id="deriva-del-concepto">
+<h2><span class="section-number">5.6. </span>Deriva del concepto<a class="headerlink" href="#deriva-del-concepto" title="Permalink to this heading">#</a></h2>
+<p>El PSI mide si cambian las predictoras (<em>covariate shift</em>). Aquí se examina si cambia la relación
+entre las predictoras y la renuncia (<em>concept drift</em>), comparando la tasa por contrato y por tramo de
+antigüedad en tres periodos del entrenamiento.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indice_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">5</span><span class="p">:]))</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+    <span class="n">periodo</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">indice_mes</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2025</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2025</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">+</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">],</span>
+                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;2025 S1&#39;</span><span class="p">,</span> <span class="s1">&#39;2025 S2&#39;</span><span class="p">,</span> <span class="s1">&#39;2026 ene-abr&#39;</span><span class="p">]),</span>
+    <span class="n">antig_t</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">antig_meses</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mf">1e4</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&lt;1 año&#39;</span><span class="p">,</span> <span class="s1">&#39;1-3 años&#39;</span><span class="p">,</span> <span class="s1">&#39;3+ años&#39;</span><span class="p">]),</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;contrato&#39;</span><span class="p">,</span> <span class="s1">&#39;antig_t&#39;</span><span class="p">]):</span>
+    <span class="n">tabla</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;periodo&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                          <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">tabla</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">columna</span> <span class="ow">in</span> <span class="n">tabla</span><span class="p">:</span>
+        <span class="n">puntos</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tabla</span><span class="p">)),</span> <span class="n">tabla</span><span class="p">[</span><span class="n">columna</span><span class="p">])</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Tasa de renuncia por </span><span class="si">{</span><span class="n">NOMBRE</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="si">}</span><span class="s1"> y periodo&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Tasa mensual (%)&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">NOMBRE</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">razon_fijo_indefinido</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">fijo</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">z</span><span class="o">.</span><span class="n">contrato</span> <span class="o">==</span> <span class="s1">&#39;Termino Fijo&#39;</span><span class="p">][</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">indefinido</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">z</span><span class="o">.</span><span class="n">contrato</span> <span class="o">==</span> <span class="s1">&#39;Termino Indefinido&#39;</span><span class="p">][</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fijo</span> <span class="o">/</span> <span class="n">indefinido</span>
+
+
+<span class="n">razones</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;periodo&#39;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">razon_fijo_indefinido</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;razón de tasas fijo / indefinido por periodo:&#39;</span><span class="p">,</span> <span class="n">razones</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+<span class="c1"># prueba de razón de verosimilitud para la interacción contrato x periodo</span>
+<span class="n">datos</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">OBJETIVO</span><span class="p">:</span> <span class="s1">&#39;y&#39;</span><span class="p">})</span>
+<span class="n">con_interaccion</span> <span class="o">=</span> <span class="n">logit</span><span class="p">(</span><span class="s1">&#39;y ~ C(contrato) * C(periodo)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">datos</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">sin_interaccion</span> <span class="o">=</span> <span class="n">logit</span><span class="p">(</span><span class="s1">&#39;y ~ C(contrato) + C(periodo)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">datos</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">con_interaccion</span><span class="o">.</span><span class="n">llf</span> <span class="o">-</span> <span class="n">sin_interaccion</span><span class="o">.</span><span class="n">llf</span><span class="p">)</span>
+<span class="n">gl</span> <span class="o">=</span> <span class="n">con_interaccion</span><span class="o">.</span><span class="n">df_model</span> <span class="o">-</span> <span class="n">sin_interaccion</span><span class="o">.</span><span class="n">df_model</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;razón de verosimilitud para la interacción contrato × periodo: </span><span class="si">{</span><span class="n">lr</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> con </span><span class="si">{</span><span class="n">gl</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> gl, &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;p = </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span><span class="w"> </span><span class="n">gl</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/8df8dc15e2a09010379b4bd29c233f0bca174f65a1f0b5c0338d3def764a415c.png" src="_images/8df8dc15e2a09010379b4bd29c233f0bca174f65a1f0b5c0338d3def764a415c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>razón de tasas fijo / indefinido por periodo: {&#39;2025 S1&#39;: 3.87, &#39;2025 S2&#39;: 3.04, &#39;2026 ene-abr&#39;: 5.0}
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>razón de verosimilitud para la interacción contrato × periodo: 3.91 con 2 gl, p = 0.141
+</pre></div>
+</div>
+</div>
+</div>
+<p>La razón de tasas entre término fijo e indefinido varía entre 3,0 y 5,0 según el periodo, pero la
+interacción contrato × periodo no es significativa (p = 0,14): no hay evidencia de que la relación
+haya cambiado, y la variación es compatible con el ruido de periodos con pocas renuncias. La forma
+del riesgo por antigüedad también se mantiene, con el primer año como el tramo de mayor riesgo. Esta
+estabilidad es un supuesto necesario para aplicar el modelo a meses posteriores.</p>
+</section>
+<section id="series-por-linea-de-negocio">
+<h2><span class="section-number">5.7. </span>Series por línea de negocio<a class="headerlink" href="#series-por-linea-de-negocio" title="Permalink to this heading">#</a></h2>
+<p>Como una persona renuncia a lo sumo una vez, no tiene sentido una serie por persona. La
+heterogeneidad temporal se examina por línea de negocio.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">linea</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;linea&#39;</span><span class="p">):</span>
+    <span class="n">tasa_linea</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">z</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">fechas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">(</span><span class="n">tasa_linea</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fechas</span><span class="p">,</span> <span class="n">tasa_linea</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">linea</span><span class="si">}</span><span class="s1"> (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Tasa de renuncia por línea (media móvil de 3 meses)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Tasa mensual (%)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Línea&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">linea_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;linea&#39;</span><span class="p">,</span> <span class="s1">&#39;mes&#39;</span><span class="p">])[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;media y desviación mensual de la tasa por línea (%):&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;media&#39;</span><span class="p">:</span> <span class="n">linea_mes</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;desv. entre meses&#39;</span><span class="p">:</span> <span class="n">linea_mes</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6c353dd02e178287059d12a9034fe2640ffb1b09fc769bdbf4d572ec9d0a44fe.png" src="_images/6c353dd02e178287059d12a9034fe2640ffb1b09fc769bdbf4d572ec9d0a44fe.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>media y desviación mensual de la tasa por línea (%):
+            media  desv. entre meses
+linea                               
+banano       2.55               1.14
+ganaderia    0.61               1.09
+industrial   1.05               0.46
+palma        0.88               0.26
+puerto       0.84               1.04
+transporte   1.06               0.61
+</pre></div>
+</div>
+</div>
+</div>
+<p>Banano tiene la tasa más alta (2,55 % mensual) y también la más variable (desviación de 1,14 puntos
+entre meses); palma es la más estable (0,26). Las líneas pequeñas (ganadería, puerto) tienen
+desviaciones grandes por tener pocos casos al mes. Las líneas difieren en nivel, y ninguna muestra
+una tendencia sostenida.</p>
+</section>
+<section id="sintesis">
+<h2><span class="section-number">5.8. </span>Síntesis<a class="headerlink" href="#sintesis" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>La tasa mensual oscila alrededor de 1 %, sin tendencia y con varianza estable. Enero es el pico
+en los dos años (1,48 % frente a 1,03 %; chi-cuadrado p = 0,0002), por lo que el modelo incluye el
+mes del año, con la advertencia de que solo hay dos eneros.</p></li>
+<li><p>ADF y KPSS coinciden en que la serie es estacionaria en nivel, y no hay autocorrelación detectable.</p></li>
+<li><p>La deriva de la población se debe al envejecimiento del panel y a un traslado de nómina; contrato,
+línea, oficio y edad son estables. Se espera que el test se parezca al entrenamiento, con más peso
+en antigüedades altas.</p></li>
+<li><p>No hay evidencia de deriva del concepto: la relación entre contrato y renuncia y la forma del
+riesgo por antigüedad se mantienen entre periodos.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ml_venv"
+        },
+        kernelOptions: {
+            name: "ml_venv",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ml_venv'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04_eda_multivariado.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>EDA multivariado</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06_auditoria_fuga.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Auditoría de fuga</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#la-serie-mensual">5.1. La serie mensual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estacionalidad">5.2. Estacionalidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estacionariedad-y-autocorrelacion">5.3. Estacionariedad y autocorrelación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-de-la-poblacion">5.4. Deriva de la población</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-del-mes-y-tasa-futura">5.5. Composición del mes y tasa futura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-del-concepto">5.6. Deriva del concepto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-por-linea-de-negocio">5.7. Series por línea de negocio</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">5.8. Síntesis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Daniel Carbonó y Luis Pérez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

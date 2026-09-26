@@ -1,0 +1,912 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>4. EDA multivariado &#8212; Rotación voluntaria de personal</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/identidad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04_eda_multivariado';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. EDA temporal" href="05_eda_temporal.html" />
+    <link rel="prev" title="3. EDA del objetivo: univariado y bivariado" href="03_eda_objetivo.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Rotación voluntaria de personal</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introducción
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_datos.html">1. Datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_particion.html">2. Partición</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_eda_objetivo.html">3. EDA del objetivo: univariado y bivariado</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. EDA multivariado</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_eda_temporal.html">5. EDA temporal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_auditoria_fuga.html">6. Auditoría de fuga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_modelo_base.html">7. Modelo base</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/04_eda_multivariado.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>EDA multivariado</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlacion-entre-numericas-y-binarias-spearman">4.1. Correlación entre numéricas y binarias (Spearman)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asociacion-entre-categoricas-v-de-cramer">4.2. Asociación entre categóricas (V de Cramér)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-de-inflacion-de-la-varianza-vif">4.3. Factor de inflación de la varianza (VIF)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales">4.4. Componentes principales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomalias-isolation-forest">4.5. Anomalías: Isolation Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conglomerados">4.6. Conglomerados</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">4.7. Síntesis</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="eda-multivariado">
+<h1><span class="section-number">4. </span>EDA multivariado<a class="headerlink" href="#eda-multivariado" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Alcance</p>
+<p>Este capítulo usa solo el entrenamiento y la semilla 2026 en todo lo aleatorio. La matriz de diseño
+del PCA, del Isolation Forest y de los conglomerados es la misma del modelo base: numéricas
+estandarizadas y categóricas en una columna por categoría (las de menos de 300 filas se agrupan).</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.outliers_influence</span> <span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools</span> <span class="kn">import</span> <span class="n">add_constant</span>
+<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">IsolationForest</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">comun</span> <span class="kn">import</span> <span class="p">(</span><span class="n">cargar</span><span class="p">,</span> <span class="n">particion</span><span class="p">,</span> <span class="n">estilo</span><span class="p">,</span> <span class="n">tasa_ic</span><span class="p">,</span> <span class="n">v_cramer</span><span class="p">,</span> <span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">NUM</span><span class="p">,</span> <span class="n">BIN</span><span class="p">,</span> <span class="n">CAT</span><span class="p">,</span>
+                   <span class="n">PREDICTORAS</span><span class="p">,</span> <span class="n">SEMILLA</span><span class="p">,</span> <span class="n">VERDE</span><span class="p">,</span> <span class="n">ORO</span><span class="p">,</span> <span class="n">TINTA</span><span class="p">,</span> <span class="n">GRIS_CL</span><span class="p">,</span> <span class="n">BORDE</span><span class="p">)</span>
+
+<span class="n">estilo</span><span class="p">()</span>
+
+<span class="n">tr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">particion</span><span class="p">(</span><span class="n">cargar</span><span class="p">())</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEMILLA</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="correlacion-entre-numericas-y-binarias-spearman">
+<h2><span class="section-number">4.1. </span>Correlación entre numéricas y binarias (Spearman)<a class="headerlink" href="#correlacion-entre-numericas-y-binarias-spearman" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">NUM</span> <span class="o">+</span> <span class="n">BIN</span> <span class="o">+</span> <span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;oro_verde&#39;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Correlación de Spearman&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e6ead9fdb8c5d3735d3bf04cb1b52bd9d590ada5d188f1fa539bc9d977203bdd.png" src="_images/e6ead9fdb8c5d3735d3bf04cb1b52bd9d590ada5d188f1fa539bc9d977203bdd.png" />
+</div>
+</div>
+<p>Edad y antigüedad tienen una correlación de rangos de 0,6, la única redundancia entre numéricas.
+Las correlaciones con el objetivo son pequeñas en valor absoluto, como se espera con una clase del
+1 %; para medir asociación con un evento raro son más adecuados el AUC y la información mutua.</p>
+</section>
+<section id="asociacion-entre-categoricas-v-de-cramer">
+<h2><span class="section-number">4.2. </span>Asociación entre categóricas (V de Cramér)<a class="headerlink" href="#asociacion-entre-categoricas-v-de-cramer" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="n">CAT</span> <span class="o">+</span> <span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">variables</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">V</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_cramer</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">tr</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;verde&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">})</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;V de Cramér entre variables categóricas&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/13d307f40056984ed7f2d3ffbabfccb61026f2a5a0d88931abda01019719d8ee.png" src="_images/13d307f40056984ed7f2d3ffbabfccb61026f2a5a0d88931abda01019719d8ee.png" />
+</div>
+</div>
+<p>Los dos pares con V = 1 corresponden a variables anidadas por construcción: cada sociedad pertenece
+a una sola línea y cada oficio a una sola familia, de modo que la categoría fina determina la
+gruesa. Además, <code class="docutils literal notranslate"><span class="pre">ubicacion</span></code> está casi anidada en <code class="docutils literal notranslate"><span class="pre">linea</span></code> (0,88) y <code class="docutils literal notranslate"><span class="pre">oficio</span></code> casi determina
+<code class="docutils literal notranslate"><span class="pre">tipo_unidad</span></code> (0,85). Se conservan todas porque la predicción no se afecta (sección 4.3), pero al
+interpretar importancias cada par debe leerse como una sola señal.</p>
+</section>
+<section id="factor-de-inflacion-de-la-varianza-vif">
+<h2><span class="section-number">4.3. </span>Factor de inflación de la varianza (VIF)<a class="headerlink" href="#factor-de-inflacion-de-la-varianza-vif" title="Permalink to this heading">#</a></h2>
+<p>El VIF de una columna mide cuánto se infla la varianza de su coeficiente porque las demás columnas
+la explican: VIF = 1 / (1 − R²) al regresar esa columna contra el resto. Se calcula sobre la matriz
+de una regresión logística, con las numéricas y variables indicadoras (se omite una categoría por
+variable, la más frecuente; con una categoría rara como referencia el VIF se infla sin que haya
+colinealidad real).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muestra</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">vif</span><span class="p">(</span><span class="n">cols_cat</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">muestra</span><span class="p">[</span><span class="n">NUM</span> <span class="o">+</span> <span class="n">BIN</span> <span class="o">+</span> <span class="n">cols_cat</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">({</span><span class="s1">&#39;edad&#39;</span><span class="p">:</span> <span class="n">muestra</span><span class="o">.</span><span class="n">edad</span><span class="o">.</span><span class="n">median</span><span class="p">()})</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;(nulo)&#39;</span><span class="p">)</span>
+    <span class="c1"># la categoría más frecuente queda primera y get_dummies la omite como referencia</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_cat</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">add_constant</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols_cat</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">valores</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">valores</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;const&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">variable_de</span><span class="p">(</span><span class="n">columna</span><span class="p">,</span> <span class="n">variables</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span> <span class="k">if</span> <span class="n">columna</span> <span class="o">==</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">columna</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">)),</span> <span class="n">columna</span><span class="p">)</span>
+
+
+<span class="n">base</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;contrato&#39;</span><span class="p">,</span> <span class="s1">&#39;linea&#39;</span><span class="p">,</span> <span class="s1">&#39;tipo_unidad&#39;</span><span class="p">,</span> <span class="s1">&#39;tipo_costos&#39;</span><span class="p">,</span> <span class="s1">&#39;estado_civil&#39;</span><span class="p">,</span> <span class="s1">&#39;genero&#39;</span><span class="p">,</span> <span class="s1">&#39;nivel&#39;</span><span class="p">]</span>
+<span class="n">v1</span> <span class="o">=</span> <span class="n">vif</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;VIF con variables de baja cardinalidad (máximo por variable):&#39;</span><span class="p">)</span>
+<span class="n">maximos</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">variable_de</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">NUM</span> <span class="o">+</span> <span class="n">BIN</span> <span class="o">+</span> <span class="n">base</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">maximos</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+
+<span class="n">v2</span> <span class="o">=</span> <span class="n">vif</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;sociedad&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">al agregar sociedad, VIF de las columnas de linea:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v2</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">v2</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;linea_&#39;</span><span class="p">)]]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>VIF con variables de baja cardinalidad (máximo por variable):
+tipo_unidad     4.3
+linea           4.2
+antig_meses     3.2
+tipo_costos     2.7
+contrato        2.6
+nivel           2.1
+edad            1.9
+estado_civil    1.3
+genero          1.2
+traslado_12m    1.1
+primer_mes      1.0
+reingreso       1.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>al agregar sociedad, VIF de las columnas de linea:
+linea_banano        inf
+linea_industrial    inf
+linea_transporte    inf
+linea_puerto        inf
+linea_ganaderia     inf
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con las variables de baja cardinalidad los VIF son moderados. Al agregar <code class="docutils literal notranslate"><span class="pre">sociedad</span></code>, el VIF de las
+columnas de línea se vuelve infinito, porque cada indicadora de línea es la suma exacta de las
+indicadoras de sus sociedades. La matriz no tiene rango completo y los coeficientes de una logística
+sin penalización no están identificados.</p>
+<div class="note admonition">
+<p class="admonition-title">Observación</p>
+<p>La colinealidad no cambia las predicciones. Para predecir se pueden conservar las dos variables de
+cada par siempre que la logística esté regularizada (L2, la opción por defecto de scikit-learn),
+que elige una solución única. Lo que no se puede hacer es interpretar sus coeficientes por separado.</p>
+</div>
+</section>
+<section id="componentes-principales">
+<h2><span class="section-number">4.4. </span>Componentes principales<a class="headerlink" href="#componentes-principales" title="Permalink to this heading">#</a></h2>
+<p>Aplicamos PCA sobre la matriz de diseño estandarizada. Con tantas indicadoras es una aproximación
+(para mezclas de numéricas y categóricas lo usual sería FAMD o análisis de correspondencias
+múltiples), pero permite ver si la estructura principal de los datos separa a quienes renuncian.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prep</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">),</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="n">NUM</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;passthrough&#39;</span><span class="p">,</span> <span class="n">BIN</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="n">make_pipeline</span><span class="p">(</span>
+        <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;(nulo)&#39;</span><span class="p">),</span>
+        <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;infrequent_if_exist&#39;</span><span class="p">,</span> <span class="n">min_frequency</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                      <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="p">),</span> <span class="n">CAT</span><span class="p">),</span>
+<span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">prep</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">PREDICTORAS</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">Xs</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;columnas de la matriz: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> | &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;componentes para 50 % de la varianza: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1"> | &#39;</span>
+      <span class="sa">f</span><span class="s1">&#39;para 80 %: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0.8</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xs</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">41</span><span class="p">),</span> <span class="n">var</span><span class="p">[:</span><span class="mi">40</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(),</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Varianza explicada acumulada&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Número de componentes&#39;</span><span class="p">,</span>
+          <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Proporción acumulada&#39;</span><span class="p">)</span>
+
+<span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="mi">8000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Z</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">Z</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hue</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">linea</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">idx</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;PC1 frente a PC2 por línea&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Línea&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">markerscale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">renuncia</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="o">~</span><span class="n">renuncia</span><span class="p">,</span> <span class="mi">0</span><span class="p">][:</span><span class="mi">8000</span><span class="p">],</span> <span class="n">Z</span><span class="p">[</span><span class="o">~</span><span class="n">renuncia</span><span class="p">,</span> <span class="mi">1</span><span class="p">][:</span><span class="mi">8000</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">GRIS_CL</span><span class="p">,</span>
+              <span class="n">label</span><span class="o">=</span><span class="s1">&#39;No renuncia (muestra)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="n">renuncia</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Z</span><span class="p">[</span><span class="n">renuncia</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">ORO</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Renuncia&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">markerscale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;PC1 frente a PC2: renuncias&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">cargas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pca</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">prep</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(),</span>
+                      <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="s1">&#39;PC2&#39;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="s1">&#39;PC2&#39;</span><span class="p">]:</span>
+    <span class="n">mayores</span> <span class="o">=</span> <span class="n">cargas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;cargas más grandes:&#39;</span><span class="p">,</span> <span class="n">mayores</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\w+__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>columnas de la matriz: 170 | componentes para 50 % de la varianza: 23 | para 80 %: 63
+</pre></div>
+</div>
+<img alt="_images/22868f459e9c1625e86b24c3355fa8119b488085a26f7a414e8199e8a87c3aa2.png" src="_images/22868f459e9c1625e86b24c3355fa8119b488085a26f7a414e8199e8a87c3aa2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PC1 cargas más grandes: [&#39;tipo_unidad_area_funcional&#39;, &#39;area_funcional_no_aplica&#39;, &#39;nivel_1_operativo&#39;, &#39;familia_cargo_agricola_campo&#39;, &#39;tipo_unidad_finca_palma&#39;, &#39;tipo_costos_OPERATIVO DIRECTO&#39;]
+PC2 cargas más grandes: [&#39;proceso_planta_no_aplica&#39;, &#39;familia_cargo_planta_industrial&#39;, &#39;tipo_unidad_planta_industrial&#39;, &#39;sociedad_S04&#39;, &#39;linea_banano&#39;, &#39;oficio_planta&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>La varianza está muy repartida: se necesitan muchos componentes para explicar la mitad, porque la
+matriz está formada sobre todo por indicadoras casi independientes. Los dos primeros componentes
+separan líneas de negocio y tipos de unidad, y las renuncias se reparten por todo el plano. La
+estructura dominante de los datos es organizacional, y ningún eje lineal separa por sí solo a
+quienes renuncian.</p>
+</section>
+<section id="anomalias-isolation-forest">
+<h2><span class="section-number">4.5. </span>Anomalías: Isolation Forest<a class="headerlink" href="#anomalias-isolation-forest" title="Permalink to this heading">#</a></h2>
+<p>Isolation Forest mide qué tan fácil es aislar una fila con cortes al azar; las filas raras se aíslan
+rápido. Aquí interesa saber si las filas raras renuncian más.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iso</span> <span class="o">=</span> <span class="n">IsolationForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">puntaje</span> <span class="o">=</span> <span class="o">-</span><span class="n">iso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">decil</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">puntaje</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;D</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">tasa_ic</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">OBJETIVO</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;decil&#39;</span><span class="p">:</span> <span class="n">decil</span><span class="p">}),</span> <span class="s1">&#39;decil&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="o">.</span><span class="n">ic_bajo</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">ic_alto</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">alto</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)),</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">ic_alto</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">alto</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">TINTA</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">ic_alto</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Tasa de renuncia por decil de anomalía (D10 = más raro)&#39;</span><span class="p">,</span>
+       <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Decil de anomalía&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Tasa mensual (%)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">[[</span><span class="s1">&#39;filas&#39;</span><span class="p">,</span> <span class="s1">&#39;renuncias&#39;</span><span class="p">,</span> <span class="s1">&#39;tasa_%&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+
+<span class="n">top</span> <span class="o">=</span> <span class="n">puntaje</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">puntaje</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">)</span>
+<span class="n">perfil</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;1 % más raro&#39;</span><span class="p">:</span> <span class="n">tr</span><span class="p">[</span><span class="n">top</span><span class="p">][[</span><span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;antig_meses&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                       <span class="s1">&#39;resto&#39;</span><span class="p">:</span> <span class="n">tr</span><span class="p">[</span><span class="o">~</span><span class="n">top</span><span class="p">][[</span><span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;antig_meses&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">perfil</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;linea&#39;</span><span class="p">,</span> <span class="s1">&#39;tipo_unidad&#39;</span><span class="p">,</span> <span class="s1">&#39;contrato&#39;</span><span class="p">]:</span>
+    <span class="n">reparto</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="p">[</span><span class="n">top</span><span class="p">][</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1"> en el 1 % más raro:&#39;</span><span class="p">,</span> <span class="n">reparto</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/61defeaae6b886daedb339c45bee65776898cd827a3e2086edd54d5f21cb0bba.png" src="_images/61defeaae6b886daedb339c45bee65776898cd827a3e2086edd54d5f21cb0bba.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>decil           D1       D2      D3       D4       D5       D6       D7      D8       D9      D10
+filas      6754.00  6758.00  6781.0  6720.00  6752.00  6755.00  6751.00  6754.0  6754.00  6751.00
+renuncias    36.00    62.00    54.0    64.00   117.00    87.00    93.00    74.0    73.00    70.00
+tasa_%        0.53     0.92     0.8     0.95     1.73     1.29     1.38     1.1     1.08     1.04
+             1 % más raro  resto
+edad                 36.6   37.4
+antig_meses          95.5   58.2
+linea en el 1 % más raro: {&#39;industrial&#39;: 44.0, &#39;palma&#39;: 23.0, &#39;banano&#39;: 15.0, &#39;transporte&#39;: 11.0}
+tipo_unidad en el 1 % más raro: {&#39;area_funcional&#39;: 88.0, &#39;planta_industrial&#39;: 9.0, &#39;finca_banano&#39;: 3.0}
+contrato en el 1 % más raro: {&#39;Termino Indefinido&#39;: 77.0, &#39;Termino Fijo&#39;: 23.0}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Las filas más raras no renuncian más: la tasa del decil más anómalo (1,0 %) es la media. El 1 % más
+raro es sobre todo personal de oficina con mucha antigüedad y contrato indefinido, un perfil poco
+frecuente pero estable. El decil más típico (D1) tiene la tasa más baja (0,5 %). Las observaciones
+anómalas corresponden a puestos poco comunes y se conservan.</p>
+</section>
+<section id="conglomerados">
+<h2><span class="section-number">4.6. </span>Conglomerados<a class="headerlink" href="#conglomerados" title="Permalink to this heading">#</a></h2>
+<p>Aplicamos k-medias sobre los 10 primeros componentes y buscamos el número de grupos con el
+coeficiente de silueta, sobre una muestra de 6.000 filas.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="mi">6000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">silueta</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+    <span class="n">etiquetas</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+    <span class="n">silueta</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">silhouette_score</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">etiquetas</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;silueta por k:&#39;</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">silueta</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">silueta</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">silueta</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+<span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEMILLA</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+<span class="n">grupos</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">grupo</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;grupo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">filas</span><span class="o">=</span><span class="p">(</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">),</span>
+    <span class="n">renuncias</span><span class="o">=</span><span class="p">(</span><span class="n">OBJETIVO</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
+    <span class="n">edad</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">),</span>
+    <span class="n">antig</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;antig_meses&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">),</span>
+    <span class="n">pct_fijo</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;contrato&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;Termino Fijo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+    <span class="n">linea</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;linea&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">tipo_unidad</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;tipo_unidad&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="p">)</span>
+<span class="n">grupos</span><span class="p">[</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">grupos</span><span class="o">.</span><span class="n">renuncias</span> <span class="o">/</span> <span class="n">grupos</span><span class="o">.</span><span class="n">filas</span>
+<span class="n">grupos</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;tasa_%&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>silueta por k: {2: 0.313, 3: 0.341, 4: 0.392, 5: 0.428, 6: 0.461, 7: 0.493, 8: 0.51}
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>grupo</th>
+      <th>filas</th>
+      <th>renuncias</th>
+      <th>edad</th>
+      <th>antig</th>
+      <th>pct_fijo</th>
+      <th>linea</th>
+      <th>tipo_unidad</th>
+      <th>tasa_%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>6614</td>
+      <td>174</td>
+      <td>39.0</td>
+      <td>76.4</td>
+      <td>32.0</td>
+      <td>banano</td>
+      <td>finca_banano</td>
+      <td>2.6</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>8081</td>
+      <td>105</td>
+      <td>35.2</td>
+      <td>53.2</td>
+      <td>62.1</td>
+      <td>palma</td>
+      <td>area_funcional</td>
+      <td>1.3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3123</td>
+      <td>36</td>
+      <td>40.1</td>
+      <td>37.4</td>
+      <td>41.6</td>
+      <td>transporte</td>
+      <td>area_funcional</td>
+      <td>1.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>6707</td>
+      <td>75</td>
+      <td>35.2</td>
+      <td>58.5</td>
+      <td>61.7</td>
+      <td>palma</td>
+      <td>planta_industrial</td>
+      <td>1.1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>33268</td>
+      <td>269</td>
+      <td>38.0</td>
+      <td>56.0</td>
+      <td>54.4</td>
+      <td>palma</td>
+      <td>finca_palma</td>
+      <td>0.8</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2890</td>
+      <td>22</td>
+      <td>38.9</td>
+      <td>59.9</td>
+      <td>64.3</td>
+      <td>palma</td>
+      <td>area_funcional</td>
+      <td>0.8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>6135</td>
+      <td>45</td>
+      <td>34.5</td>
+      <td>69.0</td>
+      <td>44.4</td>
+      <td>palma</td>
+      <td>area_funcional</td>
+      <td>0.7</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>712</td>
+      <td>4</td>
+      <td>42.3</td>
+      <td>77.7</td>
+      <td>55.5</td>
+      <td>ganaderia</td>
+      <td>hacienda_ganadera</td>
+      <td>0.6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>La silueta aumenta con k en todo el rango probado (2 a 8): los datos no tienen un número
+natural de grupos. Se adoptan k = 8 grupos con fines descriptivos; los grupos resultantes son sobre
+todo cortes organizacionales.</p>
+</section>
+<section id="sintesis">
+<h2><span class="section-number">4.7. </span>Síntesis<a class="headerlink" href="#sintesis" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>La única redundancia entre numéricas es edad y antigüedad (0,6). Las redundancias fuertes entre
+categóricas son anidamientos por construcción (sociedad y línea, oficio y familia) y se manejan
+con regularización.</p></li>
+<li><p>La estructura principal de los datos es organizacional (línea, tipo de unidad).</p></li>
+<li><p>Ni los conglomerados ni las anomalías aíslan a quienes renuncian: el riesgo resulta de combinar
+señales moderadas. Por eso el modelo base es una logística, que suma señales, antes de modelos que
+busquen interacciones complejas.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ml_venv"
+        },
+        kernelOptions: {
+            name: "ml_venv",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ml_venv'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_eda_objetivo.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>EDA del objetivo: univariado y bivariado</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_eda_temporal.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>EDA temporal</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlacion-entre-numericas-y-binarias-spearman">4.1. Correlación entre numéricas y binarias (Spearman)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asociacion-entre-categoricas-v-de-cramer">4.2. Asociación entre categóricas (V de Cramér)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-de-inflacion-de-la-varianza-vif">4.3. Factor de inflación de la varianza (VIF)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales">4.4. Componentes principales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomalias-isolation-forest">4.5. Anomalías: Isolation Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conglomerados">4.6. Conglomerados</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">4.7. Síntesis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Daniel Carbonó y Luis Pérez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
