@@ -1,0 +1,12 @@
+format: jb-book
+root: intro
+defaults:
+  numbered: true
+chapters:
+  - file: 01_datos
+  - file: 02_particion
+  - file: 03_eda_objetivo
+  - file: 04_eda_multivariado
+  - file: 05_eda_temporal
+  - file: 06_auditoria_fuga
+  - file: 07_modelo_base

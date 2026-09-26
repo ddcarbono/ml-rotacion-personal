@@ -1,0 +1,70 @@
+/* Identidad visual del libro: colores de las sustentaciones y del EDA anterior; la fuente es la del tema */
+/* colores derivados: verde oscuro #2F3E25, verde medio #7F9C6B, oro oscuro #8A6A1F, marron #6E4F1F */
+:root, html[data-theme="light"], html[data-theme="dark"] {
+  --verde: #405731; --oro: #B08A2D; --tinta: #333333; --gris: #5A5A5A;
+  --verde-cl: #E8F0EB; --oro-cl: #F5EDE0; --verde-os: #2F3E25; --oro-os: #8A6A1F; --marron: #6E4F1F;
+  --pst-color-primary: #405731; --pst-color-primary-highlight: #2F3E25;
+  --pst-color-secondary: #B08A2D; --pst-color-secondary-highlight: #8A6A1F;
+  --pst-color-info: #405731; --pst-color-info-highlight: #2F3E25;
+  --pst-color-warning: #B08A2D; --pst-color-warning-highlight: #8A6A1F;
+  --pst-color-link: #405731; --pst-color-link-hover: #B08A2D;
+  --pst-color-inline-code: #6E4F1F; --pst-color-target: #F5EDE0;
+  --pst-color-text-base: #333333; --pst-color-text-muted: #5A5A5A;
+  --pst-color-background: #FFFFFF; --pst-color-on-background: #FFFFFF;
+  --pst-color-surface: #FAFAF8; --pst-color-on-surface: #E8F0EB; --pst-color-border: #DDD5C0;
+  --sd-color-primary: #405731; --sd-color-secondary: #B08A2D;
+}
+body { color: var(--tinta); }
+.bd-article h1, .bd-content h1 { color: var(--verde) !important; font-weight: 700 !important; letter-spacing: .01em;
+     border-bottom: 3px solid var(--oro); padding-bottom: .25em; }
+.bd-article h2, .bd-content h2 { color: var(--verde) !important; font-weight: 700 !important;
+     border-bottom: 1px solid #E6E2D8; padding-bottom: .15em; }
+.bd-article h3, .bd-article h4, .bd-content h3, .bd-content h4 { color: var(--verde) !important; font-weight: 700 !important; }
+a.headerlink { color: var(--oro) !important; }
+a, a:visited { color: var(--verde); }
+a:hover { color: var(--oro); }
+blockquote { border-left: 3px solid var(--oro); background: #FFFFFF; color: var(--tinta);
+             padding: .6em 1em; margin-left: 0; }
+/* tablas de markdown y de pandas */
+table.table, table.dataframe { border-collapse: collapse; border: none; font-size: .9em; }
+table.table thead th, table.dataframe thead th {
+  background: var(--verde); color: #fff; font-weight: 700; border: none; }
+table.table thead th *, table.dataframe thead th *, thead th p { color: #fff !important; }
+table.table tbody tr, table.dataframe tbody tr { background: #FFFFFF; }
+table.table tbody tr:nth-child(even), table.dataframe tbody tr:nth-child(even) { background: #F6F8F5; }
+table.table td, table.dataframe td, table.dataframe tbody th { border: none; border-bottom: 1px solid #ECEFEA; }
+table.dataframe tbody th { color: var(--tinta) !important; font-weight: 600; }
+/* salidas de texto y barra lateral */
+div.cell_output pre, div.output pre { border-left: none; background: #FFFFFF !important; }
+.bd-sidebar-primary .navbar-brand, .bd-sidebar .current > a { color: var(--verde) !important; font-weight: 700; }
+.bd-sidebar .nav-link.active, nav.bd-links li.current > a { color: var(--verde) !important;
+  border-left: 3px solid var(--oro); padding-left: .7em !important; }
+/* titulo del libro en la barra lateral: alineado a la izquierda, con el subtitulo debajo */
+.navbar-brand.logo { display: block; text-align: left; padding: .4em 0 .6em; }
+p.title.logo__title { text-align: left; font-size: 1rem; font-weight: 700; line-height: 1.35;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--verde); margin: 0; padding-bottom: .45em; border-bottom: 2px solid var(--oro); white-space: normal; }
+p.title.logo__title::after { content: "Machine Learning \00B7  Entregable 1"; display: block;
+  font-size: .8rem; font-weight: 400; color: var(--gris); letter-spacing: .06em; text-transform: uppercase; margin-top: .35em; }
+
+/* codigo en linea: marron sobre arena, en lugar del rosado del tema */
+code.literal, p code, li code, td code { color: var(--marron) !important; background: #F4F3EF;
+  border: none; border-radius: 3px; padding: .05em .3em; }
+/* bloques de codigo: fondo neutro y resaltado con la paleta */
+div.highlight, div.highlight pre { background: #FAFAF8 !important; }
+div.cell_input { border-left: 2px solid #D9E2D4 !important; }
+.highlight .k, .highlight .kn, .highlight .kd, .highlight .kc, .highlight .ow, .highlight .kr { color: var(--verde) !important; font-weight: 700; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sa, .highlight .sd, .highlight .si, .highlight .se { color: var(--oro-os) !important; }
+.highlight .m, .highlight .mi, .highlight .mf, .highlight .mh { color: var(--marron) !important; }
+.highlight .c, .highlight .c1, .highlight .cm { color: #7F9C6B !important; font-style: italic; }
+.highlight .nb, .highlight .bp, .highlight .nf, .highlight .nc, .highlight .nn { color: var(--verde-os) !important; }
+.highlight .o, .highlight .p { color: var(--gris) !important; }
+.highlight .n, .highlight .nv, .highlight .na { color: var(--tinta) !important; }
+/* cajas (admoniciones): Alcance en verde, Observacion en dorado, fondo blanco */
+div.admonition { border: 1px solid #E6E2D8 !important; border-left: 4px solid var(--verde) !important;
+  box-shadow: none !important; background: #FFFFFF; }
+div.admonition > .admonition-title { background: #F3F6F1 !important; color: var(--verde) !important; font-weight: 700; }
+div.admonition > .admonition-title::before, div.admonition > .admonition-title::after { color: var(--verde) !important; }
+div.admonition.note { border-left-color: var(--oro) !important; }
+div.admonition.note > .admonition-title { background: #FAF6EE !important; color: var(--oro-os) !important; }
+div.admonition.note > .admonition-title::before, div.admonition.note > .admonition-title::after { color: var(--oro) !important; }
