@@ -919,7 +919,9 @@ principal.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas persona-mes duplicadas en el panel: 0
-pares (persona, mes) en entrenamiento y test a la vez: 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pares (persona, mes) en entrenamiento y test a la vez: 0
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas de test con un vector de las 105 predictoras idéntico en entrenamiento: 53 de 17,652 (0.30 %)
@@ -940,7 +942,7 @@ ningún caso hay fuga: la etiqueta de test corresponde a un mes posterior.</p>
 <p>Una renuncia registrada cuando ya existía una decisión de no renovar el contrato (tomada antes del
 retiro, para un contrato que terminaba en ese mes o en los tres siguientes) no se cuenta como
 renuncia: la empresa ya había decidido terminar el contrato y no es rotación evitable. Al construir
-la base, 85 de las 892 renuncias anteriores pasaron a otra salida por esta regla, 19 de ellas en el
+la base, 85 renuncias registradas pasaron a otra salida por esta regla, 19 de ellas en el
 test (capítulo 1).</p>
 <p>La columna <code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> marca los meses con un preaviso vigente. <strong>No es predictora:</strong>
 con preaviso, el objetivo vale 0 por construcción, y un modelo que la usara aprendería la regla con
