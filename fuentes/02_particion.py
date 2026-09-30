@@ -218,7 +218,7 @@ print(f'lo mismo con solo las 18 atributos: {int(igual18.sum()):,} ({100 * igual
 # Una renuncia registrada cuando ya existía una decisión de no renovar el contrato (tomada antes del
 # retiro, para un contrato que terminaba en ese mes o en los tres siguientes) no se cuenta como
 # renuncia: la empresa ya había decidido terminar el contrato y no es rotación evitable. Al construir
-# la base, 85 de las 892 renuncias anteriores pasaron a otra salida por esta regla, 19 de ellas en el
+# la base, 85 renuncias registradas pasaron a otra salida por esta regla, 19 de ellas en el
 # test (capítulo 1).
 #
 # La columna `preaviso_no_renovacion` marca los meses con un preaviso vigente. **No es predictora:**

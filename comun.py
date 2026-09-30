@@ -19,7 +19,7 @@ CORTE = '2026-05'          # test = may-2026 a ago-2026 (4 meses), decidido ante
 
 # Grupos de variables
 OBJETIVO = 'y_renuncia'
-# atributos del trabajador y del puesto (las 18 de la primera version)
+# atributos del trabajador y del puesto (18)
 NUM_BASE = ['edad', 'antig_meses']
 BIN = ['primer_mes', 'reingreso', 'traslado_12m']
 CAT_BASE = ['sociedad', 'linea', 'ubicacion', 'genero', 'estado_civil', 'contrato', 'nivel',

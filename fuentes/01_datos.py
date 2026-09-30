@@ -44,8 +44,8 @@
 #   entre sociedades, reingresos). El documento nunca sale de la extracción: se reemplaza por un
 #   entero asignado al azar.
 # - **Pertenencia al mes:** la persona está en el panel en el mes *t* si el registro de estados del
-#   trabajador la muestra activa algún día de ese mes. En la versión anterior se usaba una foto del
-#   día 1, que perdía a quien salía entre el 28 y el 31 (recuadro de abajo).
+#   trabajador la muestra activa algún día de ese mes, y no según una foto del día 1, que perdería a
+#   quien sale entre el 28 y el 31 (recuadro de abajo).
 # - **Episodios laborales:** una ausencia de al menos un mes abre un episodio nuevo. Un traslado entre
 #   sociedades sin pausa no lo abre.
 # - **Objetivo:** `y_renuncia = 1` en el último mes de un episodio que termina por renuncia
@@ -57,7 +57,7 @@
 #   con otro registro de personal (un traslado). No es una salida (`y = 0`).
 # - **Exclusiones:** aprendices, vicepresidencia y presidencia (pocas personas, identificables),
 #   contratos de obra o labor, el mes de salida de los casos con etiqueta dudosa (salida sin registro,
-#   terminación en periodo de prueba) y, nuevo en esta versión, las personas con una edad al ingreso
+#   terminación en periodo de prueba) y las personas con una edad al ingreso
 #   fuera de 18 a 70 años, que delata una fecha de nacimiento mal registrada.
 # - **Momento de medición:** los atributos corresponden al día 1 del mes *t* (o al primer día activo,
 #   si la persona ingresa a mitad de mes). El cargo entra con un mes de rezago, porque se vacía en el
@@ -72,23 +72,17 @@
 #   antigüedad del sistema de nómina), con continuidad en los traslados entre sociedades; una salida
 #   real seguida de recontratación sí la reinicia.
 #
-# ```{admonition} Qué cambió frente a la versión anterior de la base
+# ```{admonition} Efecto de las reglas de construcción
 # :class: note
-# - **Tamaño:** de 85.223 a 85.068 persona-mes, de 5.747 a 5.738 personas y de 892 a 837 renuncias.
-#   En el test (mayo a agosto de 2026), de 17.693 a 17.652 filas y de 162 a 149 renuncias.
-# - **Objetivo:** 85 renuncias eran no renovaciones ya decididas (había un preaviso de no renovación
-#   registrado antes) y pasan a otra salida; 30 renuncias de fin de mes se habían perdido (retiro del
-#   28 al 31 con la foto de personal del día 1 siguiente) y se recuperan. Cuadra exacto:
-#   892 − 85 + 30 = 837, y en el test 162 − 19 + 6 = 149.
-# - **Población:** salen 7 personas con una edad al ingreso no creíble (121 filas, ninguna renuncia) y
-#   las filas sin actividad confirmada en el registro de estados.
-# - **Antigüedad:** antes era, en la práctica, los meses del episodio; ahora es la antigüedad
-#   reconocida. Difiere en cerca del 10 % de las filas. Las otras 17 atributos difieren en menos del
-#   0,1 % de las filas comunes.
+# - **Preaviso de no renovación:** 85 renuncias registradas con un preaviso previo cuentan como no
+#   renovación y no como renuncia; 19 de ellas caen en el test (capítulo 2).
+# - **Salidas de fin de mes:** medir la pertenencia por la actividad del mes, y no por la foto del día
+#   1, captura 30 renuncias con retiro entre el 28 y el 31 (6 en el test), que de otro modo no
+#   tendrían mes de salida.
+# - **Edad al ingreso:** la regla de 18 a 70 años excluye 7 personas (121 filas, ninguna renuncia).
 # - **Códigos:** sociedad (S01 a S22) y ubicación (U001 a U057) se asignan al azar, no por tamaño.
-#   `proceso_planta` queda en cinco grupos y `tipo_retiro` en tres. Las columnas de trazabilidad
-#   (textos de función, cargo, departamento y área) ya no existen.
-# - **Variables:** a las 18 atributos se suman 92 columnas de historia laboral en ocho bloques; cinco
+#   `proceso_planta` queda en cinco grupos y `tipo_retiro` en tres.
+# - **Variables:** a los 18 atributos se suman 92 columnas de historia laboral en ocho bloques; cinco
 #   se descartan (sección de duplicados y valores inconsistentes) y quedan 87.
 # ```
 
@@ -313,7 +307,7 @@ epp
 # *n/p* es holgado (810 filas por variable), pero engaña. Con las 105 predictoras, el one-hot deja 179
 # columnas categóricas (con los infrecuentes agrupados) y, con las 88 numéricas y binarias y los 54
 # indicadores de faltante, el modelo estima 321 coeficientes con 688 renuncias: unas **2 renuncias
-# por columna** (2,1), muy por debajo de 10. Con las 18 atributos (162 columnas) eran 4,2. Esto tiene dos
+# por columna** (2,1), muy por debajo de 10. Con solo los 18 atributos (162 columnas) serían 4,2. Esto tiene dos
 # consecuencias para el capítulo 7: la regularización no es opcional (la rejilla de *C* tiene que
 # bajar lo suficiente, hasta 1e-4) y
 # L1, que deja coeficientes en cero, es una candidata natural frente a L2.
@@ -463,9 +457,9 @@ print('numéricas con un solo valor en más del 97 % de las filas (% de la moda)
 # - **Edades:** la base admite una edad al ingreso de 18 a 70 años (regla de exclusión). La edad al
 #   ingreso se aproxima con la edad entera menos la antigüedad, así que puede quedar hasta un año por
 #   debajo de la real; ninguna fila queda por debajo de 17 ni por encima de 70, lo que es compatible
-#   con la regla. La versión anterior tenía 516 filas con ingreso entre los 15 y
-#   los 17 años; esta base excluye a quien tiene una edad al ingreso fuera de 18 a 70 (y los aprendices
-#   ya estaban excluidos), por lo que esa contradicción desaparece. Las 82 filas de mayores de 70 son
+#   con la regla. Sin ella quedarían ingresos entre los 15 y los 17 años, que con los aprendices ya
+#   excluidos solo pueden ser fechas de nacimiento mal registradas (7 personas, recuadro de la
+#   construcción del panel). Las 82 filas de mayores de 70 son
 #   personas que ingresaron antes de esa edad y siguen activas; son valores reales.
 # - **Otros rangos:** no hay antigüedades negativas ni porcentajes fuera de 0 a 100. Los negativos
 #   que aparecen son legítimos por definición (residuo del sueldo, variación frente al mínimo, cambio

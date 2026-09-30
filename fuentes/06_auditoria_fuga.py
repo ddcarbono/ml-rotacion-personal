@@ -6,7 +6,7 @@
 # Las secciones 6.1 a 6.6 se calculan con el entrenamiento (enero de 2025 a abril de 2026). La sección
 # 6.7 compara entrenamiento y test solo por sus predictoras y personas, sin mirar las etiquetas del
 # test. Las revisiones hechas al construir el panel sobre las tablas de origen se citan como tales:
-# sus cifras no se pueden recalcular desde el panel, porque las columnas con fuga ya no están en él.
+# sus cifras no se pueden recalcular desde el panel, porque las columnas con fuga no están en él.
 # ```
 #
 # Una variable tiene fuga cuando contiene información que no estaría disponible en el momento de
@@ -202,7 +202,7 @@ print(pre.evento.value_counts().to_string())
 #
 # | campo | fuga | evidencia | corrección |
 # |---|---|---|---|
-# | cargo del mes *t* | en el mes de salida el sistema libera la posición y el cargo queda vacío | vacío en todos los meses de salida y en ninguno del resto | se usa el cargo del mes anterior, del que salen `familia_cargo` y `oficio`; el texto del cargo ya no está en el panel |
+# | cargo del mes *t* | en el mes de salida el sistema libera la posición y el cargo queda vacío | vacío en todos los meses de salida y en ninguno del resto | se usa el cargo del mes anterior, del que salen `familia_cargo` y `oficio`; el texto del cargo no está en el panel |
 # | contrato | un reporte mensual toma el contrato vigente hoy y lo copia a todos los meses | ningún cambio de contrato dentro de una misma persona en toda la historia | contrato vigente el día 1 de cada mes según la historia de contratos |
 # | tipo de personal | la base de costos de personal solo registra al personal activo, y la ausencia de fila delata la salida | faltantes concentrados en los meses de salida | se recalcula con la misma regla contable sobre el centro de costo del mes, que siempre existe |
 # | ausencias y nómina del mes *t* | el mes en curso incluye los trámites de la propia salida (liquidación, licencia antes de irse) | la liquidación solo aparece al salir | ventanas que terminan en *t−1*; la liquidación no se usa |
