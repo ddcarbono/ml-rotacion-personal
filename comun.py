@@ -32,7 +32,8 @@ BLOQUES = {
     'contrato': ['meses_al_vencimiento', 'n_renovaciones', 'meses_desde_cambio_contrato', 'fue_aprendiz',
                  'meses_desde_aprendiz', 'ingreso_a_mitad'],
     'trayectoria': ['meses_en_posicion', 'meses_en_funcion', 'meses_desde_ascenso', 'n_ascensos_24m',
-                    'n_movimientos_laterales_12m', 'es_jefe_formal', 'personas_a_cargo', 'tamano_equipo_jefe'],
+                    'n_movimientos_laterales_12m', 'es_jefe_formal', 'personas_a_cargo', 'tamano_equipo_jefe',
+                    'postulaciones_internas_12m', 'requisicion_promocion_12m', 'meses_desde_postulacion'],
     'salario_relativo': ['tipo_salario', 'posicionamiento', 'posicionamiento_local', 'gini_oficio_nivel',
                          'privacion_oficio_nivel', 'residuo_sueldo', 'en_mediana_local', 'dist_mediana_local', 'gana_minimo',
                          'var_sueldo_smmlv_12m', 'situacion_minimo', 'meses_desde_aumento_merito',
@@ -53,10 +54,14 @@ BLOQUES = {
                   'dias_compensatorio_12m', 'dia_familia_12m'],
     'vacaciones': ['meses_desde_vacaciones', 'dias_vacaciones_pendientes', 'periodos_vacaciones_pendientes',
                    'vacaciones_acumuladas_2p', 'dias_vacaciones_compensadas_12m'],
-    'arraigo': ['nacido_en_depto_sede', 'postulaciones_internas_12m', 'requisicion_promocion_12m', 'meses_desde_postulacion',
-                'cesantias_vivienda_12m', 'cesantias_educacion_12m', 'cesantias_vivienda_historico'],
+    'proyectos_personales': ['cesantias_vivienda_12m', 'cesantias_educacion_12m', 'cesantias_vivienda_historico'],
+    'origen': ['nacido_en_depto_sede'],
 }
-HISTORIA = sum(BLOQUES.values(), [])
+# orden de las columnas del modelo: el mismo de siempre, independiente de como se agrupan para describir
+# (con L1 el orden de las columnas puede mover levemente la solucion)
+_AL_FINAL = ['nacido_en_depto_sede', 'postulaciones_internas_12m', 'requisicion_promocion_12m', 'meses_desde_postulacion',
+             'cesantias_vivienda_12m', 'cesantias_educacion_12m', 'cesantias_vivienda_historico']
+HISTORIA = [c for c in sum(BLOQUES.values(), []) if c not in _AL_FINAL] + _AL_FINAL
 CAT_HISTORIA = ['tipo_salario', 'situacion_minimo', 'estado_gestion_tiempos', 'jornada_vs_pago']
 CAT = CAT_BASE + CAT_HISTORIA
 NUM = NUM_BASE + [c for c in HISTORIA if c not in CAT_HISTORIA]     # incluye binarias 0/1 de la historia; NO incluye BIN
@@ -68,7 +73,7 @@ FUERA = ['contrato_fijo', 'horas_bajo_legal', 'cambios_plan_12m', 'horas_diarias
 BLOQUE = {c: 'atributos' for c in BASE} | {c: b for b, v in BLOQUES.items() for c in v}
 PREDICTORAS = BASE + HISTORIA
 SENSIBILIDAD = ['preaviso_no_renovacion']   # con preaviso y = 0 por construccion: no entra; solo para la sensibilidad
-DESENLACE = ['evento', 'tipo_retiro', OBJETIVO]           # describen la salida: no entran
+DESENLACE = ['evento', OBJETIVO]           # describen la salida: no entran
 
 # Nombre legible de cada variable, para titulos y ejes de los graficos
 NOMBRE = {
@@ -123,9 +128,13 @@ def estilo():
 
 def _encabezado_plano(df):
     """Sube el nombre del indice a la fila de las columnas: pandas lo pone en una segunda fila."""
-    if df.columns.nlevels == 1 and df.columns.name is None and any(df.index.names):
+    if any(df.index.names):
         df = df.copy()
-        df.columns.name = ' / '.join(str(n) for n in df.index.names if n is not None)
+        nombre = ' / '.join(str(n) for n in df.index.names if n is not None)
+        ultimo = df.columns.names[-1]
+        if ultimo is not None:                     # tabla cruzada: "filas / columnas" en una sola celda
+            nombre = f'{nombre} / {ultimo}'
+        df.columns = df.columns.set_names(list(df.columns.names[:-1]) + [nombre])
         df.index.names = [None] * df.index.nlevels
     return df._repr_html_()
 
@@ -192,13 +201,36 @@ def v_cramer(a, b):
     return float(np.sqrt(chi2 / (t.sum() * (min(t.shape) - 1))))
 
 
+def eje_llano(eje):
+    """Eje en escala log con números corrientes (1.000, 10.000; 0,5, 1, 2) en vez de potencias de 10."""
+    from matplotlib.ticker import FuncFormatter, NullFormatter
+    def f(v, _):
+        return f'{v:,.0f}'.replace(',', '.') if v >= 1000 else f'{v:g}'.replace('.', ',')
+    eje.set_major_formatter(FuncFormatter(f))
+    eje.set_minor_formatter(NullFormatter())
+
+
+def es(texto):
+    """Cifras con el formato del texto del libro: punto de miles y coma decimal (32.597; 48,4)."""
+    import re
+    return re.sub(r'\d[\d,.]*\d|\d', lambda m: m.group(0).translate(str.maketrans(',.', '.,')), str(texto))
+
+
+def rotulo(categoria):
+    """Nombre de una categoría para un eje: sin guiones bajos (finca_palma -> finca palma)."""
+    return str(categoria).replace('_', ' ')
+
+
 def etiquetar(ax, barras, fmt='{:,.0f}', textos=None, fontsize=7):
     """Escribe el valor al final de cada barra."""
     if textos is None:
         textos = [fmt.format(v) for v in barras.datavalues]
+    textos = [es(t) for t in textos]
     ax.bar_label(barras, labels=textos, padding=2, fontsize=fontsize, color=TINTA)
+    # margen proporcional al texto más largo, para que la cifra no se salga del recuadro
+    largo = max((len(str(t)) for t in textos), default=0)
     if barras.orientation == 'horizontal':
-        ax.margins(x=0.12)
+        ax.margins(x=0.08 + 0.018 * largo)
     else:
         ax.margins(y=0.15)
 
@@ -220,10 +252,10 @@ def grafico_tasa(ax, t, titulo, base=None):
     ax.errorbar(t['tasa_%'], y, xerr=error, fmt='none', ecolor=TINTA, lw=0.8)
     # la etiqueta va despues del IC para no taparlo
     for yi, v, alto in zip(y, t['tasa_%'], t.ic_alto):
-        ax.text(alto, yi, f' {v:.2f} %', va='center', fontsize=7, color=TINTA)
+        ax.text(alto, yi, es(f' {v:.2f} %'), va='center', fontsize=7, color=TINTA)
     ax.set_xlim(0, t.ic_alto.max() * 1.25)
     ax.set_yticks(list(y))
-    ax.set_yticklabels([f'{i} (n={n:,})' for i, n in zip(t.index, t.filas)], fontsize=8)
+    ax.set_yticklabels([f'{rotulo(i)} (n={es(f"{n:,}")})' for i, n in zip(t.index, t.filas)], fontsize=8)
     if base is not None:
         ax.axvline(base, ls='--', c=GRIS, lw=0.8)
     ax.set(title=titulo, xlabel='Tasa de renuncia mensual (%)')

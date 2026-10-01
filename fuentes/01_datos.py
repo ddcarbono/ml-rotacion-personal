@@ -4,7 +4,7 @@
 # ```{admonition} Alcance
 # :class: tip
 # Este capítulo describe el panel completo: tamaño, estructura, diccionario y conteos de faltantes.
-# Todo lo que depende del objetivo o fija un umbral (tasas por patrón de faltante, vallas de atípicos,
+# Todo lo que depende del objetivo o fija un umbral (tasas por patrón de faltante, vallas de valores atípicos (*outliers*),
 # eventos por parámetro) se calcula solo con el entrenamiento (enero de 2025 a abril de 2026), con la
 # partición del capítulo 2 (`comun.particion`).
 # ```
@@ -20,10 +20,9 @@
 #
 # La rotación voluntaria tiene un costo directo (selección, inducción, curva de aprendizaje) y se
 # concentra en las operaciones de campo y de planta. Un puntaje mensual permite ordenar a quién mirar
-# primero. Además, el conjunto plantea las dificultades que el curso pide tratar: un evento raro, un
-# panel con entidades repetidas, una dimensión temporal, fugas de información posibles en la fuente,
-# categóricas de alta cardinalidad y, en esta versión, 87 variables de historia laboral con faltantes
-# estructurales. Supera con holgura el mínimo de 20.000 observaciones.
+# primero. Además, el conjunto reúne varias dificultades de modelado: un evento raro, un panel con
+# entidades repetidas, una dimensión temporal, fugas de datos (*data leakage*) posibles en la fuente, categóricas
+# de alta cardinalidad y 87 variables de historia laboral con faltantes estructurales.
 #
 # ## Fuente y licencia
 #
@@ -34,7 +33,7 @@
 # vacaciones, postulaciones internas y solicitudes de cesantías.
 #
 # **Licencia:** uso académico autorizado por la empresa, no redistribuible. No hay enlace público. La
-# base se entrega a la universidad como CSV anonimizado por el canal del curso, no en el repositorio;
+# base se entrega a la universidad como CSV anonimizado por un canal privado, no en el repositorio;
 # el libro lee su ruta de la variable de entorno `PANEL_ROTACION` (`comun.py`).
 #
 # ## Construcción del panel
@@ -58,8 +57,9 @@
 # - **Exclusiones:** aprendices, vicepresidencia y presidencia (pocas personas, identificables),
 #   contratos de obra o labor, el mes de salida de los casos con etiqueta dudosa (salida sin registro,
 #   terminación en periodo de prueba) y las personas con una edad al ingreso
-#   fuera de 18 a 70 años, que delata una fecha de nacimiento mal registrada.
-# - **Momento de medición:** los atributos corresponden al día 1 del mes *t* (o al primer día activo,
+#   fuera de 18 a 70 años, que indica una fecha de nacimiento mal registrada.
+# - **Momento de medición:** los atributos (las 18 variables que describen al trabajador y su puesto:
+#   demografía, contrato, cargo y ubicación) corresponden al día 1 del mes *t* (o al primer día activo,
 #   si la persona ingresa a mitad de mes). El cargo entra con un mes de rezago, porque se vacía en el
 #   mes de salida (capítulo 6). La nómina, las marcaciones y las novedades entran con los cierres
 #   hasta *t − 1*, que son los conocidos el día 1 de *t*; la licencia no remunerada y las vacaciones
@@ -81,8 +81,8 @@
 #   tendrían mes de salida.
 # - **Edad al ingreso:** la regla de 18 a 70 años excluye 7 personas (121 filas, ninguna renuncia).
 # - **Códigos:** sociedad (S01 a S22) y ubicación (U001 a U057) se asignan al azar, no por tamaño.
-#   `proceso_planta` queda en cinco grupos y `tipo_retiro` en tres.
-# - **Variables:** a los 18 atributos se suman 92 columnas de historia laboral en ocho bloques; cinco
+#   `proceso_planta` queda en cinco grupos.
+# - **Variables:** a los 18 atributos se suman 92 columnas de historia laboral en nueve bloques; cinco
 #   se descartan (sección de duplicados y valores inconsistentes) y quedan 87.
 # ```
 
@@ -113,15 +113,15 @@ n_no = int((p[OBJETIVO] == 0).sum())
 print(f'filas: {len(p):,} | personas: {p.persona_id.nunique():,} | meses: {p.mes.nunique()} '
       f'({p.mes.min()} a {p.mes.max()}) | columnas: {p.shape[1]}')
 print(f'predictoras: {len(PREDICTORAS)} ({len(BASE)} atributos + {len(HISTORIA)} de historia laboral) | '
-      f'descartadas en este capítulo: {len(FUERA)} {FUERA}')
+      f'candidatas antes de la revisión de calidad: {len(PREDICTORAS) + len(FUERA)}')
 print(f'clase positiva: {n_ren} renuncias frente a {n_no:,} no renuncias (1 a {n_no / n_ren:.0f}); '
       f'prevalencia {100 * p[OBJETIVO].mean():.2f} %')
 print('evento:', p.evento.value_counts().to_dict())
 
 # %% [markdown]
-# El panel tiene 85.068 filas de 5.738 personas en 20 meses, y 116 columnas: el identificador, el
-# mes, 110 candidatas a predictora (105 tras descartar cinco), una columna que solo sirve para la
-# sensibilidad del objetivo (`preaviso_no_renovacion`) y tres que describen el desenlace. Hay una renuncia por cada 101 meses
+# El panel tiene 85.068 filas de 5.738 personas en 20 meses, y 115 columnas: el identificador, el
+# mes, 110 candidatas a predictora (cinco se descartan en la revisión de calidad, más abajo), una columna que solo sirve para el
+# análisis de sensibilidad del objetivo (`preaviso_no_renovacion`) y dos que describen el desenlace (`evento` y el objetivo). Hay una renuncia por cada 101 meses
 # sin renuncia. Las 36 renuncias administrativas son traslados y no cuentan como salida.
 #
 # ### Por qué una fila por persona y mes
@@ -145,9 +145,8 @@ print('evento:', p.evento.value_counts().to_dict())
 # modelo de supervivencia con censura: quien sigue activa al final de la ventana aporta sus meses sin
 # renuncia, y quien sale por otra causa deja de aportar desde su salida. Como cada episodio tiene a lo
 # sumo una renuncia, el producto sobre sus meses es la probabilidad de su historia completa, y que una
-# persona aporte varias filas no sesga la estimación. Sí puede hacer optimistas los intervalos que
-# tratan las filas como independientes, si hay diferencias entre personas que las variables no
-# recogen (sección de entidades, más abajo). La probabilidad de seguir activa *k* meses es
+# persona aporte varias filas no sesga la estimación. Para medir la incertidumbre del modelo se
+# remuestrean personas completas, con todos sus meses (capítulo 7). La probabilidad de seguir activa *k* meses es
 # $S_{ik} = \prod_{t=1}^{k} (1 - h_{it})$.
 #
 # Se prefiere a una fila por persona, con la etiqueta "renunció o no", por cuatro razones:
@@ -160,7 +159,7 @@ print('evento:', p.evento.value_counts().to_dict())
 # 2. **Variables que cambian.** Edad, antigüedad, contrato, sueldo relativo, jornada y vacaciones
 #    pendientes cambian de un mes a otro. Una fila por persona obliga a elegir un momento y descarta
 #    el resto.
-# 3. **Un reloj común.** Si los activos se describen en el último mes y los que renunciaron en su mes
+# 3. **Una misma referencia temporal.** Si los activos se describen en el último mes y los que renunciaron en su mes
 #    de salida, las dos poblaciones se miden en momentos distintos, y quien se fue no pudo seguir
 #    acumulando antigüedad: "los que renuncian tienen menos antigüedad" quedaría construido por el
 #    diseño. En el panel todas las variables se miden con lo conocido al inicio del mes, antes del
@@ -179,31 +178,21 @@ print('evento:', p.evento.value_counts().to_dict())
 # ## Diccionario
 #
 # El diccionario completo está en `diccionario.csv` (una fila por columna del panel: nombre legible,
-# bloque, tipo, unidad, significado y momento en que se conoce). La tabla lo muestra agrupado por
-# bloque, una tabla por bloque, con el número de valores distintos y el porcentaje de nulos calculados
-# sobre el panel. Las cinco columnas descartadas aparecen en su propio grupo, con el motivo al inicio
-# del significado. Al final de la sección va la tabla completa, plegada.
+# bloque, tipo, unidad, significado y momento en que se conoce). La tabla siguiente, plegada, lo
+# presenta completo y ordenado por bloque, con el número de valores distintos y el porcentaje de nulos
+# calculados sobre el panel; a continuación se resume por bloque.
 
-# %%
+# %% tags=["hide-output"]
 dic = pd.read_csv('diccionario.csv')
 assert set(dic.variable) == set(p.columns) and len(dic) == p.shape[1]
 dic['distintos'] = dic.variable.map(p.nunique())
 dic['% nulos'] = dic.variable.map(100 * p.isna().mean()).round(1)
-orden_bloques = ['identificador', 'atributos'] + list(BLOQUES) + ['descartada', 'sensibilidad', 'desenlace', 'objetivo']
+orden_bloques = ['identificador', 'atributos'] + list(BLOQUES) + ['analisis_sensibilidad', 'desenlace', 'objetivo']
 dic['bloque'] = pd.Categorical(dic.bloque, orden_bloques, ordered=True)
 COLS_DIC = ['variable', 'nombre', 'tipo', 'unidad', 'distintos', '% nulos', 'significado', 'disponible']
 ESTILO_DIC = [{'selector': 'th, td', 'props': [('text-align', 'left'), ('vertical-align', 'top'), ('font-size', '0.8em')]},
               {'selector': 'td.col6', 'props': [('min-width', '420px'), ('white-space', 'normal')]},
               {'selector': 'td.col1, td.col7', 'props': [('min-width', '160px'), ('white-space', 'normal')]}]
-from IPython.display import display, Markdown
-for b, g in dic.sort_values('bloque', kind='stable').groupby('bloque', observed=True):
-    display(Markdown(f'**Bloque: {b}** ({len(g)} columnas)'))
-    display(g[COLS_DIC].style.hide(axis='index').format({'% nulos': '{:.1f}'}).set_table_styles(ESTILO_DIC))
-
-# %% [markdown]
-# La tabla completa, en una sola pieza (plegada):
-
-# %% tags=["hide-output"]
 dic.sort_values('bloque', kind='stable')[['bloque'] + COLS_DIC].style.hide(axis='index').format(
     {'% nulos': '{:.1f}'}).set_table_styles(ESTILO_DIC)
 
@@ -268,8 +257,8 @@ pd.DataFrame([sintetica])[muestra_cols].T.rename(columns={0: 'fila SINTÉTICA (n
 # %% [markdown]
 # ## Tamaño de la muestra y eventos por parámetro
 #
-# El curso pide *n*, *p*, *n/p*, los casos por clase y las entidades independientes. En una logística
-# con un evento raro, la cantidad que manda no es *n/p* sino los **eventos por parámetro**: las
+# El tamaño se describe con *n*, *p*, *n/p*, los casos por clase y las entidades independientes. En una logística
+# con un evento raro, la cantidad que importa no es *n/p* sino los **eventos por parámetro**: las
 # renuncias del entrenamiento divididas por las columnas que el modelo estima de verdad, después de
 # codificar las categóricas. La regla clásica pide al menos 10 (Peduzzi et al., 1996); por debajo, los
 # coeficientes sin penalizar se inflan y el modelo se sobreajusta.
@@ -304,11 +293,11 @@ print(f'entrenamiento: {len(tr):,} filas, {ren_tr} renuncias')
 epp
 
 # %% [markdown]
-# *n/p* es holgado (810 filas por variable), pero engaña. Con las 105 predictoras, el one-hot deja 179
+# *n/p* es holgado (810 filas por variable), pero no es la medida adecuada. Con las 105 predictoras, el one-hot deja 179
 # columnas categóricas (con los infrecuentes agrupados) y, con las 88 numéricas y binarias y los 54
 # indicadores de faltante, el modelo estima 321 coeficientes con 688 renuncias: unas **2 renuncias
 # por columna** (2,1), muy por debajo de 10. Con solo los 18 atributos (162 columnas) serían 4,2. Esto tiene dos
-# consecuencias para el capítulo 7: la regularización no es opcional (la rejilla de *C* tiene que
+# consecuencias para el capítulo 7: hace falta una regularización fuerte (la rejilla de *C* tiene que
 # bajar lo suficiente, hasta 1e-4) y
 # L1, que deja coeficientes en cero, es una candidata natural frente a L2.
 #
@@ -415,7 +404,7 @@ mecanismo
 #   distinta de la tasa sin él: 1,6 % frente a 1,0 % en el primer mes, 0,47 % frente a 1,51 % sin
 #   vencimiento (indefinidos), 0,63 % frente a 1,32 % sin marcaciones, 2,19 % frente a 0,86 % sin
 #   volatilidad, 1,57 % frente a 0,71 % sin jefe identificado. El nulo lleva señal, casi siempre a
-#   través de la antigüedad, e imputar la mediana sin más la borraría.
+#   través de la antigüedad, e imputar solo la mediana la borraría.
 #
 # **Tratamiento (capítulo 7, ajustado con el entrenamiento):** en las numéricas, imputación con la
 # mediana más un **indicador de faltante** por variable (`SimpleImputer(add_indicator=True)`), que le
@@ -429,7 +418,7 @@ print('filas persona-mes duplicadas:', int(p.duplicated(['persona_id', 'mes']).s
 casi = p[PREDICTORAS + [OBJETIVO]].duplicated(keep=False)
 casi_base = p[BASE + [OBJETIVO]].duplicated(keep=False)
 print(f'casi-duplicados (mismo vector de las {len(PREDICTORAS)} predictoras y objetivo): {int(casi.sum()):,} filas '
-      f'({100 * casi.mean():.1f} %) | con solo las 18 atributos: {int(casi_base.sum()):,} ({100 * casi_base.mean():.0f} %)')
+      f'({100 * casi.mean():.1f} %) | con solo los 18 atributos: {int(casi_base.sum()):,} ({100 * casi_base.mean():.0f} %)')
 print('contrato_fijo idéntica a contrato:', bool((p.contrato.eq('Termino Fijo').astype(int) == p.contrato_fijo).all()))
 
 edad_ingreso = p.edad - p.antig_meses / 12
@@ -486,20 +475,11 @@ plt.show()
 
 # %% [markdown]
 # Cerca de cuatro de cada cinco filas registran un cambio de plan de horario en los 12 meses previos,
-# y la proporción se desploma en dos meses concretos: julio de 2025 y agosto de 2026. Es el rastro de
-# las reasignaciones masivas de planes con la reducción legal de la jornada (Ley 2101 de 2021, con
-# escalones cada 15 de julio): el cambio de un julio sale de la ventana de 12 meses justo antes de
-# que entre el del siguiente. La variable mide sobre todo el calendario, no una decisión sobre la
-# persona, y su distribución cambia dentro del test (agosto de 2026). Por eso **se descarta** como
-# predictora (`comun.FUERA`): es un defecto de medición, decidido por su definición y no por su
-# asociación con la renuncia.
-#
-# El mismo calendario arrastra a otras dos variables del horario teórico, según el EDA temporal
-# (véase el capítulo 5): `horas_diarias_teoricas` baja por escalones con la semana legal (46 a 44 horas en
-# julio de 2025 y 44 a 42 en julio de 2026, dentro del test) y casi no varía entre personas dentro de
-# un mes, y los códigos de `plan_horario` se reemplazan con cada escalón. Las dos se descartan por la
-# misma razón: siguen a la ley, no a la persona, y en el test tomarían valores que el entrenamiento
-# nunca vio.
+# y la proporción se desploma en dos meses concretos: julio de 2025 y agosto de 2026, al ritmo de las
+# reasignaciones de planes por la reducción legal de la jornada (capítulo 5). La variable sigue el
+# calendario y no a la persona, y su distribución cambia dentro del test; por eso **se descarta**
+# (`comun.FUERA`), por su definición y no por su asociación con la renuncia. Por la misma razón se
+# descartan `horas_diarias_teoricas` y `plan_horario` (capítulo 5).
 #
 # ### Atípicos
 #
@@ -507,7 +487,7 @@ plt.show()
 # si se decide un recorte con ellas es una decisión de preprocesamiento. La tabla cubre todas las
 # numéricas que no son binarias, ordenadas por la fracción de filas fuera de las vallas.
 
-# %%
+# %% tags=["hide-output"]
 cont = [c for c in NUM if tr[c].nunique() > 2]
 filas = []
 for v in cont:
@@ -598,70 +578,28 @@ print(f'personas activas por mes: {p.groupby("mes").size().min():,} a {p.groupby
 # **Anonimización.** El panel no tiene nombre, documento, registro de personal, fecha de nacimiento,
 # textos de cargo ni centro de costo. `persona_id` es un entero asignado al azar; sociedad y ubicación
 # son códigos sorteados, que no siguen el tamaño ni el orden alfabético y no pueden volver a mapearse
-# sin la clave, que queda fuera de la entrega. Los procesos de planta muy específicos se agruparon y
-# los tipos de retiro quedan en tres grupos. No hay sueldo ni montos absolutos: el salario y el
+# sin la clave, que queda fuera de la entrega. Los procesos de planta muy específicos se agruparon. No hay sueldo ni montos absolutos: el salario y el
 # ingreso entran como razones frente a los pares o en salarios mínimos.
 #
-# **Variables excluidas por decisión de los autores.** La fuente permite construir variables de salud
-# e incapacidades, riesgo psicosocial, clima laboral individual, afiliación sindical, hijos y familia
-# registrada, quejas y denuncias, desempeño, sanciones, deudas y descuentos de nómina, y sueldo
-# absoluto. El proyecto no las usa: unas son datos sensibles en el sentido de la Ley 1581 de 2012
-# (salud, sindicato, datos de menores) y las otras son de zona gris, porque un modelo que las use
-# para puntuar a una persona convierte una queja, una sanción o una deuda en un motivo más de
-# sospecha. Las ausencias que sí entran (licencias, capacitación, compensatorios, día de la familia)
+# **Variables excluidas.** No se usan variables de salud e incapacidades, riesgo psicosocial,
+# afiliación sindical ni de hijos y familia: son datos sensibles o de menores en el sentido de la
+# Ley 1581 de 2012 (arts. 5 y 7). Tampoco se usan el clima laboral individual, las quejas y
+# denuncias, el desempeño, las sanciones, las deudas y descuentos de nómina ni el sueldo absoluto. No
+# son sensibles en ese sentido, pero su uso para estimar el riesgo de una persona excede la finalidad
+# con que se registraron (principio de finalidad, art. 4 de la misma ley). Las ausencias que sí entran (licencias, capacitación, compensatorios, día de la familia)
 # no son de salud ni disciplinarias.
 #
-# **Riesgo de reidentificación.** Aun así el panel no es anónimo: la combinación de empresa, sede,
-# edad, género, puesto y antigüedad describe a una persona concreta. La tabla mide el k-anonimato en
-# un mes (marzo de 2026): cuántas personas quedan solas (k = 1) y qué fracción queda en grupos de
-# menos de cinco, con los cuasi-identificadores que un compañero de trabajo podría conocer.
-
-# %%
-m = p[p.mes == '2026-03'].copy()
-m['edad_q'] = (m.edad // 5 * 5).astype('Int64')
-m['antig_a'] = pd.cut(m.antig_meses, [-1, 11, 23, 59, 119, 1e4], labels=['<1', '1', '2-4', '5-9', '10+'])
-VARIANTES = {
-    'tal como está': ['sociedad', 'ubicacion', 'genero', 'edad', 'antig_meses', 'nivel', 'oficio',
-                      'proceso_planta', 'tipo_unidad', 'area_funcional'],
-    'sin ubicación; edad y antigüedad agrupadas': ['sociedad', 'genero', 'edad_q', 'antig_a', 'nivel', 'oficio',
-                                                   'proceso_planta', 'tipo_unidad', 'area_funcional'],
-    'línea en vez de sociedad; oficio': ['linea', 'genero', 'edad_q', 'antig_a', 'nivel', 'oficio',
-                                         'proceso_planta', 'tipo_unidad', 'area_funcional'],
-    'línea; familia en vez de oficio': ['linea', 'genero', 'edad_q', 'antig_a', 'nivel', 'familia_cargo',
-                                        'tipo_unidad', 'area_funcional'],
-    'lo anterior sin nivel': ['linea', 'genero', 'edad_q', 'antig_a', 'familia_cargo', 'tipo_unidad',
-                              'area_funcional'],
-}
-filas = []
-for nombre, cuasi in VARIANTES.items():
-    k = m.groupby(cuasi, dropna=False, observed=True).size()
-    filas.append((nombre, len(cuasi), int((k == 1).sum()), round(100 * k[k < 5].sum() / k.sum())))
-k_anonimato = pd.DataFrame(filas, columns=['cuasi-identificadores', 'variables', 'personas únicas (k=1)',
-                                           '% en grupos k<5']).set_index('cuasi-identificadores')
-print(f'personas activas en 2026-03: {len(m):,}')
-k_anonimato
-
-# %% [markdown]
-# Con los cuasi-identificadores tal como están, el 96 % de las 4.414 personas activas en marzo de
-# 2026 queda en grupos de menos de cinco y 3.766 son únicas en un solo mes. Aun con la edad y la
-# antigüedad agrupadas, la línea en vez de la sociedad, la familia en vez del oficio y sin nivel, el
-# 35 % sigue en grupos de menos de cinco y 772 personas siguen siendo únicas, y la trayectoria de 20
-# meses, junto con las 87 variables de historia, identifica todavía a más. Llegar a un k-anonimato
-# seguro exigiría quitar lo que el modelo necesita. Por eso el panel no se publica: se entrega a la
-# universidad por el canal del curso, con uso académico, y el libro muestra solo código, tablas
-# agregadas y métricas. En las tablas por grupo se suprimen las celdas con menos de 5 renuncias o
-# personas, y los gráficos por categoría omiten los grupos con menos de 300 persona-mes.
-#
-# Hay además dos riesgos en el uso del modelo. Un puntaje de riesgo de renuncia puede servir para
-# retener o para no renovar contratos; el segundo uso perjudica a quien el modelo señala, y como el
-# término fijo y el vencimiento del contrato son de las variables con más señal, podría volverse un
-# motivo más para no pasar a nadie a indefinido. El género se reparte de forma muy desigual entre
-# familias de cargo, de modo que un modelo que no lo usa puede aprenderlo a través de la familia.
+# **Reidentificación.** Aun anonimizado, el panel conserva combinaciones de atributos (sociedad, sede,
+# edad, antigüedad y puesto) que en una población de este tamaño pueden describir a una persona
+# concreta, y quitarlas eliminaría lo que el modelo necesita. Por eso el panel no se publica: se
+# entrega a la universidad por un canal privado, con uso académico, y el libro muestra solo código,
+# tablas agregadas y métricas. En las tablas por grupo se suprimen las celdas con menos de 5 renuncias
+# o personas, y los gráficos por categoría omiten los grupos con menos de 300 persona-mes.
 #
 # ## Síntesis
 #
 # - Panel persona-mes de 85.068 filas, 5.738 personas y 837 renuncias (0,98 %), con 105 predictoras
-#   en nueve bloques (18 atributos y 87 de historia laboral). Uso académico autorizado, no redistribuible.
+#   (18 atributos y 87 de historia laboral en nueve bloques). Uso académico autorizado, no redistribuible.
 # - Eventos por parámetro: unas 2 renuncias de entrenamiento por columna del modelo. La logística
 #   necesita regularización fuerte.
 # - Los faltantes son estructurales (MAR por construcción) e informativos: se imputan con la mediana
@@ -671,5 +609,5 @@ k_anonimato
 #   (miden el calendario de la reducción legal de la jornada, no a la persona).
 # - Atípicos: colas largas con masa en cero, no errores; se recortan en p1-p99 del entrenamiento
 #   dentro del `Pipeline`.
-# - Variables sensibles excluidas por decisión de los autores; el panel no alcanza k-anonimato y no
-#   se publica.
+# - Se excluyen los datos sensibles y los de uso no justificado por su finalidad. El panel se entrega
+#   anonimizado y no se publica.

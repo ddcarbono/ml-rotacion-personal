@@ -4,9 +4,9 @@
 # ```{admonition} Alcance
 # :class: tip
 # Las secciones 6.1 a 6.6 se calculan con el entrenamiento (enero de 2025 a abril de 2026). La sección
-# 6.7 compara entrenamiento y test solo por sus predictoras y personas, sin mirar las etiquetas del
-# test. Las revisiones hechas al construir el panel sobre las tablas de origen se citan como tales:
-# sus cifras no se pueden recalcular desde el panel, porque las columnas con fuga no están en él.
+# 6.7 remite al capítulo 2 para la comparación entre entrenamiento y test. Las revisiones hechas al
+# construir el panel sobre las tablas de origen se citan como tales: sus cifras no se pueden
+# recalcular desde el panel, porque las columnas con fuga no están en él.
 # ```
 #
 # Una variable tiene fuga cuando contiene información que no estaría disponible en el momento de
@@ -50,13 +50,13 @@ print('columnas del panel que no son predictoras:',
 #
 # La tabla siguiente dice, para cada una de las 105 predictoras, **de qué ventana sale** (columna
 # `disponible` del diccionario del capítulo 1) y si se conoce el día 1 del mes *t*. La ventana se
-# verificó en los programas que construyen cada bloque del panel. Hay tres reglas de fondo:
+# verificó en los programas que construyen cada bloque del panel. Hay tres reglas generales:
 #
 # - **Foto del día 1.** Los atributos, el contrato, la trayectoria, el salario relativo, el horario
 #   teórico y el saldo de vacaciones se leen del registro vigente el día 1 (o el primer día activo).
 #   Un cambio que empieza ese mismo día ya se conoce; uno que empieza el día 15 no cuenta hasta *t+1*.
 # - **Rezago de un mes en nómina y marcaciones.** La nómina del mes *m* se liquida al cierre de *m* y
-#   el mes en curso es, justamente, el de la salida: por eso las horas extra, recargos, bonos, ingreso
+#   el mes en curso es el de la salida: por eso las horas extra, recargos, bonos, ingreso
 #   y marcaciones biométricas de la fila *t* terminan en *t−1* (ventanas de 1, 3 y 12 meses). La fecha
 #   de las últimas vacaciones pagadas va con dos meses de rezago, porque se suelen tomar justo antes
 #   de salir.
@@ -159,8 +159,6 @@ disp.set_index(['bloque', 'variable'])
 # %%
 print('evento frente al objetivo (entrenamiento):')
 print(pd.crosstab(tr.evento, tr[OBJETIVO]).to_string())
-print('\ntipo_retiro (solo en otras salidas):')
-print(tr.tipo_retiro.value_counts(dropna=False).to_string())
 print('\npreaviso de no renovación frente al objetivo:')
 print(pd.crosstab(tr.preaviso_no_renovacion, tr[OBJETIVO]).to_string())
 pre = tr[tr.preaviso_no_renovacion.eq(1)]
@@ -168,18 +166,13 @@ print('\nfilas con preaviso, por evento del mes:')
 print(pre.evento.value_counts().to_string())
 
 # %% [markdown]
-# Nótese que `evento` reproduce el objetivo exactamente: sus 688 renuncias son las 688 de `y_renuncia`,
-# y las otras salidas y las renuncias administrativas (31 filas) quedan en 0. `tipo_retiro` solo existe
-# en las 441 otras salidas. Ambas se conocen al cerrar el mes *t*, con la salida ya ocurrida: son el
-# desenlace, no predictoras.
+# Se observa que `evento` reproduce el objetivo exactamente: sus 688 renuncias son las 688 de `y_renuncia`,
+# y las otras salidas y las renuncias administrativas (31 filas) quedan en 0. Se conoce al cerrar el mes *t*, con la salida ya ocurrida: es el desenlace, no una
+# predictora.
 #
-# `preaviso_no_renovacion` es el caso más peligroso porque **sí** se conoce el día 1: es la decisión,
-# registrada antes, de no renovar un contrato que termina en *t* o después. Pero el objetivo se definió
-# de modo que una salida con preaviso no cuenta como renuncia (capítulo 2): en las 469 filas con
-# preaviso hay 0 renuncias, 199 terminan en otra salida en el mismo mes y 270 siguen activas (el
-# contrato vence más adelante). Como predictora, la variable «adivinaría» ceros por construcción de la
-# etiqueta, no por el comportamiento de la persona. Se descarta y queda solo para la sensibilidad del
-# objetivo.
+# `preaviso_no_renovacion` se conoce el día 1, pero con preaviso el objetivo es 0 por construcción:
+# las 469 filas con preaviso tienen 0 renuncias. Por eso no es predictora y queda solo para el análisis
+# de sensibilidad del objetivo (capítulo 2).
 #
 # `persona_id` es un seudónimo al azar: no entra al modelo y solo agrupa filas. `mes` tampoco entra
 # como tal (identificaría el periodo y no se repite en el test); el calendario entra solo como una
@@ -189,8 +182,8 @@ print(pre.evento.value_counts().to_string())
 # remunerada con rezago de un mes. Su AUC univariado era de 0,643 (3 meses) y 0,606 (12 meses), pero
 # bajaba a 0,591 y 0,561 con el valor de un mes antes, y a 0,585 y 0,553 con el de dos: la señal se
 # concentraba en el mes previo a la salida, donde parte de la licencia es trámite de la propia salida
-# y parte se registra después del día 1. Esas dos versiones se descartaron (quedaron solo para
-# sensibilidad fuera del libro) y entran las de rezago de dos meses, `_r2`. La sección 6.5 repite la
+# y parte se registra después del día 1. Esas dos versiones se descartaron (quedaron solo para un
+# análisis de sensibilidad fuera del libro) y entran las de rezago de dos meses, `_r2`. La sección 6.5 repite la
 # prueba con el panel del libro.
 
 # %% [markdown]
@@ -204,7 +197,7 @@ print(pre.evento.value_counts().to_string())
 # |---|---|---|---|
 # | cargo del mes *t* | en el mes de salida el sistema libera la posición y el cargo queda vacío | vacío en todos los meses de salida y en ninguno del resto | se usa el cargo del mes anterior, del que salen `familia_cargo` y `oficio`; el texto del cargo no está en el panel |
 # | contrato | un reporte mensual toma el contrato vigente hoy y lo copia a todos los meses | ningún cambio de contrato dentro de una misma persona en toda la historia | contrato vigente el día 1 de cada mes según la historia de contratos |
-# | tipo de personal | la base de costos de personal solo registra al personal activo, y la ausencia de fila delata la salida | faltantes concentrados en los meses de salida | se recalcula con la misma regla contable sobre el centro de costo del mes, que siempre existe |
+# | tipo de personal | la base de costos de personal solo registra al personal activo, y la ausencia de fila revela la salida | faltantes concentrados en los meses de salida | se recalcula con la misma regla contable sobre el centro de costo del mes, que siempre existe |
 # | ausencias y nómina del mes *t* | el mes en curso incluye los trámites de la propia salida (liquidación, licencia antes de irse) | la liquidación solo aparece al salir | ventanas que terminan en *t−1*; la liquidación no se usa |
 # | licencia no remunerada | parte de la señal es trámite de la salida en el mes previo | AUC que cae al retroceder un mes (sección 6.2) | rezago de dos meses (`_r2`) |
 # | pago de salida | un pago no recurrente puede ser el pago de la salida y no una bonificación | patrón revisado en la nómina | los pagos con ese patrón no se cuentan como bonificación |
@@ -307,9 +300,9 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que **ninguna variable supera 0,8, ni siquiera 0,75**. La máxima es la antigüedad reconocida
+# **Ninguna variable supera 0,8, ni siquiera 0,75**. La máxima es la antigüedad reconocida
 # (0,711) y la mediana de las 106 es 0,530: 60 variables quedan por debajo de 0,55 y solo siete pasan de
-# 0,65. Las seis primeras son relojes de la relación laboral (antigüedad, meses en la función y en la
+# 0,65. Las seis primeras miden el tiempo en la empresa (antigüedad, meses en la función y en la
 # posición, meses desde el último cambio de contrato) y la edad, más el oficio: todas miden lo mismo,
 # cuánto lleva la persona, y la renuncia se concentra en el primer año (capítulo 3). Un AUC de 0,7 para
 # esa variable es el esperado en rotación de personal y no es indicio de fuga: se conoce el día 1 sin
@@ -341,7 +334,7 @@ print(brecha.sort_values(ascending=False).head(6).round(3).to_string())
 por_bloque.round(3)
 
 # %% [markdown]
-# Nótese que el AUC en muestra y el fuera de pliegue, evaluados sobre las mismas filas, difieren en
+# Se evidencia que el AUC en muestra y el fuera de pliegue, evaluados sobre las mismas filas, difieren en
 # 0,053 como máximo (`meses_desde_aumento_merito`, cuya imputación con la mediana mueve a casi la mitad
 # de las filas y cambia según el pliegue). Entre las categóricas, las de muchas categorías (área
 # funcional, ubicación, sociedad) pierden entre 0,03 y 0,04 fuera de pliegue: parte de
@@ -390,7 +383,7 @@ print(f'variables con caída >= 0,05: {int((caida["caída"] >= 0.05).sum())} de 
 caida.sort_values('caída', ascending=False).head(10).round(3)
 
 # %% [markdown]
-# Nótese que, con 56.566 filas y 528 renuncias que tienen los dos meses previos, **solo una de las 88
+# Se observa que, con 56.566 filas y 528 renuncias que tienen los dos meses previos, **solo una de las 88
 # numéricas y binarias cae 0,05 o más**: `turnos_1m`, los turnos marcados en el mes anterior (0,595 en *t*, 0,533
 # en *t−1*, 0,531 en *t−2*). No es fuga en sentido estricto: las marcaciones de *t−1* están completas
 # el día 1 de *t*, porque las registra el biométrico, no una persona. Lo que dice es que quien va a
@@ -398,17 +391,17 @@ caida.sort_values('caída', ascending=False).head(10).round(3)
 # variables de marcaciones de tres meses caen 0,02 o menos. Queda en observación.
 #
 # Las dos licencias no remuneradas `_r2` caen 0,044 y 0,046, por debajo del umbral. El rezago de dos
-# meses deja fuera el mes del trámite (en la versión de un mes la caída era de 0,058 y 0,053), pero la
+# meses deja fuera el mes del trámite (con rezago de un mes la caída era de 0,058 y 0,053), pero la
 # licencia sigue anticipando la salida con uno o dos meses: esa parte es señal disponible el día 1, no
 # fuga.
 #
-# ## Datos faltantes que delatan la salida
+# ## Datos faltantes que revelan la salida
 #
 # La otra forma habitual de fuga es el faltante que aparece *porque* la persona se va: el registro se
 # cierra o se vacía en el mes de la salida. Entre quienes renuncian y tienen fila tres meses antes, se
 # compara el porcentaje de faltantes en el mes de la renuncia con el de tres meses antes. Un salto de
-# cinco puntos o más sería una alerta. Se muestra también la tasa de renuncia con y sin dato, que no
-# es fuga pero dice si el faltante es informativo (y justifica el indicador de faltante del capítulo 7).
+# cinco puntos o más sería una alerta. Que el faltante sea informativo, es decir, que la tasa de
+# renuncia difiera con y sin dato, se analiza en el capítulo 1.
 
 # %%
 ren = t_ord[t_ord[OBJETIVO].eq(1)]
@@ -420,115 +413,45 @@ for v in PREDICTORAS:
     atras = gpid[v].shift(3).loc[ren.index]
     mes_atras = gpid.mes.shift(3).loc[ren.index]
     ok = np.asarray((per_r - pd.PeriodIndex(mes_atras.fillna('1900-01'), freq='M')).map(lambda d: d.n) == 3)
-    nul = tr[v].isna()
-    filas.append({'variable': v, 'bloque': BLOQUE[v], 'nulos %': 100 * nul.mean(),
+    filas.append({'variable': v, 'bloque': BLOQUE[v], 'nulos %': 100 * tr[v].isna().mean(),
                   'sin dato al renunciar %': 100 * ren[v][ok].isna().mean(),
-                  'sin dato 3 meses antes %': 100 * atras[ok].isna().mean(),
-                  'renuncia sin dato %': 100 * tr.loc[nul, OBJETIVO].mean(),
-                  'renuncia con dato %': 100 * tr.loc[~nul, OBJETIVO].mean()})
+                  'sin dato 3 meses antes %': 100 * atras[ok].isna().mean()})
 falt = pd.DataFrame(filas).set_index('variable')
 falt['salto'] = falt['sin dato al renunciar %'] - falt['sin dato 3 meses antes %']
 print(f'variables con faltantes: {len(falt)} | con salto >= 5 puntos: {int((falt.salto >= 5).sum())} | '
       f'salto máximo: {falt.salto.max():.1f} puntos')
 print(f'renuncias con fila tres meses antes: {int(ok.sum())} de {len(ren)}')
-falt['razón'] = falt['renuncia sin dato %'] / falt['renuncia con dato %']
 cols_salto = ['bloque', 'nulos %', 'sin dato al renunciar %', 'sin dato 3 meses antes %', 'salto']
 falt[falt['nulos %'] >= 1].sort_values('salto', ascending=False)[cols_salto].head(8).round(2)
 
-# %%
-# regla de privacidad del libro: el grupo sin dato necesita 300 filas y 5 renuncias para mostrarse
-falt['filas sin dato'] = [int(tr[v].isna().sum()) for v in falt.index]
-falt['renuncias sin dato'] = [int(tr.loc[tr[v].isna(), OBJETIVO].sum()) for v in falt.index]
-visible = (falt['filas sin dato'] >= 300) & (falt['renuncias sin dato'] >= 5)
-print(f'variables con menos de 300 filas o 5 renuncias sin dato (no se muestran): '
-      f'{int((~visible).sum())}, con {int(falt.loc[~visible, "filas sin dato"].max())} filas sin dato como máximo')
-informativo = falt[visible & ((falt.razón >= 1.5) | (falt.razón <= 1 / 1.5))].sort_values('razón', ascending=False)
-print(f'variables con faltante informativo (razón de tasas >= 1,5 o <= 1/1,5): {len(informativo)} '
-      f'de {int(visible.sum())}')
-# muchas comparten el mismo patrón de faltante (la misma fuente ausente): se agrupan
-informativo = informativo.round({'nulos %': 1, 'renuncia sin dato %': 2, 'renuncia con dato %': 2, 'razón': 2})
-patrones = (informativo.reset_index()
-            .groupby(['nulos %', 'renuncia sin dato %', 'renuncia con dato %', 'razón'], as_index=False)
-            .agg(variables=('variable', 'size'), bloques=('bloque', lambda b: ', '.join(sorted(set(b)))),
-                 ejemplo=('variable', 'first'))
-            .sort_values('razón', ascending=False).set_index('ejemplo'))
-patrones
-
 # %% [markdown]
-# Nótese que **ningún faltante aparece al salir**: el salto máximo entre el mes de la renuncia y tres
+# Se observa que **ningún faltante aparece al salir**: el salto máximo entre el mes de la renuncia y tres
 # meses antes es de 0,2 puntos, lejos de los 5 de la alerta. Así se comprueba que las correcciones del
-# cargo y del tipo de personal (sección 6.3) siguen funcionando con el panel nuevo.
-#
-# De las 63 variables con faltantes, 4 (`nivel`, `tipo_unidad`, `area_funcional` y `estado_civil`)
-# tienen 18 filas sin dato o menos y no se prueban ni se muestran. De las 59 restantes, el faltante es
-# **informativo** en 54 (la tasa de renuncia sin dato es al menos 1,5 veces la tasa con dato, o a lo
-# sumo dos tercios de ella) y no lo es en 5. Los patrones tienen explicación estructural:
-#
-# - *Sin nómina previa* (2,4 % de las filas: 20 variables de ingreso y jornada, y el cargo del mes
-#   anterior): es el primer mes del episodio, con 1,66 % de renuncia frente a 1,00 %.
-# - *Sin sueldo relativo* (34-39 %): sueldos que no son básicos o grupos de menos de cinco personas;
-#   1,4 % frente a 0,8 %.
-# - *Sin vacaciones pagadas desde 2024* (34,6 %) y *sin aumento de sueldo registrado* (44,9 %): sobre todo
-#   personas nuevas; entre 2,6 y 3 veces la tasa.
-# - *Sin marcación biométrica* (43-46 %) y *sin vencimiento* (47 %, contratos indefinidos): menos
-#   riesgo, 0,63 % y 0,47 % frente a 1,33 % y 1,51 %.
-#
-# Imputar solo con la mediana borraría esa información. Por eso el capítulo 7 imputa **con indicador
-# de faltante**.
+# cargo y del tipo de personal (sección 6.3) se mantienen en el panel. El faltante no revela la
+# salida, pero sí es informativo (capítulo 1); por eso el capítulo 7 imputa **con indicador de
+# faltante**.
 #
 # ## Duplicados y entidades entre entrenamiento y test
-
-# %%
-print('filas persona-mes duplicadas en el panel:', int(p.duplicated(['persona_id', 'mes']).sum()))
-print('pares (persona, mes) en entrenamiento y test a la vez:',
-      len(set(zip(tr.persona_id, tr.mes)) & set(zip(te.persona_id, te.mes))))
-per_tr, per_te = set(tr.persona_id), set(te.persona_id)
-print(f'personas: entrenamiento {len(per_tr):,} | test {len(per_te):,} | en ambos {len(per_tr & per_te):,} '
-      f'| solo en test {len(per_te - per_tr):,}')
-print(f'filas de test de personas ya vistas en entrenamiento: {100 * te.persona_id.isin(per_tr).mean():.1f} %')
-
-vec_tr = tr[PREDICTORAS].astype(str).apply(tuple, axis=1)
-vec_te = te[PREDICTORAS].astype(str).apply(tuple, axis=1)
-print(f'filas de entrenamiento con un vector de {len(PREDICTORAS)} predictoras repetido dentro del entrenamiento: '
-      f'{int(vec_tr.duplicated(keep=False).sum()):,}')
-igual = vec_te.isin(set(vec_tr)).to_numpy()
-print(f'filas de test con un vector idéntico en entrenamiento: {int(igual.sum()):,} de {len(te):,}')
-base18 = [c for c in PREDICTORAS if BLOQUE[c] == 'atributos']
-igual18 = te[base18].astype(str).apply(tuple, axis=1).isin(set(tr[base18].astype(str).apply(tuple, axis=1)))
-print(f'  con solo las 18 de atributos: {int(igual18.sum()):,} ({100 * igual18.mean():.1f} %)')
-
-# %% [markdown]
-# Nótese que no hay filas persona-mes repetidas ni pares (persona, mes) en los dos lados: el corte es
-# limpio. En cambio, **las personas se repiten**, como corresponde a un panel: 4.373 de las 4.611
-# personas del test ya estaban en el entrenamiento, y el 96,8 % de las filas del test son suyas. No es
-# fuga, porque la etiqueta del test es de meses posteriores y ninguna predictora usa la etiqueta de la
-# persona (no hay «renunció antes» ni tasas por persona). Sí significa que el test mide si el modelo
-# predice el futuro de la misma plantilla, que es el uso real, y no si generaliza a personas nuevas;
-# para eso el capítulo 2 dejó la validación agrupada por persona como complemento.
 #
-# Con las 105 predictoras, solo 53 filas del test (0,3 %) repiten un vector del entrenamiento. Con las
-# 18 de atributos eran 1.785 (10,1 %): la historia laboral distingue a personas que antes tenían el
-# mismo perfil, como los operarios de una misma finca. Dentro del entrenamiento hay 301 filas con un
-# vector repetido.
+# El capítulo 2 verifica que el corte entre entrenamiento y test es limpio y que las personas se
+# repiten, como corresponde a un panel. Esa repetición no representa fuga, porque la etiqueta del test
+# es de meses posteriores y ninguna predictora usa la etiqueta de la persona.
 #
 # ## Variables descartadas o en observación
 #
 # El panel de construcción tenía 262 columnas; el libro usa 105 predictoras. La diferencia se explica
-# por identificadores, columnas del desenlace, versiones redundantes, controles de cobertura y, sobre
-# todo, por **categorías completas excluidas por privacidad**: salud e incapacidades, riesgo
-# psicosocial, clima individual, sindicato, hijos y familia, quejas, desempeño, sanciones, deudas y
-# descuentos, y sueldo o devengado absolutos. Son datos sensibles (Ley 1581 de 2012) o de zona gris, y
-# el proyecto no los usa.
+# por identificadores, columnas del desenlace, versiones redundantes, controles de cobertura y
+# categorías completas excluidas por privacidad, según la justificación del capítulo 1.
 #
 # | variable | decisión | justificación |
 # |---|---|---|
 # | `persona_id`, `mes` | fuera del modelo | identificadores; `persona_id` solo agrupa y `mes` se reemplaza por la indicadora de enero |
-# | `evento`, `tipo_retiro`, `y_renuncia` | fuera del modelo | desenlace: se conocen al cerrar el mes *t* (sección 6.2) |
+# | `evento`, `y_renuncia` | fuera del modelo | desenlace: se conocen al cerrar el mes *t* (sección 6.2) |
 # | `contrato_fijo` | descartada (capítulo 1) | idéntica a `contrato`: duplicaría la misma información |
 # | `horas_bajo_legal` | descartada (capítulo 1) | vale 0 en el 99,98 % de las filas |
-# | `horas_diarias_teoricas`, `plan_horario` | descartadas (capítulo 5) | siguen el calendario de la reducción legal de la jornada (46 a 44 horas en julio de 2025, 44 a 42 en julio de 2026, dentro del test), no a la persona; en el test toman valores que no existen en el entrenamiento |
-# | `cambios_plan_12m` | descartada (capítulo 1) | sigue el calendario de la reducción legal de la jornada (cerca del 80 % de las filas marca cambio y cae a 20 % en julio de 2025), no a la persona |
-# | `preaviso_no_renovacion` | descartada, solo sensibilidad | con preaviso el objetivo es 0 por construcción: 469 filas, 0 renuncias |
+# | `horas_diarias_teoricas`, `plan_horario` | descartadas (capítulo 5) | siguen el calendario de la reducción legal de la jornada (capítulo 5), no a la persona |
+# | `cambios_plan_12m` | descartada (capítulo 1) | sigue el calendario de la reducción legal de la jornada (capítulo 5), no a la persona |
+# | `preaviso_no_renovacion` | descartada, solo análisis de sensibilidad | con preaviso el objetivo es 0 por construcción: 469 filas, 0 renuncias |
 # | días de licencia no remunerada con rezago de un mes | descartadas | la señal decae de 0,643 a 0,585 al retroceder dos meses: trámite de la salida; entran las `_r2` |
 # | textos de cargo, función, departamento y área | quitados del panel | redundantes con los ejes derivados y cuasi-identificadores |
 # | otras marcas de la salida (reclasificación, bonificación de salida) | fuera del panel | describen la salida |
@@ -548,8 +471,8 @@ print(f'  con solo las 18 de atributos: {int(igual18.sum()):,} ({100 * igual18.m
 #
 # ## Resumen ejecutivo del EDA
 #
-# La tabla final sigue la convención del curso: calidad de los datos, variables prometedoras,
-# problemas detectados y decisiones que pasan al modelo. Para que se sostenga sola, la celda siguiente
+# La tabla final resume la calidad de los datos, variables prometedoras,
+# problemas detectados y decisiones que pasan al modelo. Para que pueda leerse sola, la celda siguiente
 # recalcula con el entrenamiento los pocos indicadores de calidad que la tabla cita; el detalle está
 # en los capítulos 3 a 5.
 
@@ -572,10 +495,10 @@ print(f'categóricas: {len(CAT)} | categorías (el nulo cuenta como una) con men
 # %% [markdown]
 # | aspecto | hallazgo | de dónde sale | decisión que pasa al modelo |
 # |---|---|---|---|
-# | calidad: faltantes | 63 de 105 predictoras tienen faltantes (13,7 % de las celdas); ninguno aparece al salir (salto máximo de 0,2 puntos) y 54 son informativos | capítulos 1 y 3, sección 6.6 | imputación con la mediana **más indicador de faltante** |
+# | calidad: faltantes | 63 de 105 predictoras tienen faltantes (13,7 % de las celdas); ninguno aparece al salir (salto máximo de 0,2 puntos) y son informativos | capítulos 1 y 3 (informativos), sección 6.6 (salto) | imputación con la mediana **más indicador de faltante** |
 # | calidad: colas largas | 44 de las 73 numéricas continuas tienen asimetría mayor que 2 en valor absoluto (horas extra, recargos, bonos, días de licencia) | capítulo 3 y celda anterior | **recorte p1-p99** y **log con signo** en las de cola larga, ajustados solo con el entrenamiento |
 # | calidad: categorías raras | 64 categorías con menos de 5 renuncias (el nulo cuenta como una categoría), en 11 de las 17 categóricas | capítulo 3 y celda anterior | **one-hot con `min_frequency`** (las raras se agrupan) |
-# | calidad: duplicados | ninguna fila persona-mes repetida ni compartida entre particiones; el 96,8 % de las filas de test son de personas vistas | capítulo 2 y sección 6.7 | validación agrupada por persona como complemento |
+# | calidad: duplicados | ninguna fila persona-mes repetida ni compartida entre particiones; el 95 % de las personas del test ya estaban en el entrenamiento | capítulo 2 | validación agrupada por persona como complemento |
 # | variables prometedoras | antigüedad (AUC 0,711), meses en la función y en la posición, contrato, edad, oficio; de la historia: extras, ingreso frente al pactado, licencia no remunerada `_r2`, vacaciones pendientes | capítulo 3 y sección 6.4 | antigüedad en logaritmo o por tramos (capítulo 3) |
 # | problema: colinealidad | 50 pares de numéricas y binarias con Spearman mayor que 0,7 en valor absoluto; buena parte de la historia es otra medida de la antigüedad | capítulo 4 (VIF, PCA) y celda anterior | **regularización** (L1 frente a L2, rejilla de C hasta 1e-4) en vez de eliminar a mano |
 # | problema: tiempo | la tasa oscila alrededor de 1,02 % con variación entre meses por encima del azar (p = 0,002) y baja de 1,24 % a 0,96 % entre enero-abril de 2025 y de 2026; la deriva grande viene de la reducción legal de la jornada, el ciclo del salario y cambios de cobertura; la cobertura de `tamano_equipo_jefe` cambia en 2025 | capítulo 5 | **validación temporal con gap** de un mes (`pliegues_temporales`); el test, una sola vez al final; horario teórico y plan horario fuera; revisar la calibración por mes |
@@ -587,15 +510,13 @@ print(f'categóricas: {len(CAT)} | categorías (el nulo cuenta como una) con men
 #
 # ## Síntesis
 #
-# - Las 105 predictoras se conocen el día 1 del mes que se predice: 93 sin reserva y doce con una
-#   reserva documentada (las siete ausencias, por registro tardío; cuatro de vacaciones reconstruidas;
-#   el departamento de la sede).
-# - `preaviso_no_renovacion` (0 renuncias en 469 filas, por construcción) y las licencias no
-#   remuneradas con rezago de un solo mes se descartan, igual que `contrato_fijo`, `horas_bajo_legal`
-#   y `cambios_plan_12m` (capítulo 1) y `horas_diarias_teoricas` y `plan_horario` (capítulo 5);
-#   `evento` y `tipo_retiro` son el desenlace.
-# - Ninguna variable predice sola más de lo plausible: AUC máximo de 0,711 (antigüedad), ninguno sobre
-#   0,8, y la diferencia con el AUC en muestra no pasa de 0,053.
-# - Solo `turnos_1m` concentra su señal justo antes de la salida, y ningún faltante aparece al salir.
-# - No hay filas compartidas entre entrenamiento y test; las personas sí se repiten, como en todo
-#   panel, y ninguna predictora usa la etiqueta de la persona.
+# - Las 105 predictoras se conocen el día 1 del mes que se predice; doce quedan en observación por una
+#   reserva documentada.
+# - `evento` es el desenlace y `preaviso_no_renovacion` fija el objetivo en 0 por construcción: ninguna
+#   de las dos es predictora.
+# - Ninguna variable supera un AUC univariado de 0,8 fuera de pliegue; la máxima es la antigüedad
+#   (0,711).
+# - Solo `turnos_1m` concentra su señal justo antes de la salida; las licencias no remuneradas entran
+#   con dos meses de rezago.
+# - Ningún faltante aparece al salir, y la repetición de personas entre entrenamiento y test no
+#   representa fuga.

@@ -4,8 +4,8 @@
 # ```{admonition} Alcance
 # :class: tip
 # Este capítulo usa solo el entrenamiento (enero de 2025 a abril de 2026). Las tasas son mensuales:
-# la probabilidad de renunciar en un mes dado. Los intervalos son de Wilson al 95 % y tratan las
-# filas como independientes, por lo que son algo optimistas (una persona aporta varios meses).
+# la probabilidad de renunciar en un mes dado. Los intervalos de Wilson al 95 % describen las tasas;
+# la incertidumbre del modelo se mide en el capítulo 7, remuestreando personas.
 # ```
 #
 # Para una tasa $\hat p = a / n$, el intervalo de Wilson es
@@ -24,7 +24,8 @@
 # bloque; todas entran en las tablas y solo las más relevantes de cada bloque tienen gráfico. Las
 # cinco descartadas en los capítulos 1 y 5 no se analizan: `contrato_fijo` (idéntica a `contrato`),
 # `horas_bajo_legal` (cero en el 99,98 % de las filas) y `cambios_plan_12m`, `horas_diarias_teoricas`
-# y `plan_horario`, que siguen el calendario de la reducción legal de la jornada y no a la persona.
+# y `plan_horario`, que siguen el calendario de la reducción legal de la jornada (capítulo 5) y no a
+# la persona.
 #
 # Un recordatorio sobre el tiempo de la historia laboral: en la fila del mes *t*, la nómina, las
 # marcaciones y las novedades llegan hasta *t* − 1; las variables con sufijo `_r2` y los meses desde
@@ -56,7 +57,7 @@ from statsmodels.stats.multitest import multipletests
 
 sys.path.insert(0, '.')
 warnings.filterwarnings('ignore')
-from comun import (cargar, particion, estilo, tasa, tasa_ic, grafico_tasa, etiquetar, puntos,
+from comun import (eje_llano, rotulo, cargar, particion, estilo, tasa, tasa_ic, grafico_tasa, etiquetar, puntos,
                    OBJETIVO, NUM, NUM_BASE, BIN, CAT, CAT_BASE, CAT_HISTORIA, BASE as BASE_VARS,
                    BLOQUES, BLOQUE, HISTORIA, PREDICTORAS, SEMILLA, NOMBRE, UNIDAD,
                    VERDE, ORO, GRIS, GRIS_CL, TINTA, BORDE)
@@ -174,6 +175,7 @@ conteo = tr[OBJETIVO].value_counts().sort_index()
 barras = ax[0].bar(['0: no renuncia', '1: renuncia'], conteo.values, color=[VERDE, ORO], **BORDE)
 etiquetar(ax[0], barras, textos=[f'{n:,} ({100 * n / len(tr):.2f} %)' for n in conteo.values])
 ax[0].set(title='Clases del objetivo', ylabel='Persona-mes', yscale='log')
+eje_llano(ax[0].yaxis)
 
 por_mes = tr.groupby('mes')[OBJETIVO].agg(filas='size', renuncias='sum')
 barras = ax[1].bar(por_mes.index, por_mes.renuncias, color=ORO, **BORDE)
@@ -195,23 +197,21 @@ print(f'renuncias por mes: mínimo {por_mes.renuncias.min()}, mediana {por_mes.r
       f'máximo {por_mes.renuncias.max()}')
 print(f'tasa anual equivalente: {100 * (1 - (1 - BASE / 100) ** 12):.1f} %')
 print(f'exactitud de "nadie renuncia": {100 * n0 / len(y):.2f} %')
-print('\notras salidas por tipo (y = 0 en su último mes):')
-print(tr.tipo_retiro.value_counts().to_string())
 
 # %% [markdown]
 # Nótese que la clase positiva son 688 de 67.416 filas (1,02 %): una renuncia por cada 97 filas sin
 # renuncia. Las 688 renuncias son de 688 personas distintas, de las 5.500 del entrenamiento, así que
 # nadie renuncia dos veces en el periodo. Una tasa mensual de 1,02 % equivale a que cerca de una de
 # cada nueve personas (11,6 %) renuncie en un año. Por mes hay entre 27 y 60 renuncias, con mediana
-# de 42. Las 441 otras salidas (243 despidos, 181 fines de contrato y 17 de otro tipo) y las 31
+# de 42. Las 441 otras salidas (despido, fin de contrato, pensión y otras) y las 31
 # renuncias administrativas (renuncias registradas tras las cuales la persona sigue en el grupo,
 # capítulo 1) cuentan como $y = 0$.
 #
 # ```{admonition} Implicaciones para la métrica y la validación
 # :class: important
-# - **La exactitud no sirve.** Predecir que nadie renuncia acierta el 98,98 % de las filas y no
+# - **La exactitud (*accuracy*) no sirve.** Predecir que nadie renuncia acierta el 98,98 % de las filas y no
 #   identifica ninguna renuncia.
-# - **Métrica principal: PR-AUC** (precisión promedio). Se concentra en la clase positiva y su piso
+# - **Métrica principal: PR-AUC** (área bajo la curva de precisión-exhaustividad; en inglés también AUC-PR o *average precision*). Se concentra en la clase positiva y su piso
 #   es la prevalencia (0,0102): un modelo que ordena al azar obtiene 0,0102, y cualquier ganancia se
 #   lee como múltiplo de ese piso. La ROC-AUC se reporta como complemento, porque con 97 negativos
 #   por positivo premia ordenar bien la gran masa de negativos.
@@ -251,32 +251,19 @@ with pd.option_context('display.max_rows', 200):
     display(tipos.assign(nombre=[nom(v) for v in tipos.index]))
 
 # %% [markdown]
-# Nótese que de las 105 predictoras, 44 son numéricas continuas, 29 numéricas discretas (conteos y
+# Se evidencia que de las 105 predictoras, 44 son numéricas continuas, 29 numéricas discretas (conteos y
 # meses), 15 binarias y 17 categóricas (16 nominales y una ordinal, el nivel del cargo). Entre las
 # categóricas está `estado_gestion_tiempos`, que viene como código numérico pero es una etiqueta (tres
 # valores) y se trata como categórica. Las cardinalidades de las categóricas van de 2 (género,
 # contrato) a 57 (ubicación). La tabla plegada da la de cada variable con su % de nulos: 63
-# predictoras tienen algún nulo, y en varias el nulo es
-# estructural, no un dato perdido (por ejemplo, `meses_al_vencimiento` es nulo exactamente en el
-# 47,1 % de filas con contrato indefinido, que no vence). El tratamiento de los nulos se decide en la
-# síntesis.
+# predictoras tienen algún nulo, en varias de ellas estructural (por ejemplo, `meses_al_vencimiento`
+# es nulo exactamente en el 47,1 % de filas con contrato indefinido, que no vence); el mecanismo de
+# los faltantes se describe en el capítulo 1 («Faltantes»).
 #
-# ### Cómo se leen la asimetría y la curtosis
+# ### Asimetría y colas largas
 #
-# La asimetría es el tercer momento estandarizado y la curtosis el cuarto. `pandas` reporta la
-# curtosis como **exceso de Fisher** (curtosis − 3), de modo que la normal vale 0, no 3. La lectura
-# del curso:
-#
-# | medida | valor | lectura |
-# |---|---|---|
-# | asimetría | \|g₁\| < 0,5 | aproximadamente simétrica |
-# | | 0,5 ≤ \|g₁\| ≤ 1 | moderadamente asimétrica |
-# | | \|g₁\| > 1 | muy asimétrica |
-# | curtosis (exceso) | ≈ 0 | mesocúrtica, colas como la normal |
-# | | > 0 | leptocúrtica: pico agudo y colas pesadas |
-# | | < 0 | platicúrtica: forma achatada, colas livianas |
-#
-# Además, en este libro se marca como **cola larga** toda numérica no binaria cuya asimetría sigue
+# `pandas` reporta la curtosis como exceso (curtosis − 3), de modo que la normal vale 0. Se marca como
+# **cola larga** toda numérica no binaria cuya asimetría sigue
 # siendo \|g₁\| > 2 **después de recortarla a sus percentiles 1 y 99** (sobre los valores observados):
 # es el criterio con el que los capítulos 4 y 7 deciden qué variables reciben el logaritmo con signo.
 # Las tablas muestran también la asimetría cruda, como contexto.
@@ -335,7 +322,7 @@ for v in NUM_BASE:
 pd.DataFrame(filas).T.drop(columns=['% ceros']).round(2)
 
 # %% [markdown]
-# Nótese que la edad es aproximadamente simétrica (asimetría 0,45) y platicúrtica (exceso −0,56):
+# Se observa que la edad es aproximadamente simétrica (asimetría 0,45) y platicúrtica (exceso −0,56):
 # media 37,3 y mediana 36 años, IQR de 28 a 45 y solo 0,08 % de filas fuera de las vallas. La
 # antigüedad reconocida es muy asimétrica a la derecha (1,45) y leptocúrtica (1,97): mediana de 37
 # meses frente a una media de 64,6, IQR de 13 a 90 meses, y un 6,2 % de filas por encima de la valla
@@ -362,7 +349,7 @@ binarias.index = [nom(v) for v in binarias.index]
 binarias
 
 # %% [markdown]
-# Nótese que las tres binarias de atributos son poco frecuentes: el primer mes de un episodio es el
+# Las tres binarias de atributos son poco frecuentes: el primer mes de un episodio es el
 # 2,4 % de las filas, los reingresos el 8,1 % y los traslados en los últimos 12 meses el 2,7 %. Su
 # relación con el objetivo se ve con las demás binarias, en la sección de razones de tasa.
 #
@@ -432,12 +419,10 @@ display(tabla_bloque('contrato'))
 figura_bloque('contrato')
 
 # %% [markdown]
-# Nótese que el bloque de contrato no tiene colas largas entre sus numéricas, pero sí nulos
-# estructurales: `meses_al_vencimiento` solo existe en término fijo (mediana de 3 meses, IQR de 2 a 5)
-# y `meses_desde_aprendiz` solo en el 5 % que fue aprendiz. `meses_desde_cambio_contrato` es la más
-# asociada (P(sup) 0,329): tiene mediana de 8 meses pero media de 50, porque mezcla a quienes acaban de
-# renovar con los indefinidos antiguos. `n_renovaciones` es cero en el 61 % de las filas. Las dos
-# binarias `fue_aprendiz` (5 %) e `ingreso_a_mitad` (2 %) son muy desbalanceadas.
+# Se evidencia que el bloque de contrato no tiene colas largas, pero sí nulos estructurales:
+# `meses_al_vencimiento` solo existe en término fijo y `meses_desde_aprendiz` solo en el 5 % que fue
+# aprendiz. La variable más asociada es `meses_desde_cambio_contrato` (P(sup) 0,329), cuya mediana de
+# 8 meses frente a una media de 50 refleja la mezcla de renovaciones recientes con indefinidos antiguos.
 #
 # #### Trayectoria
 
@@ -446,13 +431,11 @@ display(tabla_bloque('trayectoria'))
 figura_bloque('trayectoria')
 
 # %% [markdown]
-# Nótese que los meses en la posición y en la función (medianas de 26 y 28 meses) son las más
-# asociadas del bloque y, como se verá en la sección bidimensional, repiten buena parte de la
-# antigüedad. El resto son variables de cola larga casi siempre en cero: ascensos (95 % de ceros),
-# movimientos laterales (97 %), jefatura formal (99,6 %) y personas a cargo (96 %, asimetría 26 y
-# curtosis de exceso de 1.054, la más extrema del bloque). `meses_desde_ascenso` es nulo en el 91,5 %
-# (quien no ha ascendido) y está topada en 12 meses. `tamano_equipo_jefe` tiene un 36 % de nulos y
-# una cola larga (p99 de 323 personas).
+# Se observa que los meses en la posición y en la función son las más asociadas del bloque y, como se
+# verá en la sección bidimensional, repiten buena parte de la antigüedad. El resto son conteos de cola
+# larga casi siempre en cero (ascensos, movimientos laterales, jefatura formal, personas a cargo,
+# postulaciones internas). `meses_desde_ascenso` es nulo en el 91,5 % (quien no ha ascendido) y está
+# topada en 12 meses, y `tamano_equipo_jefe` tiene un 36 % de nulos.
 #
 # #### Salario relativo
 
@@ -461,14 +444,11 @@ display(tabla_bloque('salario_relativo'))
 figura_bloque('salario_relativo')
 
 # %% [markdown]
-# Nótese que el bloque salarial tiene un 34-39 % de nulos compartidos, y son estructurales: el
-# posicionamiento local es nulo exactamente en las filas con salario a destajo o integral, que no
-# tienen un sueldo básico comparable (el 86 % de las filas de banano), y siete de sus diez numéricas no
-# binarias con cola larga. El posicionamiento salarial vale 1 en la mitad central (IQR nulo): casi
-# todos ganan la tabla de su cargo, y lo que informa es la cola (p99 de 1,69). `pct_ultimo_aumento_merito`
-# es la más extrema (asimetría 20,9, curtosis 840). Las más asociadas con el objetivo son los aumentos
-# por mérito en 24 meses (P(sup) 0,389, quien renuncia ha tenido menos) y la privación relativa y el
-# Gini del oficio y nivel (0,604 y 0,603, más desigualdad en quienes renuncian).
+# El bloque salarial comparte un 34-39 % de nulos estructurales: el posicionamiento local es nulo
+# exactamente en las filas con salario a destajo o integral, que no tienen un sueldo básico comparable
+# (el 86 % de las filas de banano). Siete de sus diez numéricas no binarias tienen cola larga. Las más
+# asociadas con el objetivo son los aumentos por mérito en 24 meses (P(sup) 0,389, menores en quienes
+# renuncian) y la privación relativa y el Gini del oficio y nivel (0,604 y 0,603).
 #
 # #### Jornada
 
@@ -478,14 +458,12 @@ with pd.option_context('display.max_rows', 60):
 figura_bloque('jornada')
 
 # %% [markdown]
-# Nótese que la jornada es el bloque más grande (27 variables) y el de más colas largas (12 de 22
-# numéricas no binarias después del recorte; 15 con la asimetría cruda): horas extra, recargos y dominicales tienen de 49 % a 79 % de ceros y
-# asimetrías de 2 a 3,5. Hay variables casi constantes: los recargos de sábado en mínimos son cero en
-# más del 93 % de las filas. Las marcas biométricas (turnos, horas por turno, % de turnos largos o nocturnos) tienen
-# un 43-46 % de nulos, que son exactamente las personas sin marcación biométrica. Las más asociadas no son montos sino frecuencias:
-# los meses con extras o recargos en 12 meses (P(sup) 0,373) tienen una distribución en U, con 28 %
-# de filas en 0 y otro tanto en 12, y quien renuncia está más cerca de 0, en parte porque lleva menos
-# tiempo.
+# Se evidencia que la jornada es el bloque más grande (27 variables) y el de más colas largas (12 de 22
+# numéricas no binarias después del recorte): horas extra, recargos y dominicales tienen de 49 % a 79 %
+# de ceros, y las marcas biométricas tienen un 43-46 % de nulos, que son exactamente las personas sin
+# marcación biométrica. La más asociada es una frecuencia y no un monto: los meses con extras o
+# recargos en 12 meses (P(sup) 0,373), con distribución en U y valores menores en quienes renuncian,
+# en parte porque llevan menos tiempo.
 #
 # #### Ingreso relativo
 
@@ -494,12 +472,11 @@ display(tabla_bloque('ingreso_relativo'))
 figura_bloque('ingreso_relativo')
 
 # %% [markdown]
-# Nótese que el ingreso frente al pactado es la única variable del bloque aproximadamente simétrica
-# (asimetría 0,55; mediana 1,14: se gana un 14 % sobre el pactado) y la más asociada con el objetivo
-# (P(sup) 0,368: quien renuncia gana menos por encima de lo pactado). El resto son bonos y auxilios
-# casi siempre en cero, con asimetrías de 5 a 34 y curtosis de hasta 1.489: son las colas más largas
-# del libro. La volatilidad del ingreso (12 % de nulos) y el cambio del ingreso de 3 frente a 9 meses
-# (17 %) tienen nulos por falta de historia.
+# Se observa que el ingreso frente al pactado es la única variable del bloque aproximadamente simétrica
+# (asimetría 0,55) y la más asociada con el objetivo (P(sup) 0,368: quien renuncia gana menos por
+# encima de lo pactado). El resto son bonos y auxilios casi siempre en cero, con asimetrías de 5 a 34,
+# las colas más largas del libro; la volatilidad y el cambio del ingreso tienen nulos por falta de
+# historia.
 #
 # #### Ausencias
 
@@ -508,12 +485,10 @@ display(tabla_bloque('ausencias'))
 figura_bloque('ausencias')
 
 # %% [markdown]
-# Nótese que el bloque de ausencias no tiene nulos (un mes sin licencia es un cero) y seis de sus siete
-# variables tienen cola larga: las licencias no remuneradas llegan a asimetrías de 19 y curtosis de
-# 588 con un p99 de 18 días en 12 meses. Es el bloque con más variables cuyo P(sup) está por encima de
-# 0,5: quien renuncia acumula más días de licencia no remunerada en los tres meses previos (0,585). El
-# día de la familia es la excepción: es simétrico, casi todos lo toman (mediana 2) y quien renuncia lo
-# ha tomado menos (0,392), lo que de nuevo refleja en parte la antigüedad.
+# El bloque de ausencias no tiene nulos (un mes sin licencia es un cero) y seis de sus siete
+# variables tienen cola larga. La más asociada son los días de licencia no remunerada de los tres
+# meses previos (P(sup) 0,585, mayores en quienes renuncian); el día de la familia es simétrico y
+# quien renuncia lo ha tomado menos (0,392), lo que refleja en parte la antigüedad.
 #
 # #### Vacaciones
 
@@ -522,25 +497,31 @@ display(tabla_bloque('vacaciones'))
 figura_bloque('vacaciones')
 
 # %% [markdown]
-# Nótese que la mitad de las filas no tiene vacaciones pendientes y que el 15 % acumula dos periodos.
-# Los meses desde las últimas vacaciones son simétricos y están topados en 12, con un 35 % de nulos:
-# quien aún no ha disfrutado vacaciones, sobre todo personas nuevas (mediana de antigüedad de 8 meses
-# en los nulos frente a 82 en el resto). Las vacaciones compensadas en dinero son la única
-# cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente con la renuncia (P(sup)
-# 0,377): para tener pendientes hay que haber cumplido un año.
+# Se evidencia que la mitad de las filas no tiene vacaciones pendientes y que la única cola larga del
+# bloque son las vacaciones compensadas en dinero. Los meses desde las últimas vacaciones están topados
+# en 12 y son nulos en el 35 % de las filas, sobre todo personas nuevas que aún no las han disfrutado.
+# Las pendientes se asocian negativamente con la renuncia (P(sup) 0,377), porque para tenerlas hay que
+# haber cumplido un año.
 #
-# #### Arraigo
+# #### Proyectos personales
 
 # %%
-display(tabla_bloque('arraigo'))
-figura_bloque('arraigo')
+display(tabla_bloque('proyectos_personales'))
+figura_bloque('proyectos_personales')
 
 # %% [markdown]
-# Nótese que el arraigo son sobre todo conteos pequeños: el 96 % no se postuló a una vacante interna
-# en 12 meses y el 98 % no retiró cesantías para educación, ambas con cola larga. El retiro histórico
-# de cesantías para vivienda es el más asociado (P(sup) 0,360; la mediana de quien renuncia es 0
-# frente a 1), otra vez con un componente de antigüedad. Haber nacido en el departamento de la sede
-# vale 1 en el 64 % de las filas con dato y tiene un 24 % de nulos.
+# Son conteos pequeños con cola larga: el 98 % no retiró cesantías para educación en 12 meses. El
+# retiro histórico de cesantías para vivienda es el más asociado (P(sup) 0,360), también con un
+# componente de antigüedad.
+#
+# #### Origen
+
+# %%
+display(tabla_bloque('origen'))
+
+# %% [markdown]
+# Haber nacido en el departamento de la sede vale 1 en el 64 % de las filas con dato y tiene un 24 % de
+# nulos.
 #
 # #### Colas largas y valores extremos en toda la historia
 
@@ -563,7 +544,7 @@ resumen_cola = (continuas_hist.assign(larga=continuas_hist['asimetría tras p1-p
 resumen_cola
 
 # %% [markdown]
-# Nótese que de las 71 numéricas no binarias de la historia, 44 tienen \|asimetría\| > 2 en crudo y 39
+# De las 71 numéricas no binarias de la historia, 44 tienen \|asimetría\| > 2 en crudo y 39
 # la conservan después del recorte p1-p99: esas 39 son las de cola larga del libro. Las cinco que el
 # recorte normaliza lo suficiente son los tres recargos nocturnos (1, 3 y 12 meses), la volatilidad
 # del ingreso y el cambio del ingreso de 3 frente a 9 meses: su asimetría venía de unos pocos
@@ -579,8 +560,8 @@ resumen_cola
 # :class: important
 # Con estas colas, una logística sobre los valores crudos deja que unas pocas filas extremas fijen
 # el coeficiente, y la estandarización no lo arregla (la desviación la inflan los mismos extremos).
-# Por eso el preprocesamiento del modelo (i) recorta todas las numéricas no binarias a sus
-# percentiles 1 y 99, estimados en el entrenamiento de cada pliegue, y (ii) aplica a las que siguen
+# Por eso el preprocesamiento del modelo (1) recorta todas las numéricas no binarias a sus
+# percentiles 1 y 99, estimados en el entrenamiento de cada pliegue, y (2) aplica a las que siguen
 # con \|asimetría\| > 2 después del recorte el logaritmo con signo, $\operatorname{sign}(x)\log(1 + |x|)$,
 # que conserva el cero y el signo (hay variables negativas, como la variación del sueldo en mínimos).
 # En el entrenamiento completo son 39; la celda final del capítulo las lista. El `Pipeline` repite
@@ -635,7 +616,7 @@ PRINCIPALES_CAT = ['linea', 'contrato', 'nivel', 'tipo_unidad', 'estado_civil', 
 fig, ax = plt.subplots(3, 3, figsize=(14, 10))
 for a, v in zip(ax.ravel(), PRINCIPALES_CAT):
     conteo = agrupar(tr, v, min_ren=0).value_counts()
-    barras = a.barh(conteo.index[::-1], conteo.values[::-1], color=VERDE, **BORDE)
+    barras = a.barh([rotulo(c) for c in conteo.index[::-1]], conteo.values[::-1], color=VERDE, **BORDE)
     etiquetar(a, barras, textos=[f'{n:,} ({100 * n / len(tr):.1f} %)' for n in conteo.values[::-1]],
               fontsize=6)
     a.set(title=nom(v).capitalize(), xlabel='Persona-mes')
@@ -644,7 +625,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que las categóricas son muy desiguales: la línea de palma tiene el 71 % de las filas, el
+# Se evidencia que las categóricas son muy desiguales: la línea de palma tiene el 71 % de las filas, el
 # personal operativo el 69 % y los hombres el 86,5 %. La ubicación es la de más categorías raras: 30
 # de sus 57 tienen menos de 300 filas (2.469 filas en total) y 12 tienen menos de cinco personas. En
 # `oficio` y `familia_cargo` solo hay una categoría pequeña (115 filas), porque los oficios poco
@@ -666,14 +647,8 @@ plt.show()
 #
 # Se toman como principales la edad, la antigüedad reconocida y las diez numéricas no binarias de la
 # historia con mayor asociación con el objetivo. Para cada par se calculan Pearson (relación lineal)
-# y Spearman (relación monótona, sobre rangos) con los pares completos. La diferencia entre las dos
-# se lee con la tabla del curso:
-#
-# | \|Pearson − Spearman\| | lectura |
-# |---|---|
-# | < 0,1 | relación aproximadamente lineal |
-# | 0,1 a 0,2 | no linealidad moderada o efecto de atípicos |
-# | > 0,2 | relación claramente no lineal, o dominada por atípicos o por la cola |
+# y Spearman (relación monótona, sobre rangos) con los pares completos. Cuando Spearman supera
+# claramente a Pearson, la relación es monótona pero no lineal, o la dominan unos pocos valores extremos.
 #
 # La matriz completa de correlaciones y el VIF quedan para el capítulo 4.
 
@@ -695,11 +670,11 @@ print(f'pares con |Spearman| > 0,7: {(pares.Spearman.abs() > 0.7).sum()}')
 pares.sort_values('|P − S|', ascending=False).head(15).round(3)
 
 # %% [markdown]
-# Nótese que de los 66 pares, 52 tienen una relación aproximadamente lineal (\|P − S\| < 0,1), 13
+# Se observa que de los 66 pares, 52 tienen una relación aproximadamente lineal (\|P − S\| < 0,1), 13
 # una no linealidad moderada y uno es claramente no lineal: antigüedad reconocida y meses en la
 # función (Pearson 0,64, Spearman 0,85). Casi siempre Spearman supera a Pearson: son relaciones
 # monótonas pero curvas o con techo (los meses en la función no pasan de unos 90, la antigüedad sí).
-# Nueve pares superan \|Spearman\| > 0,7, el umbral del curso para redundancia entre predictoras, y
+# Nueve pares superan \|Spearman\| > 0,7, el umbral usual de redundancia entre predictoras, y
 # todos giran alrededor del tiempo en la empresa: antigüedad, meses en la posición y en la función,
 # meses desde el último cambio de contrato y retiros históricos de cesantías para vivienda. Buena
 # parte de lo que las variables de la historia dicen del objetivo es, entonces, antigüedad con otro
@@ -723,7 +698,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese la forma de cada nube. Edad y antigüedad forman un triángulo (la antigüedad está acotada por
+# Se observa la forma de cada nube. Edad y antigüedad forman un triángulo (la antigüedad está acotada por
 # la edad) con correlación 0,61, igual en Pearson y Spearman. La antigüedad reconocida y los meses
 # desde el último cambio de contrato son casi la misma variable en los indefinidos (la diagonal: su
 # último cambio fue el ingreso), con Pearson de 0,96; la nube de abajo son los de término fijo, que
@@ -770,8 +745,8 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que las 30 pruebas son significativas después de Holm, como se espera con 67.416 filas, y que
-# el tamaño del efecto separa dos situaciones. El tipo de contrato explica entre el 27 % (edad) y el
+# Las 30 pruebas son significativas después de Holm, como se espera con 67.416 filas, y el
+# tamaño del efecto separa dos situaciones. El tipo de contrato explica entre el 27 % (edad) y el
 # 67 % (meses desde el último cambio de contrato) de la variabilidad de los rangos de las numéricas
 # de tiempo, y el 61 % en la antigüedad reconocida: el término fijo agrupa sobre todo a personas
 # nuevas y jóvenes, así que los efectos del contrato y de la antigüedad se superponen. Línea, tipo de
@@ -832,7 +807,7 @@ col_mw = ['bloque', '% nulos', 'mediana renuncia', 'mediana no renuncia', 'P(sup
 mw[col_mw].head(20).round(3)
 
 # %% [markdown]
-# Nótese que la antigüedad reconocida es la numérica más discriminante (P(sup) 0,302: en el 70 % de
+# Se evidencia que la antigüedad reconocida es la numérica más discriminante (P(sup) 0,302: en el 70 % de
 # los pares, quien renuncia lleva menos tiempo; mediana de 13 frente a 38 meses) y que las siguientes
 # son también variables de tiempo: meses en la función (0,321), meses desde el último cambio de
 # contrato (0,329), meses en la posición (0,330) y edad (0,339; mediana de 30 frente a 36 años).
@@ -844,10 +819,10 @@ mw[col_mw].head(20).round(3)
 # De las 88 pruebas, 43 son significativas con Holm y 56 con BH, pero solo 15 variables tienen un
 # P(sup) fuera de [0,40; 0,60]: las demás, aunque significativas, discriminan poco solas. La
 # correlación punto-biserial es pequeña en todas (\|r_pb\| ≤ 0,06) porque con un objetivo tan raro
-# su máximo posible es bajo, y es sensible a las colas; por eso se ordena por P(sup). La tasa entre
-# los nulos también informa: en las variables de nómina el nulo es el primer mes del episodio
-# (1,66 % frente a 1,00 %), en las salariales es el destajo (1,40 % frente a 0,78 %) y en las de
-# marcación es no marcar (0,63 % frente a 1,33 %). El nulo no es aleatorio y merece su indicador.
+# su máximo posible es bajo, y es sensible a las colas; por eso se ordena por P(sup). La tasa de las
+# filas con nulo difiere de la del resto: 1,66 % frente a 1,00 % en las variables de nómina, 1,40 %
+# frente a 0,78 % en las salariales y 0,63 % frente a 1,33 % en las de marcación; el mecanismo de esos
+# faltantes se describe en el capítulo 1 («Faltantes»).
 #
 # La tabla con las 88 está plegada debajo. Las dos binarias con menos de cinco renuncias en el valor
 # 1 (`es_jefe_formal`, `auxilio_educativo_12m`) no publican sus medidas de asociación, que permitirían
@@ -857,23 +832,7 @@ mw[col_mw].head(20).round(3)
 with pd.option_context('display.max_rows', 100):
     display(mw[col_mw].round(4))
 
-# %%
-resumen_bloque = mw.groupby('bloque').agg(
-    numéricas=('P(sup)', 'size'),
-    max_abs=('|P(sup) − 0,5|', 'max'),
-    fuera_045_055=('|P(sup) − 0,5|', lambda s: int((s > 0.05).sum())),
-    signif_holm=('p Holm', lambda s: int((s < 0.05).sum())))
-resumen_bloque['mejor variable'] = mw.groupby('bloque')['|P(sup) − 0,5|'].idxmax()
-resumen_bloque['P(sup) de la mejor'] = mw.loc[resumen_bloque['mejor variable'], 'P(sup)'].to_numpy()
-resumen_bloque.sort_values('max_abs', ascending=False).round(3)
-
 # %% [markdown]
-# Nótese que todos los bloques tienen al menos una variable con P(sup) fuera de [0,40; 0,60], y que
-# el mejor de cada bloque va de 0,302 (antigüedad) a 0,392 (día de la familia). La jornada es el bloque
-# con más variables relevantes (11 fuera de [0,45; 0,55] y 15 significativas con Holm), aunque ninguna
-# tan fuerte como las de tiempo. En contrato y trayectoria la señal se concentra en una o dos variables
-# que repiten la antigüedad.
-#
 # #### Densidades por clase
 
 # %%
@@ -893,7 +852,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que en casi todas las densidades la masa de quienes renuncian (dorado) está desplazada hacia
+# En casi todas las densidades la masa de quienes renuncian (dorado) está desplazada hacia
 # los valores bajos: menos edad, menos antigüedad, menos meses en la función y en la posición, menos
 # vacaciones pendientes, menos meses con extras. Las formas no son normales ni parecidas entre
 # clases: en la antigüedad, los meses en la posición y los meses desde el cambio de contrato, los que
@@ -934,7 +893,7 @@ print(f'{len(rb)} binarias | significativas con Holm al 5 %: {(rb["p Holm"] < 0.
 rb_pub
 
 # %% [markdown]
-# Nótese que 5 de las 15 binarias difieren con Holm. Marcar en el biométrico duplica la tasa (razón
+# Se evidencia que 5 de las 15 binarias difieren con Holm. Marcar en el biométrico duplica la tasa (razón
 # 2,10; IC de 1,78 a 2,49), y hacer turnos largos sin cobrar extras también (2,08; IC de 1,73 a 2,50):
 # es la señal de jornada más clara del capítulo. En sentido contrario, tener dos periodos de
 # vacaciones acumulados divide la tasa por cinco (0,18; IC de 0,12 a 0,28), ganar la mediana local la
@@ -954,7 +913,7 @@ display(ct)
 pd.crosstab(tr.nivel, tr.tipo_costos, normalize='index').mul(100).round(1)
 
 # %% [markdown]
-# Nótese que el término fijo es el 52,9 % de las filas, pero su peso varía por línea: 57,9 % en palma
+# Se observa que el término fijo es el 52,9 % de las filas, pero su peso varía por línea: 57,9 % en palma
 # y 31,8 % en banano. El tipo de personal casi determina el nivel en los extremos (el 93,9 % del nivel
 # operativo es operativo directo), y en los niveles medios y altos se reparte entre indirecto y
 # administrativo.
@@ -979,7 +938,7 @@ print(f'{len(cc)} pares | significativos con Holm al 5 %: {(cc["p Holm"] < 0.05)
 cc.sort_values('V de Cramér', ascending=False).head(15).round(3)
 
 # %% [markdown]
-# Nótese que los 136 pares son significativos con Holm (el valor p no ordena nada con este n) y que
+# Los 136 pares son significativos con Holm (el valor p no ordena nada con este n) y
 # 30 tienen V > 0,5. Tres son casi redundancias exactas: la sociedad determina la línea (V = 1,00),
 # la familia de cargo casi determina el oficio (0,995) y la línea casi determina la ubicación (0,88).
 # El oficio también está muy asociado con el tipo de unidad, el área funcional, el tipo de personal,
@@ -1011,7 +970,7 @@ asoc['p Holm'], asoc['p BH'] = ajustar(asoc.p)
 asoc.round(4)
 
 # %% [markdown]
-# Nótese que 15 de las 17 categóricas se asocian con el objetivo después de Holm; las dos que no son
+# Se evidencia que 15 de las 17 categóricas se asocian con el objetivo después de Holm; las dos que no son
 # el género (V 0,001; p Holm 0,82) y el estado de gestión de tiempos (V 0,007). Las de mayor V son
 # las de muchas categorías (oficio 0,075, ubicación 0,069, sociedad 0,063, tipo de unidad 0,056),
 # en parte porque V crece con los grados de libertad; el contrato, con una sola, tiene V 0,052, y la
@@ -1035,7 +994,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese en los gráficos que el término fijo (1,51 %) renuncia tres veces más que el indefinido
+# Se observa en los gráficos que el término fijo (1,51 %) renuncia tres veces más que el indefinido
 # (0,47 %); que banano (2,44 %) es la única línea claramente por encima de la media, y que el destajo
 # (junto con el integral, que es pequeño: 1,43 %) supera al básico (0,80 %). En la situación frente al mínimo, quienes vieron su sueldo
 # igualar o superar el aumento del mínimo renuncian poco (0,42 %). En oficio, los de banano
@@ -1125,9 +1084,8 @@ with pd.option_context('display.max_rows', 300):
 # Otras diferencias no resisten la corrección: el nivel del cargo, el género (0,97; IC de 0,77 a
 # 1,20), el personal administrativo (0,59, significativo solo con BH), el proceso de planta y casi
 # todas las familias de cargo. En sociedad y ubicación hay varias categorías con razones de 0,2 a 4:
-# son la misma heterogeneidad que la línea y el oficio, vista a otra escala. Los contrastes tratan las
-# filas como independientes y son algo optimistas; el modelo del capítulo 7 los estima ajustando por
-# las demás variables.
+# son la misma heterogeneidad que la línea y el oficio, vista a otra escala. El modelo del capítulo 7
+# estima estos contrastes ajustando por las demás variables.
 
 # %% [markdown]
 # ### Información mutua frente al azar, para las 105 predictoras
@@ -1207,7 +1165,7 @@ imt[col_im].head(25).round({'IM observada': 5, 'IM por azar': 5, '% de H(y)': 2,
                             'p permutación': 4, 'p Holm': 4, 'p BH': 4})
 
 # %% [markdown]
-# Nótese que la antigüedad reconocida es la predictora con más información (4,8 % de la entropía del
+# Se observa que la antigüedad reconocida es la predictora con más información (4,8 % de la entropía del
 # objetivo una vez descontado el azar), seguida de los meses desde el último cambio de contrato
 # (4,0 %), el oficio (4,0 %), los meses en la posición y en la función (3,7 %), la ubicación (3,4 %),
 # la edad (3,1 %) y la sociedad (3,0 %). La corrección por azar importa: la ubicación tiene la mayor
@@ -1226,20 +1184,9 @@ with pd.option_context('display.max_rows', 120):
     display(imt[col_im].round({'IM observada': 5, 'IM por azar': 5, '% de H(y)': 2, 'z': 1,
                                'p permutación': 4, 'p Holm': 4, 'p BH': 4}))
 
-# %%
-im_bloque = imt.groupby('bloque').agg(variables=('exceso', 'size'),
-                                      suma_pct_H=('% de H(y)', 'sum'),
-                                      max_pct_H=('% de H(y)', 'max'),
-                                      signif_holm=('p Holm', lambda s: int((s < 0.05).sum())))
-im_bloque['mejor variable'] = imt.groupby('bloque')['% de H(y)'].idxmax()
-im_bloque.sort_values('max_pct_H', ascending=False).round(2)
-
 # %% [markdown]
-# Nótese que por bloque la información está repartida: los atributos concentran la mejor variable
-# (antigüedad, 4,8 %), pero la jornada, con 27 variables, suma más (aunque su mejor, los meses con
-# extras, aporta 2,3 %), y el salario relativo tiene sus 14 variables significativas. Todos los bloques
-# tienen señal por encima del azar, y la de trayectoria y contrato es en buena parte antigüedad. Los
-# bloques con menos información son arraigo y ausencias, que sin embargo aportan variables que no son
+# Todos los bloques tienen señal por encima del azar (tabla de la síntesis); la de trayectoria y
+# contrato es en buena parte antigüedad, mientras que ausencias y origen aportan variables que no son
 # tiempo (licencia no remunerada reciente, nacido en el departamento de la sede).
 #
 # ### Tasa de renuncia por antigüedad reconocida (*hazard*)
@@ -1291,7 +1238,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que en el término fijo la tasa se mantiene alrededor de 2,0-2,3 % mensual durante el primer
+# Se evidencia que en el término fijo la tasa se mantiene alrededor de 2,0-2,3 % mensual durante el primer
 # año (0-2, 3-5 y 6-11 meses), baja a 1,28 % en el segundo año, a 1,10 % en el tercero y a 0,70 % entre
 # los 3 y 5 años (en 60 meses o más, que se publica junto, 0,32 %). En el indefinido casi no hay
 # personas nuevas, y sus primeros 24 meses se publican juntos porque por separado tendrían menos de
@@ -1342,15 +1289,16 @@ ax[1].errorbar(d['razón fijo / indefinido'], yy, xerr=[d['razón fijo / indefin
                d['IC alto'] - d['razón fijo / indefinido']], fmt='o', color=VERDE, ecolor=TINTA, lw=0.8)
 ax[1].axvline(1, ls='--', c=GRIS, lw=0.8)
 ax[1].set_yticks(list(yy))
-ax[1].set_yticklabels(d.index)
+ax[1].set_yticklabels([rotulo(c) for c in d.index])
 ax[1].set_xscale('log')
+eje_llano(ax[1].xaxis)
 ax[1].set(title='Razón de tasas término fijo / indefinido, por línea (IC 95 %)', xlabel='Razón (escala log)')
 plt.tight_layout()
 plt.show()
 rr_linea.round(2)
 
 # %% [markdown]
-# Nótese que el efecto del contrato depende de la línea: el término fijo multiplica la tasa por 6,1 en
+# Se observa que el efecto del contrato depende de la línea: el término fijo multiplica la tasa por 6,1 en
 # palma (1,25 % frente a 0,20 %), por 3,9 en industrial, por 3,2 en banano y por 2,0 en transporte,
 # mientras que en puerto no hay diferencia (0,84 % frente a 0,86 %; razón 0,99, IC de 0,31 a 3,1). El
 # grupo de mayor riesgo es banano con término fijo, con 4,6 % mensual, 4,5 veces la media. Un modelo
@@ -1373,7 +1321,7 @@ for contrato in t_int2.index.get_level_values(1).unique():
 t_int2.rename_axis([f'tercil de {v_int}', 'contrato']).round(2)
 
 # %% [markdown]
-# Nótese la interacción de antigüedad y contrato en la primera tabla: con menos de un año casi todo es
+# Se observa la interacción de antigüedad y contrato en la primera tabla: con menos de un año casi todo es
 # término fijo (2,14 %); el indefinido con menos de 3 años (publicado en un solo tramo, porque su
 # primer año tiene muy pocas renuncias) renuncia a 1,47 %, más que el fijo entre 1 y 3 años (1,21 %),
 # y desde los 3 años el fijo vuelve a estar por encima (0,55 % frente a 0,37 %). El orden de
@@ -1393,7 +1341,7 @@ fam['personas hombres'] = tr[tr.genero == 'Masculino'].groupby('familia_cargo').
 fam = fam[(fam.filas >= 300) & (fam['personas mujeres'].fillna(0) >= 5) & (fam['personas hombres'].fillna(0) >= 5)]
 fam = fam.sort_values('mujeres')
 fig, ax = plt.subplots(figsize=(7, 4))
-barras = ax.barh(fam.index, fam.mujeres, color=VERDE, **BORDE)
+barras = ax.barh([rotulo(c) for c in fam.index], fam.mujeres, color=VERDE, **BORDE)
 etiquetar(ax, barras, '{:.0f} %')
 ax.set(title='Porcentaje de mujeres por familia de cargo\n(familias con >= 300 filas y >= 5 personas de cada género)',
        xlabel='Mujeres (% de persona-mes)', ylabel='')
@@ -1403,7 +1351,7 @@ print(f'familias graficadas: {len(fam)} de {tr.familia_cargo.nunique()}')
 print('tasa por género (%):', tasa(tr, 'genero')['tasa_%'].round(2).to_dict())
 
 # %% [markdown]
-# Nótese que las mujeres se concentran en las familias administrativas (74 % en finanzas y
+# Las mujeres se concentran en las familias administrativas (74 % en finanzas y
 # administración, 65 % en comercial y compras) y casi no están en las operativas (3 % a 9 % en
 # mantenimiento técnico, transporte y campo). La tasa por género es prácticamente igual (0,99 % en
 # mujeres y 1,03 % en hombres) y el género no aporta información por sí solo (V de Cramér 0,001).
@@ -1443,56 +1391,28 @@ print('cola larga:', ', '.join(COLA_LARGA))
 top_sint.round(3)
 
 # %% [markdown]
-# **Variables prometedoras, por bloque** (entre paréntesis, P(sup) o V de Cramér, y la información
-# mutua en % de la entropía):
+# **Conclusiones principales:**
 #
-# 1. **Atributos.** La antigüedad reconocida es la predictora más fuerte del libro (P(sup) 0,302;
-#    4,8 %), seguida de oficio, ubicación, edad y sociedad, y del contrato (razón fijo/indefinido 3,2).
-#    El género no aporta nada (V 0,001).
-# 2. **Contrato.** Meses desde el último cambio de contrato (0,329; 4,0 %) y meses al vencimiento, cuya
-#    información está en el nulo (indefinido).
-# 3. **Trayectoria.** Meses en la posición y en la función (0,33 y 0,32), muy correlacionados con la
-#    antigüedad (Spearman 0,84-0,85). Jefatura, ascensos y movimientos laterales no tienen señal.
-# 4. **Salario relativo.** Variación del sueldo en mínimos, aumentos por mérito, privación relativa y
-#    Gini del oficio, situación frente al mínimo y tipo de salario (destajo 1,8 veces el básico).
-# 5. **Jornada.** Meses con extras en 12 meses (0,373), jornada frente a pago de extras,
-#    marcar en el biométrico (2,1 veces) y turnos largos sin pago (2,1 veces). Los montos de horas
-#    extra y dominicales del último mes casi no informan.
-# 6. **Ingreso relativo.** Ingreso frente al pactado (0,368) y cambio y volatilidad del ingreso; los
-#    bonos puntuales (fin de año, seleccionado, ocasional) no tienen señal.
-# 7. **Ausencias.** Días de licencia no remunerada de los tres meses previos (0,585), la señal de
-#    riesgo más clara que no es antigüedad, y el día de la familia.
-# 8. **Vacaciones.** Meses desde las últimas vacaciones (en el nulo), días y periodos pendientes, y los
-#    dos periodos acumulados (razón 0,18).
-# 9. **Arraigo.** Retiros históricos de cesantías para vivienda (0,360) y haber nacido en el
-#    departamento de la sede (razón 0,68).
-#
-# **Decisiones de preprocesamiento para el capítulo 7** (todas tomadas con el entrenamiento):
-#
-# - **Métrica y validación.** PR-AUC como métrica principal (piso 0,0102), captura en el 10 % de mayor
-#   riesgo de cada mes como métrica operativa, ROC-AUC como complemento; validación en los ocho
-#   pliegues temporales mensuales, sin estratificar ni remuestrear.
-# - **Colas largas.** Recorte de las numéricas no binarias a sus percentiles 1 y 99 del entrenamiento
-#   de cada pliegue, y logaritmo con signo en las que siguen con \|asimetría\| > 2 después del
-#   recorte: 39 en el entrenamiento completo, las de la lista de arriba (con la asimetría cruda
-#   serían 44).
-# - **Antigüedad.** Además del recorte, en logaritmo, o por tramos (0-11, 12-23, 24-35, 36-59, 60+
-#   meses), porque el riesgo tiene una meseta el primer año y luego cae.
-# - **Nulos.** En las 54 numéricas con nulos, imputación por la mediana del pliegue más un indicador
-#   de faltante; en las categóricas con nulos, el nulo es una categoría más. El nulo es estructural e informativo (primer mes del episodio, destajo, no marcar,
-#   indefinido, sin vacaciones aún), no aleatorio. Ojo con `tamano_equipo_jefe`: su cobertura sube de
-#   cerca del 50 % al 80 % en el segundo semestre de 2025, así que su indicador de faltante cambia de
-#   significado en el tiempo y su coeficiente debe revisarse entre pliegues.
-# - **Categóricas.** One-hot con `min_frequency=300` y `handle_unknown='infrequent_if_exist'`, el nulo
-#   como categoría y `estado_gestion_tiempos` como categórica.
-# - **Redundancias.** Sociedad y línea (V 1,00), familia y oficio (0,995) y las variables de tiempo
-#   (Spearman > 0,7 entre sí) no se eliminan aquí: se dejan a la regularización, con una rejilla de C
-#   que llegue a 1e-4 y L1 frente a L2, y el capítulo 4 las cuantifica con el VIF.
-# - **Interacciones.** Contrato por línea (la razón fijo/indefinido va de 0,99 en puerto a 6,1 en
-#   palma) y contrato por tramo de antigüedad (el orden de los contratos se invierte entre 1 y 3
-#   años); se evalúan como términos explícitos en la validación, no se incluyen por defecto.
-# - **Normalidad.** No se transforma buscando normalidad (la logística no la supone); las
-#   transformaciones buscan limitar la influencia de las colas y linealizar la relación en el logit.
+# - **Antigüedad.** La antigüedad reconocida es la señal principal (P(sup) 0,302; 4,8 % de la
+#   entropía del objetivo), y buena parte de la señal de contrato y trayectoria es antigüedad con otro
+#   nombre (Spearman > 0,7 entre las variables de tiempo); el riesgo tiene una meseta el primer año y
+#   luego cae, por lo que se representa en logaritmo o por tramos.
+# - **Contrato.** El término fijo renuncia 3,2 veces más que el indefinido, sobre todo porque agrupa a
+#   las personas nuevas.
+# - **Interacciones.** La razón fijo/indefinido va de 0,99 en puerto a 6,1 en palma, y el orden de los
+#   contratos se invierte entre 1 y 3 años de antigüedad; se evalúan como términos explícitos en la
+#   validación del capítulo 7.
+# - **Señales que no son tiempo.** Licencia no remunerada reciente (0,585), ingreso frente al pactado
+#   (0,368), meses con extras (0,373), turnos largos sin pago (razón 2,1) y destajo (1,8 veces el
+#   básico).
+# - **Género.** No aporta información por sí solo (V de Cramér 0,001).
+# - **Colas largas.** 39 numéricas conservan \|asimetría\| > 2 tras el recorte p1-p99 y reciben el
+#   logaritmo con signo, según el recuadro de la sección de colas largas.
+# - **Nulos.** Son estructurales e informativos (capítulo 1): indicador de faltante en las numéricas y
+#   categoría propia en las categóricas. La cobertura de `tamano_equipo_jefe` cambia en el tiempo, por
+#   lo que su coeficiente debe revisarse entre pliegues.
+# - **Redundancias.** Sociedad y línea, familia y oficio y las variables de tiempo se dejan a la
+#   regularización; el capítulo 4 las cuantifica con el VIF.
 
 # %% tags=["remove-cell"]
 # Control de privacidad (no se publica): cada tabla o gráfico por grupo pasó por `verificar`, que exige

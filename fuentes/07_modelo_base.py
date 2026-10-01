@@ -30,9 +30,9 @@
 # | `DummyClassifier(strategy='most_frequent')` | predice siempre "no renuncia": muestra lo que vale la exactitud con 1 % de positivos |
 # | `DummyClassifier(strategy='prior')` | puntúa a todos con la prevalencia: el piso de cualquier métrica de ordenamiento |
 # | `DummyClassifier(strategy='stratified')` | predice al azar con la proporción de clases: el piso de la matriz de confusión |
-# | `DummyClassifier(strategy='uniform')` | predice 0 o 1 con probabilidad 1/2: el piso de la exhaustividad a cambio de marcar a la mitad |
+# | `DummyClassifier(strategy='uniform')` | predice 0 o 1 con probabilidad 1/2: el piso de la exhaustividad (*recall*) a cambio de marcar a la mitad |
 # | logística de **atributos** | las 18 variables de atributos del trabajador y del puesto (sin la historia laboral) |
-# | logística **completa** | las 105 predictoras: los atributos más los 8 bloques de historia laboral |
+# | logística **completa** | las 105 predictoras: los atributos más los 9 bloques de historia laboral |
 #
 # Las dos logísticas llevan además la indicadora de enero y la antigüedad por tramos (sección 7.3) y el mismo preprocesamiento,
 # de modo que su diferencia mide solo lo que aporta la historia laboral. La penalización (L1 o L2), su
@@ -40,13 +40,13 @@
 #
 # La métrica principal es la PR-AUC (precisión promedio). Como métrica operativa se reporta la
 # captura en el 10 % de mayor riesgo de cada mes. En las métricas con umbral (exactitud, exactitud
-# balanceada, precisión, exhaustividad, F1 y F2) el umbral es el tamaño de la lista mensual: se marca la
+# balanceada (*balanced accuracy*), precisión, exhaustividad, F1 y F2) el umbral es el tamaño de la lista mensual: se marca la
 # fracción *q* de mayor puntaje de cada mes. El F2 pesa la exhaustividad cuatro veces más que la
 # precisión, lo que refleja el costo relativo del problema: es preferible conversar con alguien que
 # no iba a renunciar que dejar de ver a quien sí.
 #
 # Con VP, FP, FN y VN las cuatro celdas de la matriz de confusión (verdaderos y falsos positivos,
-# falsos y verdaderos negativos),
+# falsos y verdaderos negativos; TP, FP, FN y TN en inglés),
 #
 # $$
 # \text{precisión} = \frac{VP}{VP + FP}, \qquad
@@ -101,10 +101,8 @@
 #
 # ## Validación
 #
-# Se usa la validación temporal del capítulo 2: ventana creciente, un mes de separación y ocho
-# pliegues que validan cada mes de septiembre de 2025 a abril de 2026. No se usa
-# `TimeSeriesSplit(gap=...)` porque en un panel el `gap` cuenta filas, no meses; `pliegues_temporales`
-# separa por mes calendario.
+# Se usa la validación temporal definida en el capítulo 2, con ocho pliegues que validan cada mes de
+# septiembre de 2025 a abril de 2026.
 
 # %%
 import sys
@@ -133,7 +131,7 @@ from statsmodels.graphics.tsaplots import plot_acf
 
 sys.path.insert(0, '.')
 warnings.filterwarnings('ignore')
-from comun import (cargar, particion, estilo, etiquetar, pliegues_temporales, marcar_top,
+from comun import (eje_llano, cargar, particion, estilo, etiquetar, pliegues_temporales, marcar_top,
                    metricas_umbral, OBJETIVO, NUM, BIN, CAT, BASE, PREDICTORAS, BLOQUE, SEMILLA, CORTE,
                    NOMBRE, VERDE, ORO, TINTA, GRIS, BORDE, PALETA)
 
@@ -237,7 +235,7 @@ for conj in LOGISTICAS:
           f'numéricas recortadas {int(rec.recorta_.sum())} de {len(rec.recorta_)}, con log {int(rec.log_.sum())}')
 
 # %% [markdown]
-# Nótese que la logística completa trabaja con muchas más columnas que variables: cada categoría
+# Se evidencia que la logística completa trabaja con muchas más columnas que variables: cada categoría
 # frecuente es una columna y cada numérica con faltantes suma su indicador. Las cifras de recorte y
 # logaritmo de la salida son las del entrenamiento completo; en cada pliegue se recalculan con sus
 # propias filas.
@@ -282,7 +280,7 @@ base_dummy.round(4)
 # :class: warning
 # El dummy que predice siempre "no renuncia" obtiene una exactitud de 0,99 con exhaustividad 0: no
 # encuentra ninguna renuncia. Esa exactitud es exactamente uno menos la prevalencia, no una señal de
-# aprendizaje. No se debe a una fuga de información (el capítulo 6 descartó las variables que se
+# aprendizaje. No se debe a una fuga de datos (el capítulo 6 descartó las variables que se
 # construyen con la salida y verificó la disponibilidad de cada bloque al día 1 del mes) ni a una
 # validación optimista (es temporal: se valida siempre en meses posteriores al entrenamiento). Por
 # eso la exactitud no se usa para elegir modelos, y en su lugar se reportan la PR-AUC, la exactitud
@@ -377,7 +375,7 @@ for conj, (pen, pesos, C) in ELEGIDO.items():
 mejores.round(4)
 
 # %% [markdown]
-# Nótese que ningún óptimo queda en el borde: en las dos combinaciones de atributos sin pesos la rejilla
+# Se observa que ningún óptimo queda en el borde: en las dos combinaciones de atributos sin pesos la rejilla
 # se amplió hacia arriba (hasta $C = 1$ y $C = 3{,}2$), y el borde inferior nunca es el óptimo porque con
 # L1 y $C \le 10^{-4}$ todos los coeficientes valen cero y la PR-AUC cae a la prevalencia. Se eligen la
 # logística de atributos con L2, pesos balanceados y $C = 3{,}2 \cdot 10^{-4}$ (PR-AUC media 0,036), y
@@ -390,7 +388,7 @@ mejores.round(4)
 #
 # ### Curva de validación
 #
-# Siguiendo la convención del curso, la PR-AUC media en las filas de entrenamiento de cada pliegue y en
+# La PR-AUC media en las filas de entrenamiento de cada pliegue y en
 # su mes de validación, según *C*, con una banda de ±1 desviación estándar entre pliegues. El punto
 # marca el *C* elegido de cada combinación.
 
@@ -414,7 +412,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Las curvas se leen como en el curso. A la izquierda (penalización muy fuerte) las dos curvas están
+# A la izquierda (penalización muy fuerte) las dos curvas están
 # juntas y bajas: es **subajuste**, y con L1 llega al extremo de un modelo sin variables, pegado a la
 # prevalencia. Al relajar la penalización suben juntas hasta el *C* elegido. A la derecha del óptimo la
 # curva de entrenamiento sigue subiendo y la de validación baja: es el **sobreajuste**, y se ve con
@@ -521,9 +519,9 @@ pruebas.round(4)
 #
 # ## Diagnóstico de sobreajuste
 #
-# Comparamos el desempeño en las filas de entrenamiento de cada pliegue con el de su mes de
+# Se compara el desempeño en las filas de entrenamiento de cada pliegue con el de su mes de
 # validación. Se prueba si la brecha media es cero (*t* de una muestra y Wilcoxon) y se lee su tamaño
-# relativo, $(\text{ent} - \text{val}) / \text{ent}$, con los umbrales del curso: hasta 5 a 10 % es
+# relativo, $(\text{ent} - \text{val}) / \text{ent}$, con umbrales convencionales: hasta 5 a 10 % es
 # aceptable y más de 15 a 20 % indica sobreajuste.
 
 # %%
@@ -545,9 +543,9 @@ brechas.round(4)
 
 # %% [markdown]
 # Ninguna brecha es significativa (*t* p ≥ 0,54; Wilcoxon p ≥ 0,55) y todas están por debajo del 5 %
-# aceptable del curso: en atributos, 4,2 % en PR-AUC y 0,2 % en ROC-AUC; en la completa, 0,02 % en
+# aceptable: en atributos, 4,2 % en PR-AUC y 0,2 % en ROC-AUC; en la completa, 0,02 % en
 # ROC-AUC y −9,5 % en PR-AUC, es decir, la validación supera al entrenamiento. Se leen las dos
-# métricas porque pueden discrepar: el umbral del curso se aplica a cada una. Esta brecha, sin embargo,
+# métricas porque pueden discrepar: el umbral se aplica a cada una. Esta brecha, sin embargo,
 # no basta para concluir que no hay sobreajuste: la brecha negativa de la completa muestra que la
 # comparación mezcla dos cosas: en la tabla por pliegue, octubre de 2025 tiene una PR-AUC de validación de 0,094
 # frente a 0,051 en su entrenamiento, con una prevalencia más baja (0,73 % frente a 1,11 %). Una brecha
@@ -615,7 +613,7 @@ pd.DataFrame(filas).set_index(['modelo', 'métrica']).round(4)
 # el sobreajuste es claro (curva de validación de la sección 7.6.1), y por eso *C* se eligió por
 # validación. Con la penalización elegida queda un sobreajuste pequeño: 2 a 3 % en ROC-AUC en los dos
 # modelos (en la completa, al borde de la significación, p = 0,055) y 11 % en el *lift* de la de
-# atributos, entre el umbral aceptable (5-10 %) y el de sobreajuste (15-20 %) del curso, sin llegar a
+# atributos, entre el umbral aceptable (5-10 %) y el de sobreajuste (15-20 %), sin llegar a
 # este. La brecha de la validación temporal lo esconde, porque la deriva entre meses la puede agrandar
 # o, como aquí, darle la vuelta; por eso no sirve sola como medidor. La deriva que importa aparece en el
 # test.
@@ -886,19 +884,12 @@ print(f'\nDeLong: ROC-AUC completa {A:.4f}, atributos {B:.4f}, diferencia {dif:+
       f'magnitud: {magnitud}')
 
 # %% [markdown]
-# | $\lvert\Delta\text{AUC}\rvert$ | magnitud (convención del curso) |
-# |---|---|
-# | < 0,01 | trivial |
-# | 0,01 a 0,03 | pequeña |
-# | 0,03 a 0,05 | moderada |
-# | > 0,05 | importante |
-#
 # Contra el dummy, las dos logísticas ganan en todas las métricas y en todas las réplicas. Entre ellas,
 # la ventaja de la completa en el test es positiva pero incierta: +0,004 de PR-AUC (IC de −0,005 a
 # +0,016; 15 % de réplicas en contra), +0,024 de ROC-AUC (IC de −0,003 a +0,050; 4,5 % en contra) y
 # +4,7 puntos de captura (IC de −4,9 a +11,8). DeLong da la misma lectura: $\Delta$AUC = +0,024 (IC 95 %
-# de −0,003 a +0,051), *z* = 1,74, *p* = 0,082, una diferencia **pequeña** según la tabla del curso y no
-# significativa al 5 %. Con 149 renuncias en el test, una diferencia de 0,02 en el AUC está en el límite
+# de −0,003 a +0,051), *z* = 1,74, *p* = 0,082, una diferencia **pequeña** (entre 0,01 y 0,03; por debajo
+# de 0,01 sería trivial y por encima de 0,05, importante) y no significativa al 5 %. Con 149 renuncias en el test, una diferencia de 0,02 en el AUC está en el límite
 # de lo que se puede detectar. La evidencia a favor de la historia laboral viene sobre todo de la
 # validación (8 de 8 pliegues). El test la confirma en la dirección, pero no con la misma fuerza.
 #
@@ -1120,7 +1111,7 @@ print('\nLjung-Box (3 rezagos):', ljung_box.round(3).to_dict('records'))
 # %% [markdown]
 # Con las probabilidades recalibradas, el residuo está entre −2 y +2 en 11 de los 12 meses y el nivel ya
 # no está desplazado. La excepción es enero de 2026: 60 renuncias frente a 38 esperadas (*z* = 3,7). La
-# indicadora de enero entra en el modelo, pero con un coeficiente pequeño (razón de momios 1,06): cuando
+# indicadora de enero entra en el modelo, pero con un coeficiente pequeño (razón de momios u *odds ratio*, 1,06): cuando
 # se valida enero de 2026, el entrenamiento solo tiene el enero de 2025, y el de 2026 fue más alto. En el
 # test, julio queda por encima de lo esperado (43 frente a 33; *z* = 1,8). Ljung-Box no rechaza la
 # ausencia de autocorrelación (p = 0,14), y el ACF no tiene rezagos fuera de la banda. No queda
@@ -1213,6 +1204,7 @@ etiquetar(ax[0], barras, textos=[f'{v:.2f}' for v in top.OR])
 ax[0].axvline(1, c=TINTA, lw=0.8)
 ax[0].set(xscale='log', title='Razón de momios, logística completa (12 más altas y 12 más bajas)',
           xlabel='Razón de momios por desviación estándar o por categoría (escala log)')
+eje_llano(ax[0].xaxis)
 lo, hi = ax[0].get_xlim()
 ax[0].set_xticks([t for t in [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.5, 2] if lo <= t <= hi])
 ax[0].xaxis.set_major_formatter(FuncFormatter(lambda v, _: f'{v:g}'))
@@ -1243,9 +1235,9 @@ print(f'\nde las 15 columnas de mayor |coeficiente| en el modelo final, con el m
 
 # %% [markdown]
 # La L1 deja 50 de las 327 columnas con coeficiente distinto de cero. Por bloque, los atributos suman el
-# 31 % del total de |coeficiente|, la jornada el 21 %, las ausencias el 12 % y arraigo, vacaciones,
-# salario relativo, trayectoria e ingreso relativo entre el 5 % y el 8,5 % cada uno; contrato y calendario
-# casi nada. La antigüedad reconocida es la variable más fuerte: una desviación estándar más (en la
+# 31 % del total de |coeficiente|, la jornada el 21 %, las ausencias el 12 % y trayectoria, vacaciones,
+# origen, salario relativo e ingreso relativo entre el 5 % y el 7 % cada uno; contrato, calendario y
+# proyectos personales casi nada. La antigüedad reconocida es la variable más fuerte: una desviación estándar más (en la
 # escala recortada) multiplica los momios de renunciar por 0,61. Le siguen los días de licencia no
 # remunerada de los tres meses previos (1,31 por desviación, la señal de riesgo más clara que no es
 # antigüedad, como en el capítulo 3), trabajar en finca de palma (0,80), los periodos de vacaciones
@@ -1399,67 +1391,50 @@ plt.show()
 # ## Limitaciones
 #
 # - **Ventana corta y pocos eventos.** Veinte meses, dos eneros y 688 renuncias de entrenamiento para
-#   327 columnas (unas 2 por columna); por eso la penalización fuerte no es opcional. El test tiene 149
+#   327 columnas (unas 2 por columna); por eso hace falta una penalización fuerte. El test tiene 149
 #   renuncias: los intervalos son anchos y una diferencia de 0,02 en el AUC queda en el límite de lo
 #   detectable.
-# - **Deriva.** La PR-AUC cae a la mitad entre validación y test. La reducción legal de la jornada
-#   (julio de 2025 y julio de 2026) movió variables de jornada que por eso se excluyeron (capítulo 5), y
-#   la recalibración se ajustó con meses anteriores al test: el nivel de las probabilidades puede
-#   desplazarse de nuevo.
+# - **Deriva.** La PR-AUC cae a la mitad entre validación y test. El efecto de la reducción legal de la
+#   jornada se trata en el capítulo 5. La recalibración se ajustó con meses anteriores al test, de modo
+#   que el nivel de las probabilidades puede desplazarse de nuevo.
 # - **Rezagos y primer mes.** Lo que sale de la nómina, las marcaciones y las novedades llega hasta el
 #   mes *t − 1* (hasta *t − 2* en las `_r2`). En el primer mes de cada episodio la historia está vacía,
 #   y el modelo solo cuenta con los atributos y el indicador de faltante justo donde el riesgo es alto.
 # - **Cobertura cambiante.** El faltante de algunas variables cambia de significado en el tiempo (el
 #   tamaño del equipo del jefe pasa de cubrir la mitad a cubrir el 80 % de las filas en 2025). Aquí su
 #   coeficiente es casi cero, pero cualquier reentrenamiento debe revisarlo.
-# - **Variables excluidas por decisión de los autores.** Salud e incapacidades, riesgo psicosocial, clima
-#   individual, sindicato, hijos y familia, quejas, desempeño, sanciones, deudas y descuentos y sueldo
-#   absoluto son datos sensibles (Ley 1581 de 2012) o de zona gris, y el proyecto no los usa. Tampoco hay
-#   datos del mercado laboral local ni de ofertas externas, que suelen precipitar una renuncia.
+# - **Variables excluidas.** Las variables sensibles o de uso ajeno a su finalidad no entran al modelo
+#   (capítulo 1), y no hay datos del mercado laboral local ni de ofertas externas.
 # - **Una sola organización.** Un grupo agroindustrial colombiano con predominio de personal operativo de
 #   campo (palma, banano, industrial, transporte, puerto, ganadería). Las conclusiones no se extienden a
 #   otros sectores ni a otras empresas.
-# - **Etiqueta y riesgos competitivos.** La renuncia es la registrada como voluntaria. Las no
-#   renovaciones con preaviso y las demás salidas se tratan como no renuncia, lo que supone que no
-#   informan sobre el riesgo de renunciar, y algunas renuncias pueden haber sido pedidas (capítulo 2).
+# - **Etiqueta y riesgos competitivos.** La renuncia es la registrada como voluntaria y las demás
+#   salidas se tratan como no renuncia; el tratamiento del preaviso se describe en el capítulo 2.
 # - **Asociación, no causa.** Los coeficientes están penalizados y condicionados a las demás variables,
 #   y con variables correlacionadas el reparto del peso es arbitrario. No indican qué pasaría si se
 #   cambiara el contrato, la jornada o un permiso de una persona.
-# - **Riesgos éticos del puntaje.** Un puntaje individual de riesgo de renuncia puede usarse para
-#   retener, pero también para decidir contrataciones, renovaciones o permisos en contra de las personas
-#   marcadas, o para castigar el uso de licencias a las que tienen derecho. El género sigue entre las
-#   predictoras (capítulo 3: no aporta, V de Cramér 0,001), aunque la L1 deja sus coeficientes en cero. No debe usarse para priorizar, y un uso real
-#   exigiría un análisis de equidad por género, tipo de contrato y línea que este entregable no hace.
+# - **Uso del puntaje.** El puntaje está pensado como apoyo para priorizar acciones de retención. El
+#   género sigue entre las predictoras (capítulo 3: no aporta, V de Cramér 0,001), aunque la L1 deja sus
+#   coeficientes en cero. Antes de cualquier uso real haría falta un análisis de equidad por género,
+#   tipo de contrato y línea, que queda para el proyecto final.
 #
 # ## Síntesis
 #
-# 1. **Las dos logísticas superan a los modelos triviales** en validación (8 de 8 pliegues) y en el test.
-#    La completa obtiene una PR-AUC de 0,028 (IC de 0,021 a 0,043) frente a 0,0084 del dummy, un
-#    ROC-AUC de 0,764 (0,731 a 0,796) y recoge el 34 % de las renuncias en el 10 % de mayor riesgo de
-#    cada mes (26 % a 41 %), frente a un 12 % de marcar al azar.
-# 2. **La exactitud no sirve aquí.** El dummy que dice siempre "no renuncia" tiene 0,99 sin encontrar
-#    ninguna renuncia. No es fuga (capítulo 6) ni validación optimista (es temporal); es la
-#    prevalencia. Por eso se eligió todo con la PR-AUC y se reportan la exactitud balanceada (0,60 a 0,62
-#    frente a 0,50), la exhaustividad y el F2.
-# 3. **La historia laboral aporta.** En validación sube la PR-AUC media de 0,036 a 0,054 (8 de 8
-#    pliegues, Wilcoxon p = 0,008). En el test la ventaja se mantiene en la dirección, pero es pequeña e
-#    incierta: $\Delta$AUC = +0,024, DeLong p = 0,08, y +0,004 de PR-AUC con un IC que incluye el cero.
-#    Las interacciones contrato por línea y contrato por antigüedad no mejoran la validación y no entran.
-# 4. **Sobreajuste: controlado, no ausente.** Con penalizaciones débiles la curva de validación muestra
-#    sobreajuste claro. Con la elegida por validación (L1, $C = 0{,}032$, 50 columnas activas), la brecha
-#    entre entrenamiento y validación temporal está por debajo del 5 % y no es significativa, pero la
-#    deriva la esconde. Separada de ella, queda un sobreajuste pequeño: 2 a 3 % en ROC-AUC (p = 0,055
-#    en la completa) y 11 % en el *lift* de la de atributos, bajo el umbral de sobreajuste del curso. La curva de aprendizaje se aplana: más filas
-#    del mismo tipo no moverían mucho el modelo.
-# 5. **Umbral y probabilidades.** La lista mensual del 9 % (F2 máximo en validación) recoge en el test
-#    el 30 % de las renuncias con una precisión del 2,8 %, 3,3 veces la tasa base; el techo con ese
-#    tamaño es 9,4 %. Las probabilidades se recalibraron con el entrenamiento (Platt), y con ellas los
-#    residuos mensuales no tienen autocorrelación (Ljung-Box p = 0,14), salvo un enero de 2026 más alto
-#    de lo esperado.
-# 6. **Lo que mueve el riesgo** es la antigüedad reconocida baja, la juventud, los permisos no
-#    remunerados recientes, no tener horas extra ni vacaciones pendientes y los turnos largos. Como
-#    asociación, no como causa.
+# 1. **Las dos logísticas superan a las líneas base.** En el test la completa obtiene una PR-AUC de
+#    0,028 (IC de 0,021 a 0,043) frente a 0,0084 del dummy, un ROC-AUC de 0,764 y recoge el 34 % de las
+#    renuncias en el 10 % de mayor riesgo de cada mes, frente a un 12 % al azar. La exactitud no sirve
+#    para elegir: el dummy mayoritario obtiene 0,99 sin encontrar ninguna renuncia.
+# 2. **La historia laboral aporta.** En validación sube la PR-AUC media de 0,036 a 0,054 (8 de 8
+#    pliegues); en el test la ventaja es pequeña e incierta ($\Delta$AUC = +0,024, DeLong p = 0,08).
+# 3. **Sobreajuste controlado, no ausente.** Separado de la deriva, es de 2 a 3 % en ROC-AUC y de 11 %
+#    en el *lift* de la de atributos, bajo el umbral de sobreajuste (15-20 %).
+# 4. **Umbral y probabilidades.** La lista mensual del 9 % (F2 máximo en validación) recoge en el test
+#    el 30 % de las renuncias con una precisión del 2,8 %, 3,3 veces la prevalencia. Con la
+#    recalibración de Platt, los residuos mensuales no presentan autocorrelación (Ljung-Box p = 0,14).
+# 5. **Lo que mueve el riesgo** es la antigüedad reconocida baja, la juventud, los permisos no
+#    remunerados recientes, la ausencia de horas extra y de vacaciones pendientes, y los turnos largos,
+#    como asociación y no como causa.
 #
-# Queda para el proyecto final una validación con más meses (o con la historia desde 2023), un análisis
-# de equidad del puntaje por género, contrato y línea antes de cualquier uso, y una recalibración
-# temporal que siga la deriva de la prevalencia.
+# Queda para el proyecto final una validación con más meses, un análisis de equidad del puntaje por
+# género, contrato y línea antes de cualquier uso, y una recalibración que siga la deriva de la
+# prevalencia.

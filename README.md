@@ -6,8 +6,8 @@ Jupyter Book con el análisis exploratorio y el modelo base (línea base trivial
 están ejecutados: se leen con sus salidas sin necesidad de datos.
 
 Los datos no están en este repositorio: son datos de personas de la empresa, con autorización de uso académico
-(capítulo 1). El panel `panel_rotacion_2025_2026.csv` (CSV anonimizado) se entrega por separado por el canal del
-curso. Para volver a ejecutar:
+(capítulo 1). El panel `panel_rotacion_2025_2026.csv` (CSV anonimizado) se entrega por separado por un canal
+privado. Para volver a ejecutar:
 
 ```
 set PANEL_ROTACION=C:\ruta\al\panel_rotacion_2025_2026.csv
@@ -22,4 +22,4 @@ o copiar el panel a `datos/panel_rotacion_2025_2026.csv` junto a este archivo (l
 - `diccionario.csv`: tipo, unidad, significado y disponibilidad de cada columna del panel.
 - `referencias.bib`: bibliografía.
 - `_static/identidad.css`: colores del libro.
-- `requirements.txt`: versiones del entorno del curso (Python 3.9).
+- `requirements.txt`: versiones del entorno (Python 3.9).

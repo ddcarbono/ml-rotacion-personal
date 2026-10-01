@@ -10,9 +10,9 @@
 #
 # El capítulo anterior miró cada variable frente al objetivo. Aquí se miran las variables entre sí,
 # con cuatro preguntas que condicionan el modelo: qué variables repiten la misma información
-# (correlación, V de Cramér y VIF), cuántas dimensiones tiene de verdad la historia laboral (PCA), si
+# (correlación, V de Cramér y VIF), cuántas dimensiones efectivas tiene la historia laboral (PCA), si
 # hay filas raras que renuncien distinto (atípicos multivariados) y si hay subpoblaciones naturales
-# (k-medias). Con 85 numéricas repartidas en 8 bloques más los atributos, el análisis se organiza por
+# (k-medias). Con 85 numéricas repartidas en 9 bloques más los atributos, el análisis se organiza por
 # bloque y se resume en tablas; los gráficos se reservan para lo que no cabe en una tabla.
 
 # %%
@@ -67,7 +67,7 @@ print(pd.Series([BLOQUE[c] for c in NUMS]).value_counts().reindex(ORDEN_BLOQUES)
 # Son 88 columnas: las 85 numéricas (incluidas las binarias 0/1 de la historia) más las 3 binarias de
 # atributos (primer mes, reingreso, traslado). Las 5 variables que el capítulo 1 dejó fuera (entre ellas
 # el contrato fijo, idéntico al tipo de contrato, y las que siguen el calendario de la reducción legal
-# de la jornada) no entran. Jornada es el bloque más grande (25), porque cada
+# de la jornada, que se trata en el capítulo 5) no entran. Jornada es el bloque más grande (25), porque cada
 # concepto de tiempo (horas extra, recargo nocturno, dominicales, sábados) viene en tres ventanas.
 #
 # ## Correlación entre numéricas (Spearman)
@@ -120,24 +120,27 @@ print(f'pares con |r| > 0,7: {len(fuertes)} de {len(pares):,} | con |r| > 0,95: 
       f'{(fuertes["|r|"] > 0.95).sum()} | entre bloques distintos: '
       f'{(fuertes.bloque_1 != fuertes.bloque_2).sum()}')
 print(f'variables involucradas: {len(set(fuertes.variable_1) | set(fuertes.variable_2))}')
+
+# %% tags=["hide-output"]
+# tabla completa de los pares con |r| > 0,7
 fuertes[['variable_1', 'variable_2', 'bloque_1', 'bloque_2', 'spearman']].round(3).reset_index(drop=True)
 
 # %% [markdown]
-# Nótese que la redundancia está concentrada y tiene dos orígenes claros:
+# Se evidencia que la redundancia está concentrada y tiene dos orígenes claros:
 #
-# 1. **Ventanas de un mismo concepto.** De los 50 pares con |r| > 0,7 (el umbral del curso), la mayoría
+# 1. **Ventanas de un mismo concepto.** De los 50 pares con |r| > 0,7, la mayoría
 #    son el mismo concepto medido en 1, 3 y 12 meses: recargo nocturno (0,96 entre 1 y 3 meses; 0,96
 #    entre 3 y 12), dominicales (0,89-0,91), horas extra (0,80-0,90), horas por turno (0,94) y sábados
 #    (0,78). También son casi duplicados por construcción días y periodos de vacaciones pendientes
 #    (0,97), estar en la mediana local y la distancia a ella (-0,97), meses con extras y su porcentaje
 #    (0,95), y días y número de licencias no remuneradas (0,93). Los 4 pares por encima de 0,95 son
 #    los de la mediana local, las vacaciones pendientes y dos de las ventanas de recargo nocturno.
-# 2. **El reloj de la persona.** La antigüedad reconocida se mueve con todo lo que cuenta meses desde
+# 2. **El tiempo en la empresa.** La antigüedad reconocida se mueve con todo lo que cuenta meses desde
 #    algo: meses desde el cambio de contrato (0,88), en la función (0,85), en la posición (0,83), desde
 #    que fue aprendiz (0,89) y el histórico de retiros de cesantías para vivienda (0,74). Estos
 #    explican casi todos los 10 pares que cruzan bloques. El primer mes y el ingreso a mitad de mes (0,94) son la misma marca de ingreso.
 #
-# El resumen por bloque confirma que, fuera de ese reloj, **los bloques están poco correlacionados
+# El resumen por bloque confirma que, fuera de ese grupo, **los bloques están poco correlacionados
 # entre sí**: ningún par entre salario relativo, jornada, ingreso relativo, ausencias y vacaciones
 # supera 0,7 (el mayor es 0,68, entre ingreso relativo y ausencias, por los meses con ausencia pagada).
 # La historia no es una copia de los atributos, sino información nueva. Dentro de cada
@@ -192,12 +195,9 @@ print(f'oficio + familia de cargo: {D.shape[1]} columnas, rango {np.linalg.matri
 # ## Preparación de las numéricas
 #
 # El VIF, el PCA, los atípicos y los conglomerados necesitan una matriz sin faltantes y en una escala
-# común. Se usa la misma preparación del modelo (capítulos 3 y 7): con los valores observados, recortar
-# cada numérica en sus percentiles 1 y 99 y aplicar un logaritmo con signo,
-# $\operatorname{sign}(x)\log(1 + |x|)$, a las que conservan una asimetría mayor que 2 (cola larga);
-# luego imputar la mediana y estandarizar. Sin el recorte y el log, unas pocas filas con
-# valores extremos dominarían la covarianza, y con ella el PCA, la distancia de Mahalanobis y
-# k-medias.
+# común. Se aplica la preparación del modelo descrita en el capítulo 3 (recorte p1-p99 y logaritmo con
+# signo en las de cola larga), seguida de la imputación con la mediana y la estandarización; todo el
+# resto del capítulo se calcula sobre esa matriz de las 88 numéricas del entrenamiento.
 
 # %%
 def preparar(df, cols):
@@ -243,25 +243,24 @@ for _, cols in sorted(grupos_nulos.items(), key=lambda kv: -len(kv[1])):
 
 # %% [markdown]
 # Se recortaron 72 de las 88 columnas (las demás son binarias o tienen el percentil 1 igual al 99) y 39
-# recibieron el log con signo; ninguna quedó constante. Nótese la estructura de los faltantes: las 54
+# recibieron el log con signo; ninguna quedó constante. Se observa la estructura de los faltantes: las 54
 # variables con nulos forman solo 22 patrones, y los grandes son bloques enteros que faltan juntos. Las
 # 5 y 3 variables que se calculan con las marcas biométricas faltan en el 44 % y el 43 % de las filas,
 # las 3 de la mediana local en el 34 %, y 20 variables de jornada e ingreso que salen de la nómina
 # faltan juntas en el mismo 2,4 % de las filas. Este último es el primer mes de cada episodio: la
 # nómina y las marcaciones de la fila del mes t llegan hasta t-1, y en el primer mes no hay mes anterior
-# que medir. Una consecuencia para los indicadores de faltante: como las 54 variables forman solo 22
-# patrones, sus indicadores están muy correlacionados (dentro de un patrón son idénticos). No es un
-# problema para una logística regularizada, que absorbe esa redundancia como la de las ventanas; el
-# modelo del capítulo 7 usa un indicador por variable por simplicidad del Pipeline. El faltante es en sí
-# una característica del puesto (marcar o no en biométrico). La imputación con la mediana crea además un
-# pico artificial en esas columnas, que se verá en el PCA y en los atípicos.
+# que medir. Como las 54 variables forman solo 22 patrones, sus indicadores de faltante están muy
+# correlacionados (dentro de un patrón son idénticos), una redundancia que la logística regularizada
+# absorbe como la de las ventanas; el carácter informativo de estos faltantes se trata en el capítulo 1.
+# La imputación con la mediana crea además un pico artificial en esas columnas, que se verá en el PCA y
+# en los atípicos.
 #
 # ## Factor de inflación de la varianza (VIF)
 #
 # El VIF de una columna mide cuánto se infla la varianza de su coeficiente porque las demás la
 # explican: $\text{VIF}_j = 1 / (1 - R_j^2)$, con $R_j^2$ el de la regresión de la columna $j$ contra
 # todas las demás y una constante (`add_constant`; sin constante el $R^2$ no está centrado y el VIF sale
-# mal). Se lee con los umbrales del curso: 1 es ausencia de colinealidad, de 1 a 5 es baja, de 5 a 10
+# mal). Se lee con los umbrales usuales: 1 es ausencia de colinealidad, de 1 a 5 es baja, de 5 a 10
 # moderada y más de 10 alta. Se calcula sobre las 88 numéricas ya imputadas, recortadas y estandarizadas
 # del entrenamiento, que es la matriz que verá el modelo.
 
@@ -300,16 +299,16 @@ print(f'  VIF > 10: {(vif_r > 10).sum()} (antes {(vif > 10).sum()}) | VIF 5-10: 
 print(vif_r[vif_r >= 5].sort_values(ascending=False).round(1).to_string())
 
 # %% [markdown]
-# Nótese que la colinealidad es real pero acotada: la mediana del VIF es 2,8, 61 de las 88 columnas
+# Se observa que la colinealidad es real pero acotada: la mediana del VIF es 2,8, 61 de las 88 columnas
 # quedan por debajo de 5, 14 entre 5 y 10 y 13 por encima de 10, y el máximo es 35 (ninguno infinito,
 # porque entre numéricas no hay dependencias exactas). Los VIF altos son justo los casi duplicados de la
 # correlación: las ventanas de recargo nocturno, dominicales y horas extra, meses con extras y su
-# porcentaje, días y periodos de vacaciones pendientes (34), y el reloj de la persona (antigüedad
+# porcentaje, días y periodos de vacaciones pendientes (34), y el tiempo en la empresa (antigüedad
 # reconocida 35, meses desde el cambio de contrato 33).
 #
 # El ejercicio de dejar una sola ventana por concepto (la de 3 meses) muestra que las ventanas explican
 # cerca de la mitad del problema: al quitar esas 9 columnas, los VIF > 10 bajan de 13 a 7 y los de 5 a 10
-# de 14 a 7, pero el máximo apenas se mueve (de 35 a 34,9). Lo que queda alto ya no son ventanas sino el reloj (antigüedad reconocida y
+# de 14 a 7, pero el máximo apenas se mueve (de 35 a 34,9). Lo que queda alto ya no son ventanas sino el tiempo en la empresa (antigüedad reconocida y
 # meses desde el cambio de contrato), los
 # pares construidos (vacaciones, meses con extras) y la desigualdad salarial del oficio y nivel (Gini y
 # privación relativa, 11).
@@ -324,7 +323,7 @@ print(vif_r[vif_r >= 5].sort_values(ascending=False).round(1).to_string())
 # las predictoras más fuertes de los atributos, y quitar ventanas antes de ver si la de 1 mes aporta algo
 # que la de 12 no tiene sería decidir sin evidencia. La redundancia sí tiene dos consecuencias que se
 # llevan al modelo: (1) los coeficientes de un grupo de casi duplicados (las tres ventanas de un
-# concepto, el reloj de la persona) se interpretan en conjunto, nunca uno por uno; y (2) la elección
+# concepto, el tiempo en la empresa) se interpretan en conjunto, nunca uno por uno; y (2) la elección
 # entre L1 y L2 y la fuerza de la penalización se deciden por validación temporal, sabiendo que L1 hará
 # una selección entre las ventanas que puede cambiar de un pliegue a otro sin que cambie la predicción.
 # ```
@@ -332,11 +331,11 @@ print(vif_r[vif_r >= 5].sort_values(ascending=False).round(1).to_string())
 # ## Componentes principales (PCA)
 #
 # El PCA busca las direcciones de máxima varianza de la matriz estandarizada. Aquí es exploratorio:
-# sirve para medir cuántas dimensiones tiene de verdad la historia laboral y qué bloques la forman, no
+# sirve para medir cuántas dimensiones efectivas tiene la historia laboral y qué bloques la forman, no
 # para reemplazar las variables en el modelo (el modelo del capítulo 7 usa las variables originales,
 # que se pueden interpretar). Se ajusta con el entrenamiento, sobre las 88 numéricas ya preparadas, y
-# para comparar también sobre la matriz completa con las categóricas en una columna por categoría. El
-# curso sugiere retener los componentes que explican entre el 70 % y el 80 % de la varianza.
+# para comparar también sobre la matriz completa con las categóricas en una columna por categoría. Un criterio
+# común es retener los componentes que explican entre el 70 % y el 80 % de la varianza.
 
 # %%
 pca = PCA(random_state=SEMILLA).fit(Zs)
@@ -410,12 +409,12 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Nótese que la varianza está muy repartida. PC1 explica solo el 11,6 %; hacen falta 11 componentes
-# para el 50 %, 24 para el 70 % y 33 para el 80 %, el rango del curso. La dimensionalidad efectiva
+# La varianza está muy repartida. PC1 explica solo el 11,6 %; hacen falta 11 componentes
+# para el 50 %, 24 para el 70 % y 33 para el 80 %. La dimensionalidad efectiva
 # coincide por dos caminos: 25 autovalores mayores que 1 (Kaiser) y una razón de participación
 # $(\sum \lambda)^2 / \sum \lambda^2$ de 26,7. Es decir, las 88 columnas equivalen a unas 25-33
 # direcciones independientes: la redundancia de las
-# ventanas y del reloj reduce la dimensión a un tercio, pero lo que queda sigue siendo alto. Con las
+# ventanas y del tiempo en la empresa reduce la dimensión a un tercio, pero lo que queda sigue siendo alto. Con las
 # categóricas (267 columnas) hacen falta 59 componentes para el 70 % y 85 para el 80 %: las indicadoras
 # añaden muchas dimensiones casi independientes.
 #
@@ -423,9 +422,9 @@ plt.show()
 #
 # - **PC1 (11,6 %), carga de trabajo pagada:** dominicales, recargo nocturno y horas extra en sus tres
 #   ventanas. Es la dirección del bloque de jornada.
-# - **PC2 (7,4 %), el reloj de la persona:** meses en la función y en la posición, antigüedad reconocida,
+# - **PC2 (7,4 %), el tiempo en la empresa:** meses en la función y en la posición, antigüedad reconocida,
 #   meses desde el cambio de contrato, la edad y el histórico de cesantías para vivienda, todos con el
-#   mismo signo. Mezcla atributos, contrato, trayectoria y arraigo.
+#   mismo signo. Mezcla atributos, contrato, trayectoria y proyectos personales.
 # - **PC3 (6,3 %), posición salarial:** elegibilidad para horas extra, estar en la mediana local o lejos
 #   de ella, meses con bonificación por productividad, vacaciones pendientes y desigualdad del oficio y
 #   nivel.
@@ -505,7 +504,7 @@ for v in ['linea', 'tipo_unidad', 'contrato']:
           (100 * tr[v].value_counts(normalize=True)).round(0).head(3).to_dict())
 
 # %% [markdown]
-# Nótese primero que la normal multivariada no se sostiene: el 17,1 % de las filas supera el cuantil
+# En primer lugar, se observa que la normal multivariada no se cumple: el 17,1 % de las filas supera el cuantil
 # 0,999 de la $\chi^2(88)$, cuando se esperaría el 0,1 %. Con binarias, conteos llenos de ceros y los
 # picos de la imputación, la distancia de Mahalanobis sirve para ordenar las filas de más típica a más
 # rara, pero no para marcar atípicos con un corte de la $\chi^2$. Los dos puntajes ordenan de forma
@@ -607,7 +606,7 @@ def perfil_grupos(etq):
 perfil_grupos(km.labels_)
 
 # %% [markdown]
-# Nótese que **no hay estructura natural fuerte**. La mejor silueta es 0,19, con k = 2, y todas las
+# Se evidencia que **no hay estructura natural fuerte**. La mejor silueta es 0,19, con k = 2, y todas las
 # demás quedan entre 0,11 y 0,13, muy por debajo de 0,25; la inercia baja sin un codo claro, y los tres
 # índices no coinciden: la silueta y Calinski-Harabasz prefieren k = 2 (Calinski-Harabasz baja casi
 # de forma monótona con k, como suele ocurrir sin grupos reales), mientras Davies-Bouldin mejora
@@ -621,10 +620,14 @@ perfil_grupos(km.labels_)
 # componente cortado en dos, no un tipo de trabajador.
 
 # %% [markdown]
-# Con k = 11, la partición de menor Davies-Bouldin, los grupos son solo medianamente estables (ARI 0,69
-# frente a otra semilla); ninguno tiene menos de 300 filas.
+# Con k = 11, la partición de menor Davies-Bouldin, los grupos son medianamente estables (ARI 0,69
+# frente a otra semilla) y su tasa varía entre 0,13 % y 3,08 %. Cada grupo, sin embargo, combina rasgos
+# que ya son predictores por sí solos (antigüedad, contrato, turnos, primer mes) y los grupos no están
+# separados en el espacio (silueta 0,13), por lo que representan cortes descriptivos de un continuo. No
+# se usan como variable: la logística puede combinar esas mismas variables y un conglomerado estimado
+# con todo el entrenamiento no se validó por pliegues.
 
-# %%
+# %% tags=["hide-output"]
 k_db = int(indices['Davies-Bouldin'].idxmin())
 km_db = KMeans(k_db, n_init=10, random_state=SEMILLA).fit(Sk)
 otra = KMeans(k_db, n_init=10, random_state=SEMILLA + 1).fit(Sk)
@@ -634,46 +637,29 @@ g = perfil_grupos(km_db.labels_)
 g
 
 # %% [markdown]
-# Aquí sí aparece algo útil, aunque la geometría sea débil: la tasa varía mucho entre grupos, de 0,13 %
-# a 3,08 %. Los de tasa alta son reconocibles: turnos largos sin pago de extras, casi todo en banano
-# (3,08 %); el primer mes y el ingreso a mitad de mes (1,65 %); capacitación y parte variable del
-# ingreso en palma (1,41 %); y poco tiempo en la función, con 85 % de contrato fijo (1,40 %). Los de
-# tasa más baja son de contrato indefinido y mucha antigüedad (0,13 %) y de licencias remuneradas con
-# aumentos por mérito (0,29 %). Pero cada uno de esos grupos es una combinación de rasgos que ya son predictores por sí
-# solos (antigüedad, contrato, turnos, primer mes), y los grupos no están separados en el espacio (la
-# silueta de k = 11 es 0,13). Son cortes descriptivos de un continuo, no tipos de trabajador. Para el
-# modelo no conviene usarlos como variable: la logística ya puede combinar esas mismas variables, y un
-# conglomerado estimado con todo el entrenamiento introduciría una decisión que no se validó por
-# pliegues.
-#
 # ## Síntesis
 #
-# - **Redundancia.** Hay 50 pares de numéricas con |r| > 0,7 y 13 VIF por encima de 10 (mediana 2,8), pero tienen dos
-#   orígenes identificables: las ventanas de 1, 3 y 12 meses de un mismo concepto de jornada, y el reloj
-#   de la persona (antigüedad reconocida, meses desde el cambio de contrato, en la posición y en la
-#   función). Entre bloques
-#   de la historia (salario, jornada, ingreso, ausencias, vacaciones) no hay pares fuertes: la historia
-#   laboral trae información nueva frente a los atributos. Entre categóricas, sociedad y línea, y oficio y
-#   familia de cargo, están anidadas exactamente.
-# - **Dimensionalidad.** Las 88 numéricas equivalen a unas 25-33 dimensiones (24 componentes para el
-#   70 %, 33 para el 80 %, Kaiser 25, razón de participación 26,7). Los ejes principales son la carga de
-#   trabajo pagada, el reloj de la persona, la posición salarial y los turnos largos. Ninguno separa por
-#   sí solo a quienes renuncian (AUC máximo 0,67).
-# - **Atípicos.** Las filas raras, por Isolation Forest o por Mahalanobis, no renuncian más; la
-#   normalidad multivariada no se cumple, así que el corte de la $\chi^2$ no se usa. Se conservan todas
-#   las filas y el recorte en p1-p99 limita la influencia de los valores extremos.
-# - **Subpoblaciones.** Sin estructura natural fuerte: la silueta no pasa de 0,19 en k = 2 a 20. Los
-#   grupos de k = 11 difieren mucho en tasa (0,13 % a 3,08 %), pero son combinaciones de predictores conocidos, no grupos
-#   separados.
+# - **Redundancia.** 50 pares de numéricas con |r| > 0,7 y 13 VIF por encima de 10 (mediana 2,8), con
+#   dos orígenes: las ventanas de 1, 3 y 12 meses de un mismo concepto de jornada y el tiempo en la
+#   empresa. Entre bloques de la historia no hay pares fuertes: la historia laboral aporta información
+#   nueva frente a los atributos.
+# - **Anidamientos.** Sociedad y línea, y oficio y familia de cargo, están anidadas exactamente.
+# - **Dimensionalidad.** Unas 25-33 dimensiones efectivas (24 componentes para el 70 %, 33 para el
+#   80 %, Kaiser 25, razón de participación 26,7); ningún componente separa por sí solo a quienes
+#   renuncian (AUC máximo 0,67).
+# - **Atípicos.** Las filas raras no renuncian más y la normalidad multivariada no se cumple, por lo que
+#   el corte de la $\chi^2$ no se usa. Se conservan todas las filas.
+# - **Subpoblaciones.** Sin estructura natural de grupos: la silueta no pasa de 0,19 para k de 2 a 20.
+#   Los grupos de k = 11 difieren en tasa (0,13 % a 3,08 %), pero combinan predictores conocidos.
 #
-# **Consecuencias para el modelo (capítulo 7).** Se usa una logística **regularizada** con todas las
-# variables, sin eliminar por VIF: la penalización resuelve la inestabilidad de los coeficientes que
-# produce la colinealidad, y la predicción no depende de cómo se reparta el peso entre casi duplicados.
-# Con L1 el modelo elegirá entre las ventanas de un mismo concepto, y esa elección puede variar entre
-# pliegues sin que la predicción cambie; por eso los coeficientes de un grupo redundante se interpretan
-# juntos. Las categóricas anidadas hacen singular la matriz sin penalización, otra razón para no usar la
-# logística sin regularizar. Con unas 30 dimensiones efectivas y 688 renuncias de entrenamiento, la
-# fuerza de la penalización importa: la rejilla de C debe llegar a valores pequeños y elegirse por
-# validación temporal. La preparación de las numéricas (recorte p1-p99, log con signo en las de cola
-# larga y mediana) es la misma de este capítulo, ajustada dentro de cada pliegue; los indicadores de
-# faltante, uno por variable, repiten pocos patrones y la penalización absorbe su redundancia. No se añaden los componentes ni los conglomerados como variables.
+# **Consecuencias para el modelo (capítulo 7).**
+#
+# - Logística **regularizada** con todas las variables, sin eliminar por VIF (véase el recuadro de la
+#   sección del VIF); las categóricas anidadas hacen además singular la matriz sin penalización.
+# - Los coeficientes de un grupo redundante se interpretan en conjunto; con L1, la elección entre
+#   ventanas puede variar entre pliegues sin que cambie la predicción.
+# - Con unas 30 dimensiones efectivas y 688 renuncias de entrenamiento, la rejilla de C llega a valores
+#   pequeños y se elige por validación temporal.
+# - La preparación de las numéricas es la de este capítulo, ajustada dentro de cada pliegue, con un
+#   indicador de faltante por variable.
+# - No se añaden los componentes ni los conglomerados como variables.

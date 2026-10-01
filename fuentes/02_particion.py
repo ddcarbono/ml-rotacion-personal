@@ -13,8 +13,8 @@
 # El modelo se usaría para predecir, con la información disponible al inicio de un mes, quién
 # renuncia en ese mes, y la evaluación debe reproducir ese uso. Una partición aleatoria por filas
 # pondría meses futuros en el entrenamiento (el modelo aprendería de agosto para predecir marzo) y
-# meses de una misma persona en los dos conjuntos. Una partición estratificada por la clase, la que
-# el curso sugiere para clasificación desbalanceada, tiene el mismo problema. Con el corte
+# meses de una misma persona en los dos conjuntos. Una partición estratificada por la clase, la
+# habitual en clasificación desbalanceada, tiene el mismo problema. Con el corte
 # cronológico, todo lo que el modelo ve es anterior a lo que predice; el desbalance se conserva de
 # forma natural porque la prevalencia mensual es estable (tabla siguiente).
 #
@@ -26,11 +26,12 @@
 # ## Uso previo del panel completo
 #
 # Para construir el panel se exploraron todos los meses: se definieron las exclusiones, se unificaron
-# los cargos, se corrigió el objetivo (capítulo 1) y se revisaron las fugas. Son decisiones de
+# los cargos, se definió el objetivo (capítulo 1) y se revisaron las fugas. Son decisiones de
 # calidad de datos (qué es un aprendiz, qué salida es una renuncia, qué dato está mal registrado) y
-# ninguna se tomó según su capacidad predictiva. A partir de aquí el test queda reservado: el
+# ninguna se tomó según su capacidad predictiva. Desde este punto, ninguna decisión mira el test: el
 # análisis exploratorio, la selección de variables, las vallas de atípicos, la imputación y el ajuste
-# usan solo el entrenamiento, y el test se usa una vez, en el capítulo 7.
+# usan solo el entrenamiento. El test se usa una sola vez, al final del capítulo 7, para medir el
+# modelo ya elegido.
 
 # %%
 import sys
@@ -71,7 +72,7 @@ resumen
 # test, 4 meses, 17.652 filas (20,8 %) y 149 renuncias (17,8 % de las renuncias). La prevalencia es
 # algo menor en el test (0,84 % frente a 1,02 %): con menos positivos, la precisión esperable de
 # cualquier modelo baja sin que el modelo haya empeorado. Por eso las métricas
-# del capítulo 7 se comparan siempre con la línea base trivial del mismo test.
+# del capítulo 7 se comparan siempre con la línea base (*baseline*) trivial del mismo test.
 
 # %%
 en_ambos = len(set(tr.persona_id) & set(te.persona_id))
@@ -98,14 +99,14 @@ plt.show()
 # nuevos; 139 de las 149 renuncias del test son de personas que el modelo ya vio en meses anteriores,
 # que es exactamente la situación de uso.
 #
-# Nótese que el número de renuncias por mes varía bastante (el gráfico lo muestra mes a mes; el
+# El número de renuncias por mes varía bastante (el gráfico lo muestra mes a mes; el
 # capítulo 5 estudia su estacionalidad). Con cuatro meses de test, la estimación de cualquier métrica
 # depende de unas 150 renuncias, y su incertidumbre se mide con *bootstrap* en el capítulo 7.
 #
 # ## Validación dentro del entrenamiento
 #
-# La validación cruzada sigue la misma lógica de la partición: es cronológica, con ventana creciente
-# por mes y un mes de separación (`gap`), implementada en `comun.pliegues_temporales`. Cada pliegue
+# La validación cruzada sigue la misma lógica de la partición: es una validación cruzada temporal, con ventana creciente
+# por mes y un mes de separación (`gap`), implementada en `comun.pliegues_temporales`. Cada pliegue (*fold*)
 # valida un mes, de septiembre de 2025 a abril de 2026, y entrena con todos los meses anteriores salvo
 # el inmediatamente previo. La separación se debe a que una renuncia puede quedar registrada ya
 # entrado el mes siguiente, de modo que al predecir el mes *t* la etiqueta de *t − 1* puede no estar
@@ -204,12 +205,12 @@ print(f'filas de test con un vector de las {len(PREDICTORAS)} predictoras idént
 BASE18 = PREDICTORAS[:18]
 vec_tr18 = set(map(tuple, tr[BASE18].astype(str).to_numpy()))
 igual18 = te[BASE18].astype(str).apply(tuple, axis=1).isin(vec_tr18).to_numpy()
-print(f'lo mismo con solo las 18 atributos: {int(igual18.sum()):,} ({100 * igual18.mean():.1f} %)')
+print(f'lo mismo con solo los 18 atributos: {int(igual18.sum()):,} ({100 * igual18.mean():.1f} %)')
 
 # %% [markdown]
-# Ninguna fila está en los dos conjuntos. Con las 18 atributos, el 10,1 % de las filas de test
-# (1.785) tenía un vector idéntico a alguno del entrenamiento: personas distintas con el mismo perfil
-# de puesto, frecuentes en fincas con muchos operarios del mismo tipo. Con las 105 predictoras solo
+# Ninguna fila está en los dos conjuntos. Con solo los 18 atributos, el 10,1 % de las filas de test
+# (1.785) tiene un vector idéntico a alguno del entrenamiento: personas distintas con el mismo perfil
+# de puesto, frecuentes en fincas con muchos operarios del mismo tipo. Con las 105 predictoras, solo
 # 53 filas (0,30 %) lo tienen, porque la historia laboral (jornada, nómina, vacaciones) distingue a esas personas. En
 # ningún caso hay fuga: la etiqueta de test corresponde a un mes posterior.
 #
@@ -223,10 +224,10 @@ print(f'lo mismo con solo las 18 atributos: {int(igual18.sum()):,} ({100 * igual
 #
 # La columna `preaviso_no_renovacion` marca los meses con un preaviso vigente. **No es predictora:**
 # con preaviso, el objetivo vale 0 por construcción, y un modelo que la usara aprendería la regla con
-# que se definió *y*, no el comportamiento. Queda solo para describir y para la sensibilidad (celda
+# que se definió *y*, no el comportamiento. Queda solo para describir y para el análisis de sensibilidad (celda
 # siguiente). Tampoco son predictoras la bonificación de salida (según la construcción de la base, 16
 # renuncias la recibieron; quedan en *y*, y la marca no está en el panel académico porque se conoce al
-# salir) ni el tipo de retiro. Las renuncias con bonificación de salida o con indicios de haber sido
+# salir). Las renuncias con bonificación de salida o con indicios de haber sido
 # pedidas se identificaron al construir la base con fuentes que el panel no incluye por privacidad,
 # así que su análisis de sensibilidad no es reproducible con el panel publicado.
 # ```
