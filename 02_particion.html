@@ -342,8 +342,8 @@ cambiar la base.</p>
 <p>El modelo se usaría para predecir, con la información disponible al inicio de un mes, quién
 renuncia en ese mes, y la evaluación debe reproducir ese uso. Una partición aleatoria por filas
 pondría meses futuros en el entrenamiento (el modelo aprendería de agosto para predecir marzo) y
-meses de una misma persona en los dos conjuntos. Una partición estratificada por la clase, la que
-el curso sugiere para clasificación desbalanceada, tiene el mismo problema. Con el corte
+meses de una misma persona en los dos conjuntos. Una partición estratificada por la clase, la
+habitual en clasificación desbalanceada, tiene el mismo problema. Con el corte
 cronológico, todo lo que el modelo ve es anterior a lo que predice; el desbalance se conserva de
 forma natural porque la prevalencia mensual es estable (tabla siguiente).</p>
 <p>Las mismas personas aparecen en entrenamiento y en test, porque es un panel y quien estaba en abril
@@ -354,11 +354,12 @@ impide.</p>
 <section id="uso-previo-del-panel-completo">
 <h2><span class="section-number">2.2. </span>Uso previo del panel completo<a class="headerlink" href="#uso-previo-del-panel-completo" title="Permalink to this heading">#</a></h2>
 <p>Para construir el panel se exploraron todos los meses: se definieron las exclusiones, se unificaron
-los cargos, se corrigió el objetivo (capítulo 1) y se revisaron las fugas. Son decisiones de
+los cargos, se definió el objetivo (capítulo 1) y se revisaron las fugas. Son decisiones de
 calidad de datos (qué es un aprendiz, qué salida es una renuncia, qué dato está mal registrado) y
-ninguna se tomó según su capacidad predictiva. A partir de aquí el test queda reservado: el
+ninguna se tomó según su capacidad predictiva. Desde este punto, ninguna decisión mira el test: el
 análisis exploratorio, la selección de variables, las vallas de atípicos, la imputación y el ajuste
-usan solo el entrenamiento, y el test se usa una vez, en el capítulo 7.</p>
+usan solo el entrenamiento. El test se usa una sola vez, al final del capítulo 7, para medir el
+modelo ya elegido.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
@@ -459,7 +460,7 @@ usan solo el entrenamiento, y el test se usa una vez, en el capítulo 7.</p>
 test, 4 meses, 17.652 filas (20,8 %) y 149 renuncias (17,8 % de las renuncias). La prevalencia es
 algo menor en el test (0,84 % frente a 1,02 %): con menos positivos, la precisión esperable de
 cualquier modelo baja sin que el modelo haya empeorado. Por eso las métricas
-del capítulo 7 se comparan siempre con la línea base trivial del mismo test.</p>
+del capítulo 7 se comparan siempre con la línea base (<em>baseline</em>) trivial del mismo test.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">en_ambos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="p">))</span>
@@ -494,14 +495,14 @@ renuncias del test de personas que ya estaban en entrenamiento: 139 de 149
 <p>De las 4.611 personas del test, 4.373 (95 %) ya estaban en el entrenamiento y 238 son ingresos
 nuevos; 139 de las 149 renuncias del test son de personas que el modelo ya vio en meses anteriores,
 que es exactamente la situación de uso.</p>
-<p>Nótese que el número de renuncias por mes varía bastante (el gráfico lo muestra mes a mes; el
+<p>El número de renuncias por mes varía bastante (el gráfico lo muestra mes a mes; el
 capítulo 5 estudia su estacionalidad). Con cuatro meses de test, la estimación de cualquier métrica
 depende de unas 150 renuncias, y su incertidumbre se mide con <em>bootstrap</em> en el capítulo 7.</p>
 </section>
 <section id="validacion-dentro-del-entrenamiento">
 <h2><span class="section-number">2.3. </span>Validación dentro del entrenamiento<a class="headerlink" href="#validacion-dentro-del-entrenamiento" title="Permalink to this heading">#</a></h2>
-<p>La validación cruzada sigue la misma lógica de la partición: es cronológica, con ventana creciente
-por mes y un mes de separación (<code class="docutils literal notranslate"><span class="pre">gap</span></code>), implementada en <code class="docutils literal notranslate"><span class="pre">comun.pliegues_temporales</span></code>. Cada pliegue
+<p>La validación cruzada sigue la misma lógica de la partición: es una validación cruzada temporal, con ventana creciente
+por mes y un mes de separación (<code class="docutils literal notranslate"><span class="pre">gap</span></code>), implementada en <code class="docutils literal notranslate"><span class="pre">comun.pliegues_temporales</span></code>. Cada pliegue (<em>fold</em>)
 valida un mes, de septiembre de 2025 a abril de 2026, y entrena con todos los meses anteriores salvo
 el inmediatamente previo. La separación se debe a que una renuncia puede quedar registrada ya
 entrado el mes siguiente, de modo que al predecir el mes <em>t</em> la etiqueta de <em>t − 1</em> puede no estar
@@ -686,10 +687,6 @@ de un mes y <code class="docutils literal notranslate"><span class="pre">gap=1</
     .dataframe thead tr th {
         text-align: left;
     }
-
-    .dataframe thead tr:last-of-type th {
-        text-align: right;
-    }
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -699,22 +696,13 @@ de un mes y <code class="docutils literal notranslate"><span class="pre">gap=1</
       <th colspan="3" halign="left">orden mes, persona</th>
     </tr>
     <tr>
-      <th></th>
-      <th>meses en validación</th>
-      <th>de ellos también en entrenamiento</th>
-      <th>filas de separación</th>
-      <th>meses en validación</th>
-      <th>de ellos también en entrenamiento</th>
-      <th>filas de separación</th>
-    </tr>
-    <tr>
       <th>pliegue</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>meses en validación</th>
+      <th>de ellos también en entrenamiento</th>
+      <th>filas de separación</th>
+      <th>meses en validación</th>
+      <th>de ellos también en entrenamiento</th>
+      <th>filas de separación</th>
     </tr>
   </thead>
   <tbody>
@@ -913,28 +901,26 @@ principal.</p>
 <span class="n">BASE18</span> <span class="o">=</span> <span class="n">PREDICTORAS</span><span class="p">[:</span><span class="mi">18</span><span class="p">]</span>
 <span class="n">vec_tr18</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">tr</span><span class="p">[</span><span class="n">BASE18</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()))</span>
 <span class="n">igual18</span> <span class="o">=</span> <span class="n">te</span><span class="p">[</span><span class="n">BASE18</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">vec_tr18</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;lo mismo con solo las 18 atributos: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">igual18</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">igual18</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;lo mismo con solo los 18 atributos: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">igual18</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">igual18</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas persona-mes duplicadas en el panel: 0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pares (persona, mes) en entrenamiento y test a la vez: 0
+pares (persona, mes) en entrenamiento y test a la vez: 0
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas de test con un vector de las 105 predictoras idéntico en entrenamiento: 53 de 17,652 (0.30 %)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>lo mismo con solo las 18 atributos: 1,785 (10.1 %)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>lo mismo con solo los 18 atributos: 1,785 (10.1 %)
 </pre></div>
 </div>
 </div>
 </div>
-<p>Ninguna fila está en los dos conjuntos. Con las 18 atributos, el 10,1 % de las filas de test
-(1.785) tenía un vector idéntico a alguno del entrenamiento: personas distintas con el mismo perfil
-de puesto, frecuentes en fincas con muchos operarios del mismo tipo. Con las 105 predictoras solo
+<p>Ninguna fila está en los dos conjuntos. Con solo los 18 atributos, el 10,1 % de las filas de test
+(1.785) tiene un vector idéntico a alguno del entrenamiento: personas distintas con el mismo perfil
+de puesto, frecuentes en fincas con muchos operarios del mismo tipo. Con las 105 predictoras, solo
 53 filas (0,30 %) lo tienen, porque la historia laboral (jornada, nómina, vacaciones) distingue a esas personas. En
 ningún caso hay fuga: la etiqueta de test corresponde a un mes posterior.</p>
 <div class="warning admonition">
@@ -946,10 +932,10 @@ la base, 85 renuncias registradas pasaron a otra salida por esta regla, 19 de el
 test (capítulo 1).</p>
 <p>La columna <code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> marca los meses con un preaviso vigente. <strong>No es predictora:</strong>
 con preaviso, el objetivo vale 0 por construcción, y un modelo que la usara aprendería la regla con
-que se definió <em>y</em>, no el comportamiento. Queda solo para describir y para la sensibilidad (celda
+que se definió <em>y</em>, no el comportamiento. Queda solo para describir y para el análisis de sensibilidad (celda
 siguiente). Tampoco son predictoras la bonificación de salida (según la construcción de la base, 16
 renuncias la recibieron; quedan en <em>y</em>, y la marca no está en el panel académico porque se conoce al
-salir) ni el tipo de retiro. Las renuncias con bonificación de salida o con indicios de haber sido
+salir). Las renuncias con bonificación de salida o con indicios de haber sido
 pedidas se identificaron al construir la base con fuentes que el panel no incluye por privacidad,
 así que su análisis de sensibilidad no es reproducible con el panel publicado.</p>
 </div>

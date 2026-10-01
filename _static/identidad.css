@@ -65,6 +65,11 @@ div.admonition { border: 1px solid #E6E2D8 !important; border-left: 4px solid va
   box-shadow: none !important; background: #FFFFFF; }
 div.admonition > .admonition-title { background: #F3F6F1 !important; color: var(--verde) !important; font-weight: 700; }
 div.admonition > .admonition-title::before, div.admonition > .admonition-title::after { color: var(--verde) !important; }
+/* el tema pone una capa de color (::before) a todo el ancho del titulo que tapa el texto: el fondo ya lo da la regla anterior */
+div.admonition > .admonition-title::before { display: none !important; }
 div.admonition.note { border-left-color: var(--oro) !important; }
 div.admonition.note > .admonition-title { background: #FAF6EE !important; color: var(--oro-os) !important; }
 div.admonition.note > .admonition-title::before, div.admonition.note > .admonition-title::after { color: var(--oro) !important; }
+/* encabezados de tabla: todos alineados igual, abajo, y el rotulo de filas a la izquierda */
+table.dataframe thead th { text-align: right !important; vertical-align: bottom !important; }
+table.dataframe thead th:first-child { text-align: left !important; }

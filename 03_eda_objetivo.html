@@ -314,7 +314,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-objetivo">3.1. El objetivo</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-unidimensional">3.2. Análisis unidimensional</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipo-y-cardinalidad-de-las-105-predictoras">3.2.1. Tipo y cardinalidad de las 105 predictoras</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#como-se-leen-la-asimetria-y-la-curtosis">3.2.2. Cómo se leen la asimetría y la curtosis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#asimetria-y-colas-largas">3.2.2. Asimetría y colas largas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edad-y-antiguedad-reconocida">3.2.3. Edad y antigüedad reconocida</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binarias-de-atributos">3.2.4. Binarias de atributos</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#la-historia-laboral-bloque-por-bloque">3.2.5. La historia laboral, bloque por bloque</a><ul class="nav section-nav flex-column">
@@ -325,8 +325,9 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ingreso-relativo">3.2.5.5. Ingreso relativo</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ausencias">3.2.5.6. Ausencias</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vacaciones">3.2.5.7. Vacaciones</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#arraigo">3.2.5.8. Arraigo</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#colas-largas-y-valores-extremos-en-toda-la-historia">3.2.5.9. Colas largas y valores extremos en toda la historia</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#proyectos-personales">3.2.5.8. Proyectos personales</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen">3.2.5.9. Origen</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#colas-largas-y-valores-extremos-en-toda-la-historia">3.2.5.10. Colas largas y valores extremos en toda la historia</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-categoricas">3.2.6. Variables categóricas</a><ul class="nav section-nav flex-column">
@@ -380,8 +381,8 @@ document.write(`
 <div class="tip admonition">
 <p class="admonition-title">Alcance</p>
 <p>Este capítulo usa solo el entrenamiento (enero de 2025 a abril de 2026). Las tasas son mensuales:
-la probabilidad de renunciar en un mes dado. Los intervalos son de Wilson al 95 % y tratan las
-filas como independientes, por lo que son algo optimistas (una persona aporta varios meses).</p>
+la probabilidad de renunciar en un mes dado. Los intervalos de Wilson al 95 % describen las tasas;
+la incertidumbre del modelo se mide en el capítulo 7, remuestreando personas.</p>
 </div>
 <p>Para una tasa <span class="math notranslate nohighlight">\(\hat p = a / n\)</span>, el intervalo de Wilson es</p>
 <div class="math notranslate nohighlight">
@@ -397,7 +398,8 @@ separado (2.2) y después las relaciones de a dos, entre predictoras y con el ob
 bloque; todas entran en las tablas y solo las más relevantes de cada bloque tienen gráfico. Las
 cinco descartadas en los capítulos 1 y 5 no se analizan: <code class="docutils literal notranslate"><span class="pre">contrato_fijo</span></code> (idéntica a <code class="docutils literal notranslate"><span class="pre">contrato</span></code>),
 <code class="docutils literal notranslate"><span class="pre">horas_bajo_legal</span></code> (cero en el 99,98 % de las filas) y <code class="docutils literal notranslate"><span class="pre">cambios_plan_12m</span></code>, <code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code>
-y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code>, que siguen el calendario de la reducción legal de la jornada y no a la persona.</p>
+y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code>, que siguen el calendario de la reducción legal de la jornada (capítulo 5) y no a
+la persona.</p>
 <p>Un recordatorio sobre el tiempo de la historia laboral: en la fila del mes <em>t</em>, la nómina, las
 marcaciones y las novedades llegan hasta <em>t</em> − 1; las variables con sufijo <code class="docutils literal notranslate"><span class="pre">_r2</span></code> y los meses desde
 las últimas vacaciones, hasta <em>t</em> − 2. Por eso en el primer mes de cada episodio (2,4 % de las
@@ -427,7 +429,7 @@ automática lo verifica en cada tabla (función <code class="docutils literal no
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">comun</span> <span class="kn">import</span> <span class="p">(</span><span class="n">cargar</span><span class="p">,</span> <span class="n">particion</span><span class="p">,</span> <span class="n">estilo</span><span class="p">,</span> <span class="n">tasa</span><span class="p">,</span> <span class="n">tasa_ic</span><span class="p">,</span> <span class="n">grafico_tasa</span><span class="p">,</span> <span class="n">etiquetar</span><span class="p">,</span> <span class="n">puntos</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">comun</span> <span class="kn">import</span> <span class="p">(</span><span class="n">eje_llano</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">,</span> <span class="n">cargar</span><span class="p">,</span> <span class="n">particion</span><span class="p">,</span> <span class="n">estilo</span><span class="p">,</span> <span class="n">tasa</span><span class="p">,</span> <span class="n">tasa_ic</span><span class="p">,</span> <span class="n">grafico_tasa</span><span class="p">,</span> <span class="n">etiquetar</span><span class="p">,</span> <span class="n">puntos</span><span class="p">,</span>
                    <span class="n">OBJETIVO</span><span class="p">,</span> <span class="n">NUM</span><span class="p">,</span> <span class="n">NUM_BASE</span><span class="p">,</span> <span class="n">BIN</span><span class="p">,</span> <span class="n">CAT</span><span class="p">,</span> <span class="n">CAT_BASE</span><span class="p">,</span> <span class="n">CAT_HISTORIA</span><span class="p">,</span> <span class="n">BASE</span> <span class="k">as</span> <span class="n">BASE_VARS</span><span class="p">,</span>
                    <span class="n">BLOQUES</span><span class="p">,</span> <span class="n">BLOQUE</span><span class="p">,</span> <span class="n">HISTORIA</span><span class="p">,</span> <span class="n">PREDICTORAS</span><span class="p">,</span> <span class="n">SEMILLA</span><span class="p">,</span> <span class="n">NOMBRE</span><span class="p">,</span> <span class="n">UNIDAD</span><span class="p">,</span>
                    <span class="n">VERDE</span><span class="p">,</span> <span class="n">ORO</span><span class="p">,</span> <span class="n">GRIS</span><span class="p">,</span> <span class="n">GRIS_CL</span><span class="p">,</span> <span class="n">TINTA</span><span class="p">,</span> <span class="n">BORDE</span><span class="p">)</span>
@@ -552,6 +554,7 @@ clases está en escala logarítmica para que la barra de las renuncias se vea).<
 <span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="s1">&#39;0: no renuncia&#39;</span><span class="p">,</span> <span class="s1">&#39;1: renuncia&#39;</span><span class="p">],</span> <span class="n">conteo</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">ORO</span><span class="p">],</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
 <span class="n">etiquetar</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">barras</span><span class="p">,</span> <span class="n">textos</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> %)&#39;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">conteo</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Clases del objetivo&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Persona-mes&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">eje_llano</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="p">)</span>
 
 <span class="n">por_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">filas</span><span class="o">=</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="n">renuncias</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
 <span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">por_mes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">renuncias</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">ORO</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
@@ -573,13 +576,11 @@ clases está en escala logarítmica para que la barra de las renuncias se vea).<
       <span class="sa">f</span><span class="s1">&#39;máximo </span><span class="si">{</span><span class="n">por_mes</span><span class="o">.</span><span class="n">renuncias</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tasa anual equivalente: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">BASE</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="mi">12</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;exactitud de &quot;nadie renuncia&quot;: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">otras salidas por tipo (y = 0 en su último mes):&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">tipo_retiro</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/dbf052dc4402b14ea57ba62883ab8cbf74e35032ef59986b2a8661aeb8cd1079.png" src="_images/dbf052dc4402b14ea57ba62883ab8cbf74e35032ef59986b2a8661aeb8cd1079.png" />
+<img alt="_images/fee2e29a435ed234d7af2fb6abf189ecd0eb9087fc0da2c934967fdbe1aadd9c.png" src="_images/fee2e29a435ed234d7af2fb6abf189ecd0eb9087fc0da2c934967fdbe1aadd9c.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                         filas      %  y
 evento                                  
 ninguno                  66256  98.28  0
@@ -592,12 +593,6 @@ personas distintas que renuncian: 688 de 5,500
 renuncias por mes: mínimo 27, mediana 42, máximo 60
 tasa anual equivalente: 11.6 %
 exactitud de &quot;nadie renuncia&quot;: 98.98 %
-
-otras salidas por tipo (y = 0 en su último mes):
-tipo_retiro
-despido            243
-fin_de_contrato    181
-otra                17
 </pre></div>
 </div>
 </div>
@@ -606,15 +601,15 @@ otra                17
 renuncia. Las 688 renuncias son de 688 personas distintas, de las 5.500 del entrenamiento, así que
 nadie renuncia dos veces en el periodo. Una tasa mensual de 1,02 % equivale a que cerca de una de
 cada nueve personas (11,6 %) renuncie en un año. Por mes hay entre 27 y 60 renuncias, con mediana
-de 42. Las 441 otras salidas (243 despidos, 181 fines de contrato y 17 de otro tipo) y las 31
+de 42. Las 441 otras salidas (despido, fin de contrato, pensión y otras) y las 31
 renuncias administrativas (renuncias registradas tras las cuales la persona sigue en el grupo,
 capítulo 1) cuentan como <span class="math notranslate nohighlight">\(y = 0\)</span>.</p>
 <div class="important admonition">
 <p class="admonition-title">Implicaciones para la métrica y la validación</p>
 <ul class="simple">
-<li><p><strong>La exactitud no sirve.</strong> Predecir que nadie renuncia acierta el 98,98 % de las filas y no
+<li><p><strong>La exactitud (<em>accuracy</em>) no sirve.</strong> Predecir que nadie renuncia acierta el 98,98 % de las filas y no
 identifica ninguna renuncia.</p></li>
-<li><p><strong>Métrica principal: PR-AUC</strong> (precisión promedio). Se concentra en la clase positiva y su piso
+<li><p><strong>Métrica principal: PR-AUC</strong> (área bajo la curva de precisión-exhaustividad; en inglés también AUC-PR o <em>average precision</em>). Se concentra en la clase positiva y su piso
 es la prevalencia (0,0102): un modelo que ordena al azar obtiene 0,0102, y cualquier ganancia se
 lee como múltiplo de ese piso. La ROC-AUC se reporta como complemento, porque con 97 negativos
 por positivo premia ordenar bien la gran masa de negativos.</p></li>
@@ -670,7 +665,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>tipo</th>
+      <th>bloque / tipo</th>
       <th>binaria</th>
       <th>categórica nominal</th>
       <th>categórica ordinal</th>
@@ -678,26 +673,8 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
       <th>numérica discreta</th>
       <th>total</th>
     </tr>
-    <tr>
-      <th>bloque</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>arraigo</th>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>6</td>
-      <td>7</td>
-    </tr>
     <tr>
       <th>atributos</th>
       <td>3</td>
@@ -744,6 +721,24 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
       <td>27</td>
     </tr>
     <tr>
+      <th>origen</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>proyectos_personales</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
       <th>salario_relativo</th>
       <td>2</td>
       <td>2</td>
@@ -758,8 +753,8 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>7</td>
-      <td>8</td>
+      <td>10</td>
+      <td>11</td>
     </tr>
     <tr>
       <th>vacaciones</th>
@@ -1608,7 +1603,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>binaria</td>
       <td>2</td>
       <td>24.1</td>
@@ -1616,7 +1611,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>postulaciones_internas_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>numérica discreta</td>
       <td>6</td>
       <td>0.0</td>
@@ -1624,7 +1619,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>requisicion_promocion_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>numérica discreta</td>
       <td>5</td>
       <td>0.0</td>
@@ -1632,7 +1627,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>meses_desde_postulacion</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>numérica discreta</td>
       <td>100</td>
       <td>88.6</td>
@@ -1640,7 +1635,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>numérica discreta</td>
       <td>10</td>
       <td>0.0</td>
@@ -1648,7 +1643,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>cesantias_educacion_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>numérica discreta</td>
       <td>6</td>
       <td>0.0</td>
@@ -1656,7 +1651,7 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>numérica discreta</td>
       <td>14</td>
       <td>0.0</td>
@@ -1667,56 +1662,19 @@ mezclaría meses. No se remuestrea (ni sobremuestreo ni SMOTE) en el EDA; el pes
 </div></div></div>
 </details>
 </div>
-<p>Nótese que de las 105 predictoras, 44 son numéricas continuas, 29 numéricas discretas (conteos y
+<p>Se evidencia que de las 105 predictoras, 44 son numéricas continuas, 29 numéricas discretas (conteos y
 meses), 15 binarias y 17 categóricas (16 nominales y una ordinal, el nivel del cargo). Entre las
 categóricas está <code class="docutils literal notranslate"><span class="pre">estado_gestion_tiempos</span></code>, que viene como código numérico pero es una etiqueta (tres
 valores) y se trata como categórica. Las cardinalidades de las categóricas van de 2 (género,
 contrato) a 57 (ubicación). La tabla plegada da la de cada variable con su % de nulos: 63
-predictoras tienen algún nulo, y en varias el nulo es
-estructural, no un dato perdido (por ejemplo, <code class="docutils literal notranslate"><span class="pre">meses_al_vencimiento</span></code> es nulo exactamente en el
-47,1 % de filas con contrato indefinido, que no vence). El tratamiento de los nulos se decide en la
-síntesis.</p>
+predictoras tienen algún nulo, en varias de ellas estructural (por ejemplo, <code class="docutils literal notranslate"><span class="pre">meses_al_vencimiento</span></code>
+es nulo exactamente en el 47,1 % de filas con contrato indefinido, que no vence); el mecanismo de
+los faltantes se describe en el capítulo 1 («Faltantes»).</p>
 </section>
-<section id="como-se-leen-la-asimetria-y-la-curtosis">
-<h3><span class="section-number">3.2.2. </span>Cómo se leen la asimetría y la curtosis<a class="headerlink" href="#como-se-leen-la-asimetria-y-la-curtosis" title="Permalink to this heading">#</a></h3>
-<p>La asimetría es el tercer momento estandarizado y la curtosis el cuarto. <code class="docutils literal notranslate"><span class="pre">pandas</span></code> reporta la
-curtosis como <strong>exceso de Fisher</strong> (curtosis − 3), de modo que la normal vale 0, no 3. La lectura
-del curso:</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>medida</p></th>
-<th class="head"><p>valor</p></th>
-<th class="head"><p>lectura</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>asimetría</p></td>
-<td><p>|g₁| &lt; 0,5</p></td>
-<td><p>aproximadamente simétrica</p></td>
-</tr>
-<tr class="row-odd"><td><p></p></td>
-<td><p>0,5 ≤ |g₁| ≤ 1</p></td>
-<td><p>moderadamente asimétrica</p></td>
-</tr>
-<tr class="row-even"><td><p></p></td>
-<td><p>|g₁| &gt; 1</p></td>
-<td><p>muy asimétrica</p></td>
-</tr>
-<tr class="row-odd"><td><p>curtosis (exceso)</p></td>
-<td><p>≈ 0</p></td>
-<td><p>mesocúrtica, colas como la normal</p></td>
-</tr>
-<tr class="row-even"><td><p></p></td>
-<td><p>&gt; 0</p></td>
-<td><p>leptocúrtica: pico agudo y colas pesadas</p></td>
-</tr>
-<tr class="row-odd"><td><p></p></td>
-<td><p>&lt; 0</p></td>
-<td><p>platicúrtica: forma achatada, colas livianas</p></td>
-</tr>
-</tbody>
-</table>
-<p>Además, en este libro se marca como <strong>cola larga</strong> toda numérica no binaria cuya asimetría sigue
+<section id="asimetria-y-colas-largas">
+<h3><span class="section-number">3.2.2. </span>Asimetría y colas largas<a class="headerlink" href="#asimetria-y-colas-largas" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code> reporta la curtosis como exceso (curtosis − 3), de modo que la normal vale 0. Se marca como
+<strong>cola larga</strong> toda numérica no binaria cuya asimetría sigue
 siendo |g₁| &gt; 2 <strong>después de recortarla a sus percentiles 1 y 99</strong> (sobre los valores observados):
 es el criterio con el que los capítulos 4 y 7 deciden qué variables reciben el logaritmo con signo.
 Las tablas muestran también la asimetría cruda, como contexto.</p>
@@ -1863,7 +1821,7 @@ más allá de 1,5 × IQR).</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese que la edad es aproximadamente simétrica (asimetría 0,45) y platicúrtica (exceso −0,56):
+<p>Se observa que la edad es aproximadamente simétrica (asimetría 0,45) y platicúrtica (exceso −0,56):
 media 37,3 y mediana 36 años, IQR de 28 a 45 y solo 0,08 % de filas fuera de las vallas. La
 antigüedad reconocida es muy asimétrica a la derecha (1,45) y leptocúrtica (1,97): mediana de 37
 meses frente a una media de 64,6, IQR de 13 a 90 meses, y un 6,2 % de filas por encima de la valla
@@ -1938,7 +1896,7 @@ la regresión logística no supone normalidad de las predictoras.</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese que las tres binarias de atributos son poco frecuentes: el primer mes de un episodio es el
+<p>Las tres binarias de atributos son poco frecuentes: el primer mes de un episodio es el
 2,4 % de las filas, los reingresos el 8,1 % y los traslados en los últimos 12 meses el 2,7 %. Su
 relación con el objetivo se ve con las demás binarias, en la sección de razones de tasa.</p>
 </section>
@@ -2168,12 +2126,10 @@ privacidad no se publican mínimos ni máximos: los percentiles 1 y 99 hacen su 
 </div></div><img alt="_images/9af0298c311faf1ebdfd63048321227a1ca3b291a9ccbbe54fb3d1c91450859a.png" src="_images/9af0298c311faf1ebdfd63048321227a1ca3b291a9ccbbe54fb3d1c91450859a.png" />
 </div>
 </div>
-<p>Nótese que el bloque de contrato no tiene colas largas entre sus numéricas, pero sí nulos
-estructurales: <code class="docutils literal notranslate"><span class="pre">meses_al_vencimiento</span></code> solo existe en término fijo (mediana de 3 meses, IQR de 2 a 5)
-y <code class="docutils literal notranslate"><span class="pre">meses_desde_aprendiz</span></code> solo en el 5 % que fue aprendiz. <code class="docutils literal notranslate"><span class="pre">meses_desde_cambio_contrato</span></code> es la más
-asociada (P(sup) 0,329): tiene mediana de 8 meses pero media de 50, porque mezcla a quienes acaban de
-renovar con los indefinidos antiguos. <code class="docutils literal notranslate"><span class="pre">n_renovaciones</span></code> es cero en el 61 % de las filas. Las dos
-binarias <code class="docutils literal notranslate"><span class="pre">fue_aprendiz</span></code> (5 %) e <code class="docutils literal notranslate"><span class="pre">ingreso_a_mitad</span></code> (2 %) son muy desbalanceadas.</p>
+<p>Se evidencia que el bloque de contrato no tiene colas largas, pero sí nulos estructurales:
+<code class="docutils literal notranslate"><span class="pre">meses_al_vencimiento</span></code> solo existe en término fijo y <code class="docutils literal notranslate"><span class="pre">meses_desde_aprendiz</span></code> solo en el 5 % que fue
+aprendiz. La variable más asociada es <code class="docutils literal notranslate"><span class="pre">meses_desde_cambio_contrato</span></code> (P(sup) 0,329), cuya mediana de
+8 meses frente a una media de 50 refleja la mezcla de renovaciones recientes con indefinidos antiguos.</p>
 </section>
 <section id="trayectoria">
 <h4><span class="section-number">3.2.5.2. </span>Trayectoria<a class="headerlink" href="#trayectoria" title="Permalink to this heading">#</a></h4>
@@ -2374,18 +2330,73 @@ binarias <code class="docutils literal notranslate"><span class="pre">fue_aprend
       <td>6.21</td>
       <td>sí</td>
     </tr>
+    <tr>
+      <th>postulaciones_internas_12m</th>
+      <td>numérica discreta</td>
+      <td>0.00</td>
+      <td>0.05</td>
+      <td>0.25</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>6.65</td>
+      <td>4.71</td>
+      <td>57.73</td>
+      <td>96.03</td>
+      <td>3.97</td>
+      <td>sí</td>
+    </tr>
+    <tr>
+      <th>requisicion_promocion_12m</th>
+      <td>numérica discreta</td>
+      <td>0.00</td>
+      <td>0.05</td>
+      <td>0.26</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>5.68</td>
+      <td>4.37</td>
+      <td>38.37</td>
+      <td>95.46</td>
+      <td>4.54</td>
+      <td>sí</td>
+    </tr>
+    <tr>
+      <th>meses_desde_postulacion</th>
+      <td>numérica discreta</td>
+      <td>88.61</td>
+      <td>33.62</td>
+      <td>30.09</td>
+      <td>1.0</td>
+      <td>9.0</td>
+      <td>20.0</td>
+      <td>67.0</td>
+      <td>94.0</td>
+      <td>58.0</td>
+      <td>0.70</td>
+      <td>0.69</td>
+      <td>-1.07</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
-</div></div><img alt="_images/a6429c308f1cab0aa3ad20b92151ebe9b7fa1844bd95a684c2ba22f638987487.png" src="_images/a6429c308f1cab0aa3ad20b92151ebe9b7fa1844bd95a684c2ba22f638987487.png" />
+</div></div><img alt="_images/1f1705965ae9b8451d395c57b5ae27948ffbaddee4c1c01caefda9600c3fe75a.png" src="_images/1f1705965ae9b8451d395c57b5ae27948ffbaddee4c1c01caefda9600c3fe75a.png" />
 </div>
 </div>
-<p>Nótese que los meses en la posición y en la función (medianas de 26 y 28 meses) son las más
-asociadas del bloque y, como se verá en la sección bidimensional, repiten buena parte de la
-antigüedad. El resto son variables de cola larga casi siempre en cero: ascensos (95 % de ceros),
-movimientos laterales (97 %), jefatura formal (99,6 %) y personas a cargo (96 %, asimetría 26 y
-curtosis de exceso de 1.054, la más extrema del bloque). <code class="docutils literal notranslate"><span class="pre">meses_desde_ascenso</span></code> es nulo en el 91,5 %
-(quien no ha ascendido) y está topada en 12 meses. <code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code> tiene un 36 % de nulos y
-una cola larga (p99 de 323 personas).</p>
+<p>Se observa que los meses en la posición y en la función son las más asociadas del bloque y, como se
+verá en la sección bidimensional, repiten buena parte de la antigüedad. El resto son conteos de cola
+larga casi siempre en cero (ascensos, movimientos laterales, jefatura formal, personas a cargo,
+postulaciones internas). <code class="docutils literal notranslate"><span class="pre">meses_desde_ascenso</span></code> es nulo en el 91,5 % (quien no ha ascendido) y está
+topada en 12 meses, y <code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code> tiene un 36 % de nulos.</p>
 </section>
 <section id="salario-relativo">
 <h4><span class="section-number">3.2.5.3. </span>Salario relativo<a class="headerlink" href="#salario-relativo" title="Permalink to this heading">#</a></h4>
@@ -2667,14 +2678,11 @@ una cola larga (p99 de 323 personas).</p>
 </div></div><img alt="_images/16666403f5504f666cb2e4a43daffd2b473ec298dc61c213e09395fcf42d17d0.png" src="_images/16666403f5504f666cb2e4a43daffd2b473ec298dc61c213e09395fcf42d17d0.png" />
 </div>
 </div>
-<p>Nótese que el bloque salarial tiene un 34-39 % de nulos compartidos, y son estructurales: el
-posicionamiento local es nulo exactamente en las filas con salario a destajo o integral, que no
-tienen un sueldo básico comparable (el 86 % de las filas de banano), y siete de sus diez numéricas no
-binarias con cola larga. El posicionamiento salarial vale 1 en la mitad central (IQR nulo): casi
-todos ganan la tabla de su cargo, y lo que informa es la cola (p99 de 1,69). <code class="docutils literal notranslate"><span class="pre">pct_ultimo_aumento_merito</span></code>
-es la más extrema (asimetría 20,9, curtosis 840). Las más asociadas con el objetivo son los aumentos
-por mérito en 24 meses (P(sup) 0,389, quien renuncia ha tenido menos) y la privación relativa y el
-Gini del oficio y nivel (0,604 y 0,603, más desigualdad en quienes renuncian).</p>
+<p>El bloque salarial comparte un 34-39 % de nulos estructurales: el posicionamiento local es nulo
+exactamente en las filas con salario a destajo o integral, que no tienen un sueldo básico comparable
+(el 86 % de las filas de banano). Siete de sus diez numéricas no binarias tienen cola larga. Las más
+asociadas con el objetivo son los aumentos por mérito en 24 meses (P(sup) 0,389, menores en quienes
+renuncian) y la privación relativa y el Gini del oficio y nivel (0,604 y 0,603).</p>
 </section>
 <section id="jornada">
 <h4><span class="section-number">3.2.5.4. </span>Jornada<a class="headerlink" href="#jornada" title="Permalink to this heading">#</a></h4>
@@ -3204,14 +3212,12 @@ Gini del oficio y nivel (0,604 y 0,603, más desigualdad en quienes renuncian).<
 </div></div><img alt="_images/d30e0ef3bc4ae6b87eee807452d2672662f1c7489f678f4575fd4b4322dc6b5c.png" src="_images/d30e0ef3bc4ae6b87eee807452d2672662f1c7489f678f4575fd4b4322dc6b5c.png" />
 </div>
 </div>
-<p>Nótese que la jornada es el bloque más grande (27 variables) y el de más colas largas (12 de 22
-numéricas no binarias después del recorte; 15 con la asimetría cruda): horas extra, recargos y dominicales tienen de 49 % a 79 % de ceros y
-asimetrías de 2 a 3,5. Hay variables casi constantes: los recargos de sábado en mínimos son cero en
-más del 93 % de las filas. Las marcas biométricas (turnos, horas por turno, % de turnos largos o nocturnos) tienen
-un 43-46 % de nulos, que son exactamente las personas sin marcación biométrica. Las más asociadas no son montos sino frecuencias:
-los meses con extras o recargos en 12 meses (P(sup) 0,373) tienen una distribución en U, con 28 %
-de filas en 0 y otro tanto en 12, y quien renuncia está más cerca de 0, en parte porque lleva menos
-tiempo.</p>
+<p>Se evidencia que la jornada es el bloque más grande (27 variables) y el de más colas largas (12 de 22
+numéricas no binarias después del recorte): horas extra, recargos y dominicales tienen de 49 % a 79 %
+de ceros, y las marcas biométricas tienen un 43-46 % de nulos, que son exactamente las personas sin
+marcación biométrica. La más asociada es una frecuencia y no un monto: los meses con extras o
+recargos en 12 meses (P(sup) 0,373), con distribución en U y valores menores en quienes renuncian,
+en parte porque llevan menos tiempo.</p>
 </section>
 <section id="ingreso-relativo">
 <h4><span class="section-number">3.2.5.5. </span>Ingreso relativo<a class="headerlink" href="#ingreso-relativo" title="Permalink to this heading">#</a></h4>
@@ -3512,12 +3518,11 @@ tiempo.</p>
 </div></div><img alt="_images/74dfcab8a65d77b0ecbd27d286f715596d870c82aa86fca60d962cc7cc4aaf79.png" src="_images/74dfcab8a65d77b0ecbd27d286f715596d870c82aa86fca60d962cc7cc4aaf79.png" />
 </div>
 </div>
-<p>Nótese que el ingreso frente al pactado es la única variable del bloque aproximadamente simétrica
-(asimetría 0,55; mediana 1,14: se gana un 14 % sobre el pactado) y la más asociada con el objetivo
-(P(sup) 0,368: quien renuncia gana menos por encima de lo pactado). El resto son bonos y auxilios
-casi siempre en cero, con asimetrías de 5 a 34 y curtosis de hasta 1.489: son las colas más largas
-del libro. La volatilidad del ingreso (12 % de nulos) y el cambio del ingreso de 3 frente a 9 meses
-(17 %) tienen nulos por falta de historia.</p>
+<p>Se observa que el ingreso frente al pactado es la única variable del bloque aproximadamente simétrica
+(asimetría 0,55) y la más asociada con el objetivo (P(sup) 0,368: quien renuncia gana menos por
+encima de lo pactado). El resto son bonos y auxilios casi siempre en cero, con asimetrías de 5 a 34,
+las colas más largas del libro; la volatilidad y el cambio del ingreso tienen nulos por falta de
+historia.</p>
 </section>
 <section id="ausencias">
 <h4><span class="section-number">3.2.5.6. </span>Ausencias<a class="headerlink" href="#ausencias" title="Permalink to this heading">#</a></h4>
@@ -3704,12 +3709,10 @@ del libro. La volatilidad del ingreso (12 % de nulos) y el cambio del ingreso de
 </div></div><img alt="_images/95c59055e8c256bda34d3c307fde641467d800542ae0ed3812fc6c03c7f8580f.png" src="_images/95c59055e8c256bda34d3c307fde641467d800542ae0ed3812fc6c03c7f8580f.png" />
 </div>
 </div>
-<p>Nótese que el bloque de ausencias no tiene nulos (un mes sin licencia es un cero) y seis de sus siete
-variables tienen cola larga: las licencias no remuneradas llegan a asimetrías de 19 y curtosis de
-588 con un p99 de 18 días en 12 meses. Es el bloque con más variables cuyo P(sup) está por encima de
-0,5: quien renuncia acumula más días de licencia no remunerada en los tres meses previos (0,585). El
-día de la familia es la excepción: es simétrico, casi todos lo toman (mediana 2) y quien renuncia lo
-ha tomado menos (0,392), lo que de nuevo refleja en parte la antigüedad.</p>
+<p>El bloque de ausencias no tiene nulos (un mes sin licencia es un cero) y seis de sus siete
+variables tienen cola larga. La más asociada son los días de licencia no remunerada de los tres
+meses previos (P(sup) 0,585, mayores en quienes renuncian); el día de la familia es simétrico y
+quien renuncia lo ha tomado menos (0,392), lo que refleja en parte la antigüedad.</p>
 </section>
 <section id="vacaciones">
 <h4><span class="section-number">3.2.5.7. </span>Vacaciones<a class="headerlink" href="#vacaciones" title="Permalink to this heading">#</a></h4>
@@ -3858,19 +3861,18 @@ ha tomado menos (0,392), lo que de nuevo refleja en parte la antigüedad.</p>
 </div></div><img alt="_images/d1315d524b4df20201b36acea3cc558adbbaca76a2a8317c4b6b3873bf0ad783.png" src="_images/d1315d524b4df20201b36acea3cc558adbbaca76a2a8317c4b6b3873bf0ad783.png" />
 </div>
 </div>
-<p>Nótese que la mitad de las filas no tiene vacaciones pendientes y que el 15 % acumula dos periodos.
-Los meses desde las últimas vacaciones son simétricos y están topados en 12, con un 35 % de nulos:
-quien aún no ha disfrutado vacaciones, sobre todo personas nuevas (mediana de antigüedad de 8 meses
-en los nulos frente a 82 en el resto). Las vacaciones compensadas en dinero son la única
-cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente con la renuncia (P(sup)
-0,377): para tener pendientes hay que haber cumplido un año.</p>
+<p>Se evidencia que la mitad de las filas no tiene vacaciones pendientes y que la única cola larga del
+bloque son las vacaciones compensadas en dinero. Los meses desde las últimas vacaciones están topados
+en 12 y son nulos en el 35 % de las filas, sobre todo personas nuevas que aún no las han disfrutado.
+Las pendientes se asocian negativamente con la renuncia (P(sup) 0,377), porque para tenerlas hay que
+haber cumplido un año.</p>
 </section>
-<section id="arraigo">
-<h4><span class="section-number">3.2.5.8. </span>Arraigo<a class="headerlink" href="#arraigo" title="Permalink to this heading">#</a></h4>
+<section id="proyectos-personales">
+<h4><span class="section-number">3.2.5.8. </span>Proyectos personales<a class="headerlink" href="#proyectos-personales" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">tabla_bloque</span><span class="p">(</span><span class="s1">&#39;arraigo&#39;</span><span class="p">))</span>
-<span class="n">figura_bloque</span><span class="p">(</span><span class="s1">&#39;arraigo&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">tabla_bloque</span><span class="p">(</span><span class="s1">&#39;proyectos_personales&#39;</span><span class="p">))</span>
+<span class="n">figura_bloque</span><span class="p">(</span><span class="s1">&#39;proyectos_personales&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -3913,85 +3915,9 @@ cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente co
   </thead>
   <tbody>
     <tr>
-      <th>nacido_en_depto_sede</th>
-      <td>binaria</td>
-      <td>24.06</td>
-      <td>0.64</td>
-      <td>0.48</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>-0.59</td>
-      <td>-0.59</td>
-      <td>-1.66</td>
-      <td>35.96</td>
-      <td>0.00</td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>postulaciones_internas_12m</th>
-      <td>numérica discreta</td>
-      <td>0.00</td>
-      <td>0.05</td>
-      <td>0.25</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>6.65</td>
-      <td>4.71</td>
-      <td>57.73</td>
-      <td>96.03</td>
-      <td>3.97</td>
-      <td>sí</td>
-    </tr>
-    <tr>
-      <th>requisicion_promocion_12m</th>
-      <td>numérica discreta</td>
-      <td>0.00</td>
-      <td>0.05</td>
-      <td>0.26</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>5.68</td>
-      <td>4.37</td>
-      <td>38.37</td>
-      <td>95.46</td>
-      <td>4.54</td>
-      <td>sí</td>
-    </tr>
-    <tr>
-      <th>meses_desde_postulacion</th>
-      <td>numérica discreta</td>
-      <td>88.61</td>
-      <td>33.62</td>
-      <td>30.09</td>
-      <td>1.0</td>
-      <td>9.0</td>
-      <td>20.0</td>
-      <td>67.0</td>
-      <td>94.0</td>
-      <td>58.0</td>
-      <td>0.70</td>
-      <td>0.69</td>
-      <td>-1.07</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td></td>
-    </tr>
-    <tr>
       <th>cesantias_vivienda_12m</th>
       <td>numérica discreta</td>
-      <td>0.00</td>
+      <td>0.0</td>
       <td>0.40</td>
       <td>0.56</td>
       <td>0.0</td>
@@ -4010,7 +3936,7 @@ cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente co
     <tr>
       <th>cesantias_educacion_12m</th>
       <td>numérica discreta</td>
-      <td>0.00</td>
+      <td>0.0</td>
       <td>0.03</td>
       <td>0.19</td>
       <td>0.0</td>
@@ -4029,7 +3955,7 @@ cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente co
     <tr>
       <th>cesantias_vivienda_historico</th>
       <td>numérica discreta</td>
-      <td>0.00</td>
+      <td>0.0</td>
       <td>1.52</td>
       <td>1.92</td>
       <td>0.0</td>
@@ -4047,17 +3973,87 @@ cola larga del bloque (asimetría 3). Las pendientes se asocian negativamente co
     </tr>
   </tbody>
 </table>
-</div></div><img alt="_images/f775d240680fb0599ef0cd00879eb2e14499233e1ee494dd4415be40761450b8.png" src="_images/f775d240680fb0599ef0cd00879eb2e14499233e1ee494dd4415be40761450b8.png" />
+</div></div><img alt="_images/a8e44dafc0d4a64d8c1b6bf63abd4113ef1d9754bdcf24048ef448049ade7ee7.png" src="_images/a8e44dafc0d4a64d8c1b6bf63abd4113ef1d9754bdcf24048ef448049ade7ee7.png" />
 </div>
 </div>
-<p>Nótese que el arraigo son sobre todo conteos pequeños: el 96 % no se postuló a una vacante interna
-en 12 meses y el 98 % no retiró cesantías para educación, ambas con cola larga. El retiro histórico
-de cesantías para vivienda es el más asociado (P(sup) 0,360; la mediana de quien renuncia es 0
-frente a 1), otra vez con un componente de antigüedad. Haber nacido en el departamento de la sede
-vale 1 en el 64 % de las filas con dato y tiene un 24 % de nulos.</p>
+<p>Son conteos pequeños con cola larga: el 98 % no retiró cesantías para educación en 12 meses. El
+retiro histórico de cesantías para vivienda es el más asociado (P(sup) 0,360), también con un
+componente de antigüedad.</p>
+</section>
+<section id="origen">
+<h4><span class="section-number">3.2.5.9. </span>Origen<a class="headerlink" href="#origen" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">tabla_bloque</span><span class="p">(</span><span class="s1">&#39;origen&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tipo</th>
+      <th>% ceros</th>
+      <th>% fuera 1,5×IQR</th>
+      <th>% nulos</th>
+      <th>IQR</th>
+      <th>asimetría</th>
+      <th>asimetría tras p1-p99</th>
+      <th>curtosis (exceso)</th>
+      <th>desv.</th>
+      <th>media</th>
+      <th>mediana</th>
+      <th>p1</th>
+      <th>p25</th>
+      <th>p75</th>
+      <th>p99</th>
+      <th>cola larga</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>nacido_en_depto_sede</th>
+      <td>binaria</td>
+      <td>35.96</td>
+      <td>0.0</td>
+      <td>24.06</td>
+      <td>1.0</td>
+      <td>-0.59</td>
+      <td>-0.59</td>
+      <td>-1.66</td>
+      <td>0.48</td>
+      <td>0.64</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Haber nacido en el departamento de la sede vale 1 en el 64 % de las filas con dato y tiene un 24 % de
+nulos.</p>
 </section>
 <section id="colas-largas-y-valores-extremos-en-toda-la-historia">
-<h4><span class="section-number">3.2.5.9. </span>Colas largas y valores extremos en toda la historia<a class="headerlink" href="#colas-largas-y-valores-extremos-en-toda-la-historia" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">3.2.5.10. </span>Colas largas y valores extremos en toda la historia<a class="headerlink" href="#colas-largas-y-valores-extremos-en-toda-la-historia" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">todas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">tabla_bloque</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">bloque</span><span class="o">=</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">BLOQUES</span><span class="p">])</span>
@@ -4112,14 +4108,6 @@ D&#39;Agostino rechaza la normalidad al 1 % en 71 de 71
   </thead>
   <tbody>
     <tr>
-      <th>arraigo</th>
-      <td>6</td>
-      <td>3</td>
-      <td>3</td>
-      <td>79.5</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
       <th>ausencias</th>
       <td>7</td>
       <td>6</td>
@@ -4152,6 +4140,14 @@ D&#39;Agostino rechaza la normalidad al 1 % en 71 de 71
       <td>6.1</td>
     </tr>
     <tr>
+      <th>proyectos_personales</th>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>63.6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
       <th>salario_relativo</th>
       <td>10</td>
       <td>7</td>
@@ -4161,10 +4157,10 @@ D&#39;Agostino rechaza la normalidad al 1 % en 71 de 71
     </tr>
     <tr>
       <th>trayectoria</th>
-      <td>7</td>
-      <td>4</td>
-      <td>4</td>
-      <td>3.2</td>
+      <td>10</td>
+      <td>6</td>
+      <td>6</td>
+      <td>49.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -4179,7 +4175,7 @@ D&#39;Agostino rechaza la normalidad al 1 % en 71 de 71
 </table>
 </div></div></div>
 </div>
-<p>Nótese que de las 71 numéricas no binarias de la historia, 44 tienen |asimetría| &gt; 2 en crudo y 39
+<p>De las 71 numéricas no binarias de la historia, 44 tienen |asimetría| &gt; 2 en crudo y 39
 la conservan después del recorte p1-p99: esas 39 son las de cola larga del libro. Las cinco que el
 recorte normaliza lo suficiente son los tres recargos nocturnos (1, 3 y 12 meses), la volatilidad
 del ingreso y el cambio del ingreso de 3 frente a 9 meses: su asimetría venía de unos pocos
@@ -4194,8 +4190,8 @@ horas extra, quien tuvo una licencia larga) y no se eliminan.</p>
 <p class="admonition-title">Decisión para el capítulo 7: recorte y logaritmo con signo</p>
 <p>Con estas colas, una logística sobre los valores crudos deja que unas pocas filas extremas fijen
 el coeficiente, y la estandarización no lo arregla (la desviación la inflan los mismos extremos).
-Por eso el preprocesamiento del modelo (i) recorta todas las numéricas no binarias a sus
-percentiles 1 y 99, estimados en el entrenamiento de cada pliegue, y (ii) aplica a las que siguen
+Por eso el preprocesamiento del modelo (1) recorta todas las numéricas no binarias a sus
+percentiles 1 y 99, estimados en el entrenamiento de cada pliegue, y (2) aplica a las que siguen
 con |asimetría| &gt; 2 después del recorte el logaritmo con signo, <span class="math notranslate nohighlight">\(\operatorname{sign}(x)\log(1 + |x|)\)</span>,
 que conserva el cero y el signo (hay variables negativas, como la variación del sueldo en mínimos).
 En el entrenamiento completo son 39; la celda final del capítulo las lista. El <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> repite
@@ -5723,7 +5719,7 @@ las categorías más pequeñas hasta reunir al menos cinco personas.</p>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">PRINCIPALES_CAT</span><span class="p">):</span>
     <span class="n">conteo</span> <span class="o">=</span> <span class="n">agrupar</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">min_ren</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-    <span class="n">barras</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">conteo</span><span class="o">.</span><span class="n">index</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">conteo</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
+    <span class="n">barras</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">barh</span><span class="p">([</span><span class="n">rotulo</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">conteo</span><span class="o">.</span><span class="n">index</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">conteo</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
     <span class="n">etiquetar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">barras</span><span class="p">,</span> <span class="n">textos</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %)&#39;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">conteo</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
               <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
     <span class="n">a</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">nom</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Persona-mes&#39;</span><span class="p">)</span>
@@ -5734,10 +5730,10 @@ las categorías más pequeñas hasta reunir al menos cinco personas.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/76a6d59e779bc72c8bbdef990302ec1848d35c963e749d527149df0817eaa4ce.png" src="_images/76a6d59e779bc72c8bbdef990302ec1848d35c963e749d527149df0817eaa4ce.png" />
+<img alt="_images/584d2d0edffb670721fc7e79d3e886c7aa24527a7edc4d7586e8e19f871ec63d.png" src="_images/584d2d0edffb670721fc7e79d3e886c7aa24527a7edc4d7586e8e19f871ec63d.png" />
 </div>
 </div>
-<p>Nótese que las categóricas son muy desiguales: la línea de palma tiene el 71 % de las filas, el
+<p>Se evidencia que las categóricas son muy desiguales: la línea de palma tiene el 71 % de las filas, el
 personal operativo el 69 % y los hombres el 86,5 %. La ubicación es la de más categorías raras: 30
 de sus 57 tienen menos de 300 filas (2.469 filas en total) y 12 tienen menos de cinco personas. En
 <code class="docutils literal notranslate"><span class="pre">oficio</span></code> y <code class="docutils literal notranslate"><span class="pre">familia_cargo</span></code> solo hay una categoría pequeña (115 filas), porque los oficios poco
@@ -5759,26 +5755,8 @@ mes).</p>
 <h3><span class="section-number">3.3.1. </span>Numérica frente a numérica<a class="headerlink" href="#numerica-frente-a-numerica" title="Permalink to this heading">#</a></h3>
 <p>Se toman como principales la edad, la antigüedad reconocida y las diez numéricas no binarias de la
 historia con mayor asociación con el objetivo. Para cada par se calculan Pearson (relación lineal)
-y Spearman (relación monótona, sobre rangos) con los pares completos. La diferencia entre las dos
-se lee con la tabla del curso:</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>|Pearson − Spearman|</p></th>
-<th class="head"><p>lectura</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>&lt; 0,1</p></td>
-<td><p>relación aproximadamente lineal</p></td>
-</tr>
-<tr class="row-odd"><td><p>0,1 a 0,2</p></td>
-<td><p>no linealidad moderada o efecto de atípicos</p></td>
-</tr>
-<tr class="row-even"><td><p>&gt; 0,2</p></td>
-<td><p>relación claramente no lineal, o dominada por atípicos o por la cola</p></td>
-</tr>
-</tbody>
-</table>
+y Spearman (relación monótona, sobre rangos) con los pares completos. Cuando Spearman supera
+claramente a Pearson, la relación es monótona pero no lineal, o la dominan unos pocos valores extremos.</p>
 <p>La matriz completa de correlaciones y el VIF quedan para el capítulo 4.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -5971,11 +5949,11 @@ pares con |Spearman| &gt; 0,7: 9
 </table>
 </div></div></div>
 </div>
-<p>Nótese que de los 66 pares, 52 tienen una relación aproximadamente lineal (|P − S| &lt; 0,1), 13
+<p>Se observa que de los 66 pares, 52 tienen una relación aproximadamente lineal (|P − S| &lt; 0,1), 13
 una no linealidad moderada y uno es claramente no lineal: antigüedad reconocida y meses en la
 función (Pearson 0,64, Spearman 0,85). Casi siempre Spearman supera a Pearson: son relaciones
 monótonas pero curvas o con techo (los meses en la función no pasan de unos 90, la antigüedad sí).
-Nueve pares superan |Spearman| &gt; 0,7, el umbral del curso para redundancia entre predictoras, y
+Nueve pares superan |Spearman| &gt; 0,7, el umbral usual de redundancia entre predictoras, y
 todos giran alrededor del tiempo en la empresa: antigüedad, meses en la posición y en la función,
 meses desde el último cambio de contrato y retiros históricos de cesantías para vivienda. Buena
 parte de lo que las variables de la historia dicen del objetivo es, entonces, antigüedad con otro
@@ -6004,7 +5982,7 @@ nombre; el capítulo 4 lo cuantifica con el VIF.</p>
 <img alt="_images/b7e8597d45bbd7aa7c997cacab4e405cde14ea1a55a91cd2f9028a3eb8a04b75.png" src="_images/b7e8597d45bbd7aa7c997cacab4e405cde14ea1a55a91cd2f9028a3eb8a04b75.png" />
 </div>
 </div>
-<p>Nótese la forma de cada nube. Edad y antigüedad forman un triángulo (la antigüedad está acotada por
+<p>Se observa la forma de cada nube. Edad y antigüedad forman un triángulo (la antigüedad está acotada por
 la edad) con correlación 0,61, igual en Pearson y Spearman. La antigüedad reconocida y los meses
 desde el último cambio de contrato son casi la misma variable en los indefinidos (la diagonal: su
 último cambio fue el ingreso), con Pearson de 0,96; la nube de abajo son los de término fijo, que
@@ -6059,20 +6037,12 @@ Los valores p de las pruebas se corrigen por Holm y por Benjamini-Hochberg dentr
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>grupo</th>
+      <th>numérica / grupo</th>
       <th>linea</th>
       <th>contrato</th>
       <th>tipo_unidad</th>
       <th>nivel</th>
       <th>tipo_costos</th>
-    </tr>
-    <tr>
-      <th>numérica</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -6150,8 +6120,8 @@ Los valores p de las pruebas se corrigen por Holm y por Benjamini-Hochberg dentr
 <img alt="_images/277b933d3bbd340f63980b9bcce30198ce388cf3599cbe6d5dc6d5db20c8b0df.png" src="_images/277b933d3bbd340f63980b9bcce30198ce388cf3599cbe6d5dc6d5db20c8b0df.png" />
 </div>
 </div>
-<p>Nótese que las 30 pruebas son significativas después de Holm, como se espera con 67.416 filas, y que
-el tamaño del efecto separa dos situaciones. El tipo de contrato explica entre el 27 % (edad) y el
+<p>Las 30 pruebas son significativas después de Holm, como se espera con 67.416 filas, y el
+tamaño del efecto separa dos situaciones. El tipo de contrato explica entre el 27 % (edad) y el
 67 % (meses desde el último cambio de contrato) de la variabilidad de los rangos de las numéricas
 de tiempo, y el 61 % en la antigüedad reconocida: el término fijo agrupa sobre todo a personas
 nuevas y jóvenes, así que los efectos del contrato y de la antigüedad se superponen. Línea, tipo de
@@ -6321,7 +6291,7 @@ P(sup) fuera de [0,45; 0,55]: 36 | fuera de [0,40; 0,60]: 15
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>1.000</td>
@@ -6533,7 +6503,7 @@ P(sup) fuera de [0,45; 0,55]: 36 | fuera de [0,40; 0,60]: 15
 </table>
 </div></div></div>
 </div>
-<p>Nótese que la antigüedad reconocida es la numérica más discriminante (P(sup) 0,302: en el 70 % de
+<p>Se evidencia que la antigüedad reconocida es la numérica más discriminante (P(sup) 0,302: en el 70 % de
 los pares, quien renuncia lleva menos tiempo; mediana de 13 frente a 38 meses) y que las siguientes
 son también variables de tiempo: meses en la función (0,321), meses desde el último cambio de
 contrato (0,329), meses en la posición (0,330) y edad (0,339; mediana de 30 frente a 36 años).
@@ -6544,10 +6514,10 @@ ha tomado más días de licencia no remunerada en los tres meses previos (0,585)
 <p>De las 88 pruebas, 43 son significativas con Holm y 56 con BH, pero solo 15 variables tienen un
 P(sup) fuera de [0,40; 0,60]: las demás, aunque significativas, discriminan poco solas. La
 correlación punto-biserial es pequeña en todas (|r_pb| ≤ 0,06) porque con un objetivo tan raro
-su máximo posible es bajo, y es sensible a las colas; por eso se ordena por P(sup). La tasa entre
-los nulos también informa: en las variables de nómina el nulo es el primer mes del episodio
-(1,66 % frente a 1,00 %), en las salariales es el destajo (1,40 % frente a 0,78 %) y en las de
-marcación es no marcar (0,63 % frente a 1,33 %). El nulo no es aleatorio y merece su indicador.</p>
+su máximo posible es bajo, y es sensible a las colas; por eso se ordena por P(sup). La tasa de las
+filas con nulo difiere de la del resto: 1,66 % frente a 1,00 % en las variables de nómina, 1,40 %
+frente a 0,78 % en las salariales y 0,63 % frente a 1,33 % en las de marcación; el mecanismo de esos
+faltantes se describe en el capítulo 1 («Faltantes»).</p>
 <p>La tabla con las 88 está plegada debajo. Las dos binarias con menos de cinco renuncias en el valor
 1 (<code class="docutils literal notranslate"><span class="pre">es_jefe_formal</span></code>, <code class="docutils literal notranslate"><span class="pre">auxilio_educativo_12m</span></code>) no publican sus medidas de asociación, que permitirían
 reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
@@ -6668,7 +6638,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>1.0000</td>
@@ -6934,7 +6904,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>0.0000</td>
@@ -7158,7 +7128,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>24.0551</td>
       <td>1.0000</td>
       <td>1.0000</td>
@@ -7256,7 +7226,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>meses_desde_postulacion</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>88.6095</td>
       <td>28.0000</td>
       <td>20.0000</td>
@@ -7522,7 +7492,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>postulaciones_internas_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>0.0000</td>
@@ -7564,7 +7534,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>requisicion_promocion_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>0.0000</td>
@@ -7718,7 +7688,7 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
     </tr>
     <tr>
       <th>cesantias_educacion_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>0.0000</td>
@@ -7833,137 +7803,6 @@ reconstruir el conteo; lo mismo en la tabla de información mutua.</p>
 </div></div></div>
 </details>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resumen_bloque</span> <span class="o">=</span> <span class="n">mw</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;bloque&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
-    <span class="n">numéricas</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;P(sup)&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">),</span>
-    <span class="n">max_abs</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;|P(sup) − 0,5|&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">),</span>
-    <span class="n">fuera_045_055</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;|P(sup) − 0,5|&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">s</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())),</span>
-    <span class="n">signif_holm</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;p Holm&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">s</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
-<span class="n">resumen_bloque</span><span class="p">[</span><span class="s1">&#39;mejor variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mw</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;bloque&#39;</span><span class="p">)[</span><span class="s1">&#39;|P(sup) − 0,5|&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
-<span class="n">resumen_bloque</span><span class="p">[</span><span class="s1">&#39;P(sup) de la mejor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mw</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">resumen_bloque</span><span class="p">[</span><span class="s1">&#39;mejor variable&#39;</span><span class="p">],</span> <span class="s1">&#39;P(sup)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-<span class="n">resumen_bloque</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;max_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>bloque</th>
-      <th>numéricas</th>
-      <th>max_abs</th>
-      <th>fuera_045_055</th>
-      <th>signif_holm</th>
-      <th>mejor variable</th>
-      <th>P(sup) de la mejor</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>atributos</th>
-      <td>5</td>
-      <td>0.198</td>
-      <td>2</td>
-      <td>2</td>
-      <td>antig_meses</td>
-      <td>0.302</td>
-    </tr>
-    <tr>
-      <th>trayectoria</th>
-      <td>8</td>
-      <td>0.179</td>
-      <td>2</td>
-      <td>2</td>
-      <td>meses_en_funcion</td>
-      <td>0.321</td>
-    </tr>
-    <tr>
-      <th>contrato</th>
-      <td>6</td>
-      <td>0.171</td>
-      <td>2</td>
-      <td>1</td>
-      <td>meses_desde_cambio_contrato</td>
-      <td>0.329</td>
-    </tr>
-    <tr>
-      <th>arraigo</th>
-      <td>7</td>
-      <td>0.140</td>
-      <td>2</td>
-      <td>3</td>
-      <td>cesantias_vivienda_historico</td>
-      <td>0.360</td>
-    </tr>
-    <tr>
-      <th>ingreso_relativo</th>
-      <td>13</td>
-      <td>0.132</td>
-      <td>4</td>
-      <td>4</td>
-      <td>ingreso_vs_pactado_3m</td>
-      <td>0.368</td>
-    </tr>
-    <tr>
-      <th>jornada</th>
-      <td>25</td>
-      <td>0.127</td>
-      <td>11</td>
-      <td>15</td>
-      <td>meses_con_extras_12m</td>
-      <td>0.373</td>
-    </tr>
-    <tr>
-      <th>vacaciones</th>
-      <td>5</td>
-      <td>0.123</td>
-      <td>3</td>
-      <td>4</td>
-      <td>dias_vacaciones_pendientes</td>
-      <td>0.377</td>
-    </tr>
-    <tr>
-      <th>salario_relativo</th>
-      <td>12</td>
-      <td>0.111</td>
-      <td>6</td>
-      <td>7</td>
-      <td>n_aumentos_merito_24m</td>
-      <td>0.389</td>
-    </tr>
-    <tr>
-      <th>ausencias</th>
-      <td>7</td>
-      <td>0.108</td>
-      <td>4</td>
-      <td>5</td>
-      <td>dia_familia_12m</td>
-      <td>0.392</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>Nótese que todos los bloques tienen al menos una variable con P(sup) fuera de [0,40; 0,60], y que
-el mejor de cada bloque va de 0,302 (antigüedad) a 0,392 (día de la familia). La jornada es el bloque
-con más variables relevantes (11 fuera de [0,45; 0,55] y 15 significativas con Holm), aunque ninguna
-tan fuerte como las de tiempo. En contrato y trayectoria la señal se concentra en una o dos variables
-que repiten la antigüedad.</p>
 </section>
 <section id="densidades-por-clase">
 <h4><span class="section-number">3.3.3.2. </span>Densidades por clase<a class="headerlink" href="#densidades-por-clase" title="Permalink to this heading">#</a></h4>
@@ -7990,7 +7829,7 @@ que repiten la antigüedad.</p>
 <img alt="_images/e1d442b36d4dcc23899ca499d0a954bc3d8e12579eda1aa97f6ed3c0b4dc8db6.png" src="_images/e1d442b36d4dcc23899ca499d0a954bc3d8e12579eda1aa97f6ed3c0b4dc8db6.png" />
 </div>
 </div>
-<p>Nótese que en casi todas las densidades la masa de quienes renuncian (dorado) está desplazada hacia
+<p>En casi todas las densidades la masa de quienes renuncian (dorado) está desplazada hacia
 los valores bajos: menos edad, menos antigüedad, menos meses en la función y en la posición, menos
 vacaciones pendientes, menos meses con extras. Las formas no son normales ni parecidas entre
 clases: en la antigüedad, los meses en la posición y los meses desde el cambio de contrato, los que
@@ -8225,7 +8064,7 @@ apoya los tramos o el logaritmo del capítulo 7.</p>
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>32787</td>
       <td>342</td>
       <td>1.043</td>
@@ -8283,7 +8122,7 @@ apoya los tramos o el logaritmo del capítulo 7.</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese que 5 de las 15 binarias difieren con Holm. Marcar en el biométrico duplica la tasa (razón
+<p>Se evidencia que 5 de las 15 binarias difieren con Holm. Marcar en el biométrico duplica la tasa (razón
 2,10; IC de 1,78 a 2,49), y hacer turnos largos sin cobrar extras también (2,08; IC de 1,73 a 2,50):
 es la señal de jornada más clara del capítulo. En sentido contrario, tener dos periodos de
 vacaciones acumulados divide la tasa por cinco (0,18; IC de 0,12 a 0,28), ganar la mediana local la
@@ -8324,18 +8163,11 @@ renuncias con valor 1 y no se publican.</p>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>contrato</th>
+      <th>linea / contrato</th>
       <th>Termino Fijo</th>
       <th>Termino Indefinido</th>
       <th>total</th>
       <th>% término fijo</th>
-    </tr>
-    <tr>
-      <th>linea</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -8407,16 +8239,10 @@ renuncias con valor 1 y no se publican.</p>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>tipo_costos</th>
+      <th>nivel / tipo_costos</th>
       <th>ADMINISTRATIVO</th>
       <th>OPERATIVO DIRECTO</th>
       <th>OPERATIVO INDIRECTO</th>
-    </tr>
-    <tr>
-      <th>nivel</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -8460,7 +8286,7 @@ renuncias con valor 1 y no se publican.</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese que el término fijo es el 52,9 % de las filas, pero su peso varía por línea: 57,9 % en palma
+<p>Se observa que el término fijo es el 52,9 % de las filas, pero su peso varía por línea: 57,9 % en palma
 y 31,8 % en banano. El tipo de personal casi determina el nivel en los extremos (el 93,9 % del nivel
 operativo es operativo directo), y en los niveles medios y altos se reparte entre indirecto y
 administrativo.</p>
@@ -8688,7 +8514,7 @@ El nulo cuenta como una categoría. Son 136 pares; los valores p se corrigen por
 </table>
 </div></div></div>
 </div>
-<p>Nótese que los 136 pares son significativos con Holm (el valor p no ordena nada con este n) y que
+<p>Los 136 pares son significativos con Holm (el valor p no ordena nada con este n) y
 30 tienen V &gt; 0,5. Tres son casi redundancias exactas: la sociedad determina la línea (V = 1,00),
 la familia de cargo casi determina el oficio (0,995) y la línea casi determina la ubicación (0,88).
 El oficio también está muy asociado con el tipo de unidad, el área funcional, el tipo de personal,
@@ -8997,7 +8823,7 @@ calculan solo entre las categorías publicables (al menos 300 filas y 5 renuncia
 </table>
 </div></div></div>
 </div>
-<p>Nótese que 15 de las 17 categóricas se asocian con el objetivo después de Holm; las dos que no son
+<p>Se evidencia que 15 de las 17 categóricas se asocian con el objetivo después de Holm; las dos que no son
 el género (V 0,001; p Holm 0,82) y el estado de gestión de tiempos (V 0,007). Las de mayor V son
 las de muchas categorías (oficio 0,075, ubicación 0,069, sociedad 0,063, tipo de unidad 0,056),
 en parte porque V crece con los grados de libertad; el contrato, con una sola, tiene V 0,052, y la
@@ -9016,7 +8842,7 @@ es el tamaño del efecto, no el valor p, lo que permite comparar.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/e9ff86b32b725209cc48c697241f473d234f343c14fca01eeaba3a28a30c543d.png" src="_images/e9ff86b32b725209cc48c697241f473d234f343c14fca01eeaba3a28a30c543d.png" />
+<img alt="_images/65bad75806520027925486a8d3c223fdf4fe9d70b169c179916583326e66496a.png" src="_images/65bad75806520027925486a8d3c223fdf4fe9d70b169c179916583326e66496a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -9030,10 +8856,10 @@ es el tamaño del efecto, no el valor p, lo que permite comparar.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f8b47ff4aab479e9098731ef47961a1e94b2019d1544690deb0b3b3e9317a954.png" src="_images/f8b47ff4aab479e9098731ef47961a1e94b2019d1544690deb0b3b3e9317a954.png" />
+<img alt="_images/c2ae0a753943ce2d3a0c55e29cdb7dda8b6b7d4785725a41e54bd424e582b136.png" src="_images/c2ae0a753943ce2d3a0c55e29cdb7dda8b6b7d4785725a41e54bd424e582b136.png" />
 </div>
 </div>
-<p>Nótese en los gráficos que el término fijo (1,51 %) renuncia tres veces más que el indefinido
+<p>Se observa en los gráficos que el término fijo (1,51 %) renuncia tres veces más que el indefinido
 (0,47 %); que banano (2,44 %) es la única línea claramente por encima de la media, y que el destajo
 (junto con el integral, que es pequeño: 1,43 %) supera al básico (0,80 %). En la situación frente al mínimo, quienes vieron su sueldo
 igualar o superar el aumento del mínimo renuncian poco (0,42 %). En oficio, los de banano
@@ -11035,9 +10861,8 @@ la unión libre.</p></li>
 <p>Otras diferencias no resisten la corrección: el nivel del cargo, el género (0,97; IC de 0,77 a
 1,20), el personal administrativo (0,59, significativo solo con BH), el proceso de planta y casi
 todas las familias de cargo. En sociedad y ubicación hay varias categorías con razones de 0,2 a 4:
-son la misma heterogeneidad que la línea y el oficio, vista a otra escala. Los contrastes tratan las
-filas como independientes y son algo optimistas; el modelo del capítulo 7 los estima ajustando por
-las demás variables.</p>
+son la misma heterogeneidad que la línea y el oficio, vista a otra escala. El modelo del capítulo 7
+estima estos contrastes ajustando por las demás variables.</p>
 </section>
 </section>
 <section id="informacion-mutua-frente-al-azar-para-las-105-predictoras">
@@ -11285,7 +11110,7 @@ El valor p de permutación (<span class="math notranslate nohighlight">\(\geq 1/
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>14</td>
       <td>0.00154</td>
       <td>0.00009</td>
@@ -11455,7 +11280,7 @@ El valor p de permutación (<span class="math notranslate nohighlight">\(\geq 1/
 </table>
 </div></div></div>
 </div>
-<p>Nótese que la antigüedad reconocida es la predictora con más información (4,8 % de la entropía del
+<p>Se observa que la antigüedad reconocida es la predictora con más información (4,8 % de la entropía del
 objetivo una vez descontado el azar), seguida de los meses desde el último cambio de contrato
 (4,0 %), el oficio (4,0 %), los meses en la posición y en la función (3,7 %), la ubicación (3,4 %),
 la edad (3,1 %) y la sociedad (3,0 %). La corrección por azar importa: la ubicación tiene la mayor
@@ -11645,7 +11470,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>14</td>
       <td>0.00154</td>
       <td>0.00009</td>
@@ -11945,7 +11770,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>3</td>
       <td>0.00090</td>
       <td>0.00002</td>
@@ -12197,7 +12022,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>10</td>
       <td>0.00056</td>
       <td>0.00004</td>
@@ -12497,7 +12322,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>requisicion_promocion_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>5</td>
       <td>0.00008</td>
       <td>0.00002</td>
@@ -12521,7 +12346,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>postulaciones_internas_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>6</td>
       <td>0.00007</td>
       <td>0.00003</td>
@@ -12581,7 +12406,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>meses_desde_postulacion</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>21</td>
       <td>0.00018</td>
       <td>0.00016</td>
@@ -12737,7 +12562,7 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
     </tr>
     <tr>
       <th>cesantias_educacion_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>6</td>
       <td>0.00002</td>
       <td>0.00003</td>
@@ -12776,125 +12601,8 @@ variables comparten información. Con la prueba G, 74 de las 105 son significati
 </div></div></div>
 </details>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">im_bloque</span> <span class="o">=</span> <span class="n">imt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;bloque&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">variables</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;exceso&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">),</span>
-                                      <span class="n">suma_pct_H</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">% d</span><span class="s1">e H(y)&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">),</span>
-                                      <span class="n">max_pct_H</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">% d</span><span class="s1">e H(y)&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">),</span>
-                                      <span class="n">signif_holm</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;p Holm&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">s</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
-<span class="n">im_bloque</span><span class="p">[</span><span class="s1">&#39;mejor variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;bloque&#39;</span><span class="p">)[</span><span class="s1">&#39;</span><span class="si">% d</span><span class="s1">e H(y)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
-<span class="n">im_bloque</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;max_pct_H&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>bloque</th>
-      <th>variables</th>
-      <th>suma_pct_H</th>
-      <th>max_pct_H</th>
-      <th>signif_holm</th>
-      <th>mejor variable</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>atributos</th>
-      <td>18</td>
-      <td>25.80</td>
-      <td>4.77</td>
-      <td>12</td>
-      <td>antig_meses</td>
-    </tr>
-    <tr>
-      <th>contrato</th>
-      <td>6</td>
-      <td>7.82</td>
-      <td>4.05</td>
-      <td>3</td>
-      <td>meses_desde_cambio_contrato</td>
-    </tr>
-    <tr>
-      <th>trayectoria</th>
-      <td>8</td>
-      <td>8.99</td>
-      <td>3.73</td>
-      <td>3</td>
-      <td>meses_en_posicion</td>
-    </tr>
-    <tr>
-      <th>salario_relativo</th>
-      <td>14</td>
-      <td>21.70</td>
-      <td>2.86</td>
-      <td>14</td>
-      <td>var_sueldo_smmlv_12m</td>
-    </tr>
-    <tr>
-      <th>vacaciones</th>
-      <td>5</td>
-      <td>9.79</td>
-      <td>2.79</td>
-      <td>5</td>
-      <td>meses_desde_vacaciones</td>
-    </tr>
-    <tr>
-      <th>arraigo</th>
-      <td>7</td>
-      <td>5.19</td>
-      <td>2.55</td>
-      <td>3</td>
-      <td>cesantias_vivienda_historico</td>
-    </tr>
-    <tr>
-      <th>ingreso_relativo</th>
-      <td>13</td>
-      <td>10.57</td>
-      <td>2.40</td>
-      <td>8</td>
-      <td>ingreso_vs_pactado_3m</td>
-    </tr>
-    <tr>
-      <th>jornada</th>
-      <td>27</td>
-      <td>27.19</td>
-      <td>2.25</td>
-      <td>20</td>
-      <td>meses_con_extras_12m</td>
-    </tr>
-    <tr>
-      <th>ausencias</th>
-      <td>7</td>
-      <td>6.41</td>
-      <td>2.00</td>
-      <td>6</td>
-      <td>dias_licencia_no_remunerada_3m_r2</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>Nótese que por bloque la información está repartida: los atributos concentran la mejor variable
-(antigüedad, 4,8 %), pero la jornada, con 27 variables, suma más (aunque su mejor, los meses con
-extras, aporta 2,3 %), y el salario relativo tiene sus 14 variables significativas. Todos los bloques
-tienen señal por encima del azar, y la de trayectoria y contrato es en buena parte antigüedad. Los
-bloques con menos información son arraigo y ausencias, que sin embargo aportan variables que no son
+<p>Todos los bloques tienen señal por encima del azar (tabla de la síntesis); la de trayectoria y
+contrato es en buena parte antigüedad, mientras que ausencias y origen aportan variables que no son
 tiempo (licencia no remunerada reciente, nacido en el departamento de la sede).</p>
 </section>
 <section id="tasa-de-renuncia-por-antiguedad-reconocida-hazard">
@@ -13078,7 +12786,7 @@ siguiente.</p>
 </div></div><img alt="_images/cbc553df1dad1b1260c933463590c0f1dbbfc0dc2f56fedb7ab133463482c7c1.png" src="_images/cbc553df1dad1b1260c933463590c0f1dbbfc0dc2f56fedb7ab133463482c7c1.png" />
 </div>
 </div>
-<p>Nótese que en el término fijo la tasa se mantiene alrededor de 2,0-2,3 % mensual durante el primer
+<p>Se evidencia que en el término fijo la tasa se mantiene alrededor de 2,0-2,3 % mensual durante el primer
 año (0-2, 3-5 y 6-11 meses), baja a 1,28 % en el segundo año, a 1,10 % en el tercero y a 0,70 % entre
 los 3 y 5 años (en 60 meses o más, que se publica junto, 0,32 %). En el indefinido casi no hay
 personas nuevas, y sus primeros 24 meses se publican juntos porque por separado tendrían menos de
@@ -13130,8 +12838,9 @@ tramos capturan mejor.</p>
                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;IC alto&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;razón fijo / indefinido&#39;</span><span class="p">]],</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="n">TINTA</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">GRIS</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="n">rotulo</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">eje_llano</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Razón de tasas término fijo / indefinido, por línea (IC 95 %)&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Razón (escala log)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -13140,7 +12849,7 @@ tramos capturan mejor.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/1557fff0db7bef298bc330c79b2ec86fc546f87d56bafa755421ab17e0b8a1b1.png" src="_images/1557fff0db7bef298bc330c79b2ec86fc546f87d56bafa755421ab17e0b8a1b1.png" />
+<img alt="_images/755297c6e0a10618389849c70def94ef6504a9b47a31f5d8b4ca973e06fa635d.png" src="_images/755297c6e0a10618389849c70def94ef6504a9b47a31f5d8b4ca973e06fa635d.png" />
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -13205,7 +12914,7 @@ tramos capturan mejor.</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese que el efecto del contrato depende de la línea: el término fijo multiplica la tasa por 6,1 en
+<p>Se observa que el efecto del contrato depende de la línea: el término fijo multiplica la tasa por 6,1 en
 palma (1,25 % frente a 0,20 %), por 3,9 en industrial, por 3,2 en banano y por 2,0 en transporte,
 mientras que en puerto no hay diferencia (0,84 % frente a 0,86 %; razón 0,99, IC de 0,31 a 3,1). El
 grupo de mayor riesgo es banano con término fijo, con 4,6 % mensual, 4,5 veces la media. Un modelo
@@ -13358,7 +13067,7 @@ publica ninguna de las dos.</p>
 </table>
 </div></div></div>
 </div>
-<p>Nótese la interacción de antigüedad y contrato en la primera tabla: con menos de un año casi todo es
+<p>Se observa la interacción de antigüedad y contrato en la primera tabla: con menos de un año casi todo es
 término fijo (2,14 %); el indefinido con menos de 3 años (publicado en un solo tramo, porque su
 primer año tiene muy pocas renuncias) renuncia a 1,47 %, más que el fijo entre 1 y 3 años (1,21 %),
 y desde los 3 años el fijo vuelve a estar por encima (0,55 % frente a 0,37 %). El orden de
@@ -13379,7 +13088,7 @@ el efecto del contrato es sobre todo un efecto de ser nuevo.</p>
 <span class="n">fam</span> <span class="o">=</span> <span class="n">fam</span><span class="p">[(</span><span class="n">fam</span><span class="o">.</span><span class="n">filas</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fam</span><span class="p">[</span><span class="s1">&#39;personas mujeres&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fam</span><span class="p">[</span><span class="s1">&#39;personas hombres&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)]</span>
 <span class="n">fam</span> <span class="o">=</span> <span class="n">fam</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mujeres&#39;</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">fam</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">fam</span><span class="o">.</span><span class="n">mujeres</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
+<span class="n">barras</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">([</span><span class="n">rotulo</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fam</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">fam</span><span class="o">.</span><span class="n">mujeres</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">VERDE</span><span class="p">,</span> <span class="o">**</span><span class="n">BORDE</span><span class="p">)</span>
 <span class="n">etiquetar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">barras</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.0f}</span><span class="s1"> %&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Porcentaje de mujeres por familia de cargo</span><span class="se">\n</span><span class="s1">(familias con &gt;= 300 filas y &gt;= 5 personas de cada género)&#39;</span><span class="p">,</span>
        <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Mujeres (</span><span class="si">% d</span><span class="s1">e persona-mes)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -13391,14 +13100,14 @@ el efecto del contrato es sobre todo un efecto de ser nuevo.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f1abe4eef2e33d581a75a819cd05556ce1d526b2296449c2971655cb0319b34e.png" src="_images/f1abe4eef2e33d581a75a819cd05556ce1d526b2296449c2971655cb0319b34e.png" />
+<img alt="_images/2a2f27198c95976c6ea1265d6c72b2065837dd40a6c0955bdb9662c55ff51ec3.png" src="_images/2a2f27198c95976c6ea1265d6c72b2065837dd40a6c0955bdb9662c55ff51ec3.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>familias graficadas: 13 de 17
 tasa por género (%): {&#39;Femenino&#39;: 0.99, &#39;Masculino&#39;: 1.03}
 </pre></div>
 </div>
 </div>
 </div>
-<p>Nótese que las mujeres se concentran en las familias administrativas (74 % en finanzas y
+<p>Las mujeres se concentran en las familias administrativas (74 % en finanzas y
 administración, 65 % en comercial y compras) y casi no están en las operativas (3 % a 9 % en
 mantenimiento técnico, transporte y campo). La tasa por género es prácticamente igual (0,99 % en
 mujeres y 1,03 % en hombres) y el género no aporta información por sí solo (V de Cramér 0,001).
@@ -13475,42 +13184,6 @@ cola larga: auxilios_3m, bonif_ocasional_12m, bonificacion_otra_12m, bono_produc
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
-      <td>0.360</td>
-      <td>NaN</td>
-      <td>2.551</td>
-      <td>1.263</td>
-      <td>1.172</td>
-      <td>0.000</td>
-      <td></td>
-      <td>12</td>
-    </tr>
-    <tr>
-      <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
-      <td>0.454</td>
-      <td>NaN</td>
-      <td>1.546</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>24.055</td>
-      <td></td>
-      <td>37</td>
-    </tr>
-    <tr>
-      <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
-      <td>0.424</td>
-      <td>NaN</td>
-      <td>0.914</td>
-      <td>1.444</td>
-      <td>0.968</td>
-      <td>0.000</td>
-      <td></td>
-      <td>58</td>
-    </tr>
     <tr>
       <th>antig_meses</th>
       <td>atributos</td>
@@ -13692,6 +13365,54 @@ cola larga: auxilios_3m, bonif_ocasional_12m, bonificacion_otra_12m, bono_produc
       <td>27</td>
     </tr>
     <tr>
+      <th>nacido_en_depto_sede</th>
+      <td>origen</td>
+      <td>0.454</td>
+      <td>NaN</td>
+      <td>1.546</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>24.055</td>
+      <td></td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>cesantias_vivienda_historico</th>
+      <td>proyectos_personales</td>
+      <td>0.360</td>
+      <td>NaN</td>
+      <td>2.551</td>
+      <td>1.263</td>
+      <td>1.172</td>
+      <td>0.000</td>
+      <td></td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>cesantias_vivienda_12m</th>
+      <td>proyectos_personales</td>
+      <td>0.424</td>
+      <td>NaN</td>
+      <td>0.914</td>
+      <td>1.444</td>
+      <td>0.968</td>
+      <td>0.000</td>
+      <td></td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <th>cesantias_educacion_12m</th>
+      <td>proyectos_personales</td>
+      <td>0.498</td>
+      <td>NaN</td>
+      <td>-0.017</td>
+      <td>9.020</td>
+      <td>6.602</td>
+      <td>0.000</td>
+      <td>sí</td>
+      <td>101</td>
+    </tr>
+    <tr>
       <th>var_sueldo_smmlv_12m</th>
       <td>salario_relativo</td>
       <td>0.404</td>
@@ -13803,56 +13524,28 @@ cola larga: auxilios_3m, bonif_ocasional_12m, bonificacion_otra_12m, bono_produc
 </table>
 </div></div></div>
 </div>
-<p><strong>Variables prometedoras, por bloque</strong> (entre paréntesis, P(sup) o V de Cramér, y la información
-mutua en % de la entropía):</p>
-<ol class="arabic simple">
-<li><p><strong>Atributos.</strong> La antigüedad reconocida es la predictora más fuerte del libro (P(sup) 0,302;
-4,8 %), seguida de oficio, ubicación, edad y sociedad, y del contrato (razón fijo/indefinido 3,2).
-El género no aporta nada (V 0,001).</p></li>
-<li><p><strong>Contrato.</strong> Meses desde el último cambio de contrato (0,329; 4,0 %) y meses al vencimiento, cuya
-información está en el nulo (indefinido).</p></li>
-<li><p><strong>Trayectoria.</strong> Meses en la posición y en la función (0,33 y 0,32), muy correlacionados con la
-antigüedad (Spearman 0,84-0,85). Jefatura, ascensos y movimientos laterales no tienen señal.</p></li>
-<li><p><strong>Salario relativo.</strong> Variación del sueldo en mínimos, aumentos por mérito, privación relativa y
-Gini del oficio, situación frente al mínimo y tipo de salario (destajo 1,8 veces el básico).</p></li>
-<li><p><strong>Jornada.</strong> Meses con extras en 12 meses (0,373), jornada frente a pago de extras,
-marcar en el biométrico (2,1 veces) y turnos largos sin pago (2,1 veces). Los montos de horas
-extra y dominicales del último mes casi no informan.</p></li>
-<li><p><strong>Ingreso relativo.</strong> Ingreso frente al pactado (0,368) y cambio y volatilidad del ingreso; los
-bonos puntuales (fin de año, seleccionado, ocasional) no tienen señal.</p></li>
-<li><p><strong>Ausencias.</strong> Días de licencia no remunerada de los tres meses previos (0,585), la señal de
-riesgo más clara que no es antigüedad, y el día de la familia.</p></li>
-<li><p><strong>Vacaciones.</strong> Meses desde las últimas vacaciones (en el nulo), días y periodos pendientes, y los
-dos periodos acumulados (razón 0,18).</p></li>
-<li><p><strong>Arraigo.</strong> Retiros históricos de cesantías para vivienda (0,360) y haber nacido en el
-departamento de la sede (razón 0,68).</p></li>
-</ol>
-<p><strong>Decisiones de preprocesamiento para el capítulo 7</strong> (todas tomadas con el entrenamiento):</p>
+<p><strong>Conclusiones principales:</strong></p>
 <ul class="simple">
-<li><p><strong>Métrica y validación.</strong> PR-AUC como métrica principal (piso 0,0102), captura en el 10 % de mayor
-riesgo de cada mes como métrica operativa, ROC-AUC como complemento; validación en los ocho
-pliegues temporales mensuales, sin estratificar ni remuestrear.</p></li>
-<li><p><strong>Colas largas.</strong> Recorte de las numéricas no binarias a sus percentiles 1 y 99 del entrenamiento
-de cada pliegue, y logaritmo con signo en las que siguen con |asimetría| &gt; 2 después del
-recorte: 39 en el entrenamiento completo, las de la lista de arriba (con la asimetría cruda
-serían 44).</p></li>
-<li><p><strong>Antigüedad.</strong> Además del recorte, en logaritmo, o por tramos (0-11, 12-23, 24-35, 36-59, 60+
-meses), porque el riesgo tiene una meseta el primer año y luego cae.</p></li>
-<li><p><strong>Nulos.</strong> En las 54 numéricas con nulos, imputación por la mediana del pliegue más un indicador
-de faltante; en las categóricas con nulos, el nulo es una categoría más. El nulo es estructural e informativo (primer mes del episodio, destajo, no marcar,
-indefinido, sin vacaciones aún), no aleatorio. Ojo con <code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code>: su cobertura sube de
-cerca del 50 % al 80 % en el segundo semestre de 2025, así que su indicador de faltante cambia de
-significado en el tiempo y su coeficiente debe revisarse entre pliegues.</p></li>
-<li><p><strong>Categóricas.</strong> One-hot con <code class="docutils literal notranslate"><span class="pre">min_frequency=300</span></code> y <code class="docutils literal notranslate"><span class="pre">handle_unknown='infrequent_if_exist'</span></code>, el nulo
-como categoría y <code class="docutils literal notranslate"><span class="pre">estado_gestion_tiempos</span></code> como categórica.</p></li>
-<li><p><strong>Redundancias.</strong> Sociedad y línea (V 1,00), familia y oficio (0,995) y las variables de tiempo
-(Spearman &gt; 0,7 entre sí) no se eliminan aquí: se dejan a la regularización, con una rejilla de C
-que llegue a 1e-4 y L1 frente a L2, y el capítulo 4 las cuantifica con el VIF.</p></li>
-<li><p><strong>Interacciones.</strong> Contrato por línea (la razón fijo/indefinido va de 0,99 en puerto a 6,1 en
-palma) y contrato por tramo de antigüedad (el orden de los contratos se invierte entre 1 y 3
-años); se evalúan como términos explícitos en la validación, no se incluyen por defecto.</p></li>
-<li><p><strong>Normalidad.</strong> No se transforma buscando normalidad (la logística no la supone); las
-transformaciones buscan limitar la influencia de las colas y linealizar la relación en el logit.</p></li>
+<li><p><strong>Antigüedad.</strong> La antigüedad reconocida es la señal principal (P(sup) 0,302; 4,8 % de la
+entropía del objetivo), y buena parte de la señal de contrato y trayectoria es antigüedad con otro
+nombre (Spearman &gt; 0,7 entre las variables de tiempo); el riesgo tiene una meseta el primer año y
+luego cae, por lo que se representa en logaritmo o por tramos.</p></li>
+<li><p><strong>Contrato.</strong> El término fijo renuncia 3,2 veces más que el indefinido, sobre todo porque agrupa a
+las personas nuevas.</p></li>
+<li><p><strong>Interacciones.</strong> La razón fijo/indefinido va de 0,99 en puerto a 6,1 en palma, y el orden de los
+contratos se invierte entre 1 y 3 años de antigüedad; se evalúan como términos explícitos en la
+validación del capítulo 7.</p></li>
+<li><p><strong>Señales que no son tiempo.</strong> Licencia no remunerada reciente (0,585), ingreso frente al pactado
+(0,368), meses con extras (0,373), turnos largos sin pago (razón 2,1) y destajo (1,8 veces el
+básico).</p></li>
+<li><p><strong>Género.</strong> No aporta información por sí solo (V de Cramér 0,001).</p></li>
+<li><p><strong>Colas largas.</strong> 39 numéricas conservan |asimetría| &gt; 2 tras el recorte p1-p99 y reciben el
+logaritmo con signo, según el recuadro de la sección de colas largas.</p></li>
+<li><p><strong>Nulos.</strong> Son estructurales e informativos (capítulo 1): indicador de faltante en las numéricas y
+categoría propia en las categóricas. La cobertura de <code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code> cambia en el tiempo, por
+lo que su coeficiente debe revisarse entre pliegues.</p></li>
+<li><p><strong>Redundancias.</strong> Sociedad y línea, familia y oficio y las variables de tiempo se dejan a la
+regularización; el capítulo 4 las cuantifica con el VIF.</p></li>
 </ul>
 </section>
 </section>
@@ -13927,7 +13620,7 @@ transformaciones buscan limitar la influencia de las colas y linealizar la relac
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-objetivo">3.1. El objetivo</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-unidimensional">3.2. Análisis unidimensional</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipo-y-cardinalidad-de-las-105-predictoras">3.2.1. Tipo y cardinalidad de las 105 predictoras</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#como-se-leen-la-asimetria-y-la-curtosis">3.2.2. Cómo se leen la asimetría y la curtosis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#asimetria-y-colas-largas">3.2.2. Asimetría y colas largas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edad-y-antiguedad-reconocida">3.2.3. Edad y antigüedad reconocida</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binarias-de-atributos">3.2.4. Binarias de atributos</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#la-historia-laboral-bloque-por-bloque">3.2.5. La historia laboral, bloque por bloque</a><ul class="nav section-nav flex-column">
@@ -13938,8 +13631,9 @@ transformaciones buscan limitar la influencia de las colas y linealizar la relac
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ingreso-relativo">3.2.5.5. Ingreso relativo</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ausencias">3.2.5.6. Ausencias</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vacaciones">3.2.5.7. Vacaciones</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#arraigo">3.2.5.8. Arraigo</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#colas-largas-y-valores-extremos-en-toda-la-historia">3.2.5.9. Colas largas y valores extremos en toda la historia</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#proyectos-personales">3.2.5.8. Proyectos personales</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen">3.2.5.9. Origen</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#colas-largas-y-valores-extremos-en-toda-la-historia">3.2.5.10. Colas largas y valores extremos en toda la historia</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-categoricas">3.2.6. Variables categóricas</a><ul class="nav section-nav flex-column">

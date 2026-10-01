@@ -321,11 +321,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-de-la-poblacion">5.8. Deriva de la población</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-del-concepto">5.9. Deriva del concepto</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-por-linea-de-negocio">5.10. Series por línea de negocio</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consecuencias-para-el-modelado">5.11. Consecuencias para el modelado</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entra-el-mes-del-ano-como-predictora">5.11.1. ¿Entra el mes del año como predictora?</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">5.12. Síntesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entra-el-mes-del-ano-como-predictora">5.11. ¿Entra el mes del año como predictora?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis-y-decisiones-para-el-modelado">5.12. Síntesis y decisiones para el modelado</a></li>
 </ul>
             </nav>
         </div>
@@ -391,7 +388,7 @@ por lo que los análisis espaciales del enunciado (2.7 y 2.8) no aplican.</p>
 </div>
 <section id="validacion-de-la-variable-temporal">
 <h2><span class="section-number">5.1. </span>Validación de la variable temporal<a class="headerlink" href="#validacion-de-la-variable-temporal" title="Permalink to this heading">#</a></h2>
-<p>Antes de mirar la serie verificamos la variable <code class="docutils literal notranslate"><span class="pre">mes</span></code>: formato, frecuencia, huecos, duplicados y
+<p>Antes de mirar la serie se verifica la variable <code class="docutils literal notranslate"><span class="pre">mes</span></code>: formato, frecuencia, huecos, duplicados y
 cobertura (cuántas personas y cuántos datos de la historia laboral hay en cada mes).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -444,7 +441,7 @@ personas sin meses intermedios faltantes: 99.4 %
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01dd471f2b6ee754fa94a6d8ff501e7c9289eff84bfd91919e38e6b86cdd00e3.png" src="_images/01dd471f2b6ee754fa94a6d8ff501e7c9289eff84bfd91919e38e6b86cdd00e3.png" />
+<img alt="_images/b1b9a49520bf23bfe603f6df202512afd24f8738e8f3289c18a55c1061a91c14.png" src="_images/b1b9a49520bf23bfe603f6df202512afd24f8738e8f3289c18a55c1061a91c14.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>variables cuya cobertura más cambia entre meses (puntos porcentuales de filas con dato):
                             mín. %  máx. %  rango
 tamano_equipo_jefe            49.4    81.6   32.2
@@ -510,7 +507,7 @@ objetivo es la renuncia en <span class="math notranslate nohighlight">\(t\)</spa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/dad47c057a035bf5d7c495e1913e65c3bd15590cbccdc3b0775d5e27c830ee45.png" src="_images/dad47c057a035bf5d7c495e1913e65c3bd15590cbccdc3b0775d5e27c830ee45.png" />
+<img alt="_images/8d79d5725e5daae5097e0d0075b8c17c4c14bf9cf6acba23678a530f64dad655.png" src="_images/8d79d5725e5daae5097e0d0075b8c17c4c14bf9cf6acba23678a530f64dad655.png" />
 <img alt="_images/1a04ccd664b2d58a65698a1520a6fb8c4a18144f4e8f4213723c40b987beb101.png" src="_images/1a04ccd664b2d58a65698a1520a6fb8c4a18144f4e8f4213723c40b987beb101.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>desviación entre meses: observada 0.238 pp | esperada por azar binomial 0.155 pp
 homogeneidad de la tasa entre los 16 meses: chi-cuadrado 35.3 con 15 gl, p = 0.0022
@@ -652,21 +649,21 @@ homogeneidad de la tasa entre los 16 meses: chi-cuadrado 35.3 con 15 gl, p = 0.0
 </table>
 </div></div></div>
 </div>
-<p>Nótese que la tasa oscila alrededor de su media (1,02 %) entre 0,65 % (junio de 2025) y 1,40 %
+<p>Se observa que la tasa oscila alrededor de su media (1,02 %) entre 0,65 % (junio de 2025) y 1,40 %
 (febrero de 2025). La media móvil de cuatro meses baja de 1,24 % en enero-abril de 2025 a cerca de
 1,0 % desde junio de 2025 y queda en 0,96 % en enero-abril de 2026: un descenso de nivel concentrado
 en el primer semestre de 2025, que se prueba en la sección de puntos de cambio. La desviación móvil
 (entre 0,15 y 0,29 puntos) está casi siempre por encima de la que daría el azar binomial con unas
 4.200 personas por mes (0,155 puntos): la variación entre meses es real y no solo ruido de muestreo
-(chi-cuadrado de homogeneidad 35,3 con 15 gl, p = 0,002). Esa sobredispersión importa para leer las
-pruebas siguientes, que tratan las filas como independientes: sus valores p son optimistas.</p>
+(chi-cuadrado de homogeneidad 35,3 con 15 gl, p = 0,002). Por esa sobredispersión, los valores p de
+las pruebas siguientes se leen con cautela.</p>
 </section>
 <section id="estacionalidad-por-mes-del-ano">
 <h2><span class="section-number">5.3. </span>Estacionalidad por mes del año<a class="headerlink" href="#estacionalidad-por-mes-del-ano" title="Permalink to this heading">#</a></h2>
 <p>Una descomposición STL con periodo anual necesita al menos dos ciclos completos (24 meses) para
 separar la tendencia de la componente estacional; aquí hay 16 meses, con dos observaciones de enero
-a abril y una sola de mayo a diciembre. Por eso <strong>no aplicamos STL</strong>: la componente estacional de mayo
-a diciembre sería, por construcción, el residuo de un único año. En su lugar comparamos la tasa por
+a abril y una sola de mayo a diciembre. Por eso <strong>no se aplica STL</strong>: la componente estacional de mayo
+a diciembre sería, por construcción, el residuo de un único año. En su lugar se compara la tasa por
 mes del año y los cuatro meses que se repiten.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -714,26 +711,25 @@ homogeneidad por mes del año: chi-cuadrado 23.2 con 11 gl, p = 0.0165
 </div>
 <p>Con solo 16 meses de entrenamiento hay dos eneros, dos febreros, dos marzos y dos abriles, y un único
 dato de cada mes de mayo a diciembre; una barra de un solo año no separa el mes del año del mes
-concreto. Nótese que:</p>
+concreto. Se observa que:</p>
 <ul class="simple">
 <li><p>Enero es el mes más alto al juntar los dos años (1,34 %), pero no en los dos años: en 2026 sí es el
 pico (1,39 %), mientras que en 2025 febrero (1,40 %) supera a enero (1,28 %).</p></li>
 <li><p>Junio de 2025 es el mínimo de la serie (0,65 %) y julio de 2025 vuelve a 1,24 %.</p></li>
 <li><p>La correlación de rangos entre los dos años en enero-abril (0,60) se calcula con cuatro puntos y no
 distingue nada del azar.</p></li>
-<li><p>La prueba de homogeneidad por mes del año rechaza (chi-cuadrado 23,2 con 11 gl, p = 0,017), pero con
-la sobredispersión de la sección anterior ese valor p es optimista, y en ocho de los doce meses mide
-un solo mes concreto.</p></li>
+<li><p>La prueba de homogeneidad por mes del año rechaza (chi-cuadrado 23,2 con 11 gl, p = 0,017), pero en
+ocho de los doce meses mide un solo mes concreto.</p></li>
 </ul>
 <p>La conclusión es que hay indicios de un patrón de calendario, no una estacionalidad demostrada.</p>
 </section>
 <section id="efectos-de-calendario">
 <h2><span class="section-number">5.4. </span>Efectos de calendario<a class="headerlink" href="#efectos-de-calendario" title="Permalink to this heading">#</a></h2>
-<p>En Colombia la prima de servicios se paga en dos cuotas, a más tardar el 30 de junio y el 20 de
-diciembre (Código Sustantivo del Trabajo, art. 306). Si las personas esperan a cobrar la prima para irse, los meses de pago (junio, diciembre) tendrían menos renuncias y
-los meses siguientes (julio, enero) más. Contrastamos tres hipótesis sugeridas por el calendario
-laboral: enero frente al resto, los meses después de la prima frente al resto y los meses de la prima
-frente al resto, con los valores p ajustados por Holm.</p>
+<p>En Colombia la prima de servicios se paga a más tardar el 30 de junio y el 20 de diciembre (Código
+Sustantivo del Trabajo, art. 306). Si las personas esperan a cobrarla para renunciar, junio y
+diciembre tendrían menos renuncias y julio y enero más. Se contrastan frente al resto de meses tres
+hipótesis: enero, los meses posteriores a la prima y los meses de la prima, con valores p ajustados
+por Holm.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">contrastes</span> <span class="o">=</span> <span class="p">{</span>
@@ -822,17 +818,13 @@ frente al resto, con los valores p ajustados por Holm.</p>
 </table>
 </div></div></div>
 </div>
-<p>Los tres contrastes van en la dirección de la hipótesis de la prima y los tres sobreviven a Holm: los
-meses de la prima tienen una tasa 25 % menor que el resto (0,80 % frente a 1,05 %; p Holm = 0,028), los
-meses siguientes una 37 % mayor (1,31 % frente a 0,96 %; p Holm = 0,001) y enero, solo, también un 37 %
-mayor (1,34 % frente a 0,98 %; p Holm = 0,004). Las hipótesis vienen del calendario laboral, pero la
-serie ya se había mirado al formularlas, y junio y julio aportan un único mes cada uno: el contraste
-de la prima descansa en junio y julio de 2025 y en dos eneros. Con la sobredispersión, los valores p
-son además optimistas. Se leen como un efecto de calendario plausible, que el modelo solo debe usar si
-también mejora fuera de muestra (se prueba al final del capítulo).</p>
-<p>La cosecha de palma tiene picos de producción a lo largo del año, pero el panel no trae la
-producción. Su huella en la persona son las horas extra y los turnos, que sí están; en la sección de
-correlación cruzada se prueba si la carga de trabajo del mes anticipa la tasa.</p>
+<p>Los tres contrastes van en la dirección de la hipótesis y sobreviven a Holm: los meses de la prima
+tienen una tasa 25 % menor que el resto (p Holm = 0,028), los meses siguientes una 37 % mayor
+(p Holm = 0,001) y enero, solo, también un 37 % mayor (p Holm = 0,004). Sin embargo, las hipótesis se
+formularon con la serie ya observada y descansan en un solo junio, un solo julio y dos eneros.
+Representan un efecto de calendario plausible, que el modelo usa solo si mejora fuera de muestra
+(sección del mes del año). La cosecha no está en el panel; su huella en las horas extra se examina en
+la correlación cruzada.</p>
 </section>
 <section id="estacionariedad-y-autocorrelacion">
 <h2><span class="section-number">5.5. </span>Estacionariedad y autocorrelación<a class="headerlink" href="#estacionariedad-y-autocorrelacion" title="Permalink to this heading">#</a></h2>
@@ -882,7 +874,7 @@ predictoras.</p>
 <section id="puntos-de-cambio">
 <h2><span class="section-number">5.6. </span>Puntos de cambio<a class="headerlink" href="#puntos-de-cambio" title="Permalink to this heading">#</a></h2>
 <p>Un cambio de nivel (por ejemplo, una política de retención o un cambio en el registro de retiros)
-rompería el supuesto de que los meses pasados describen a los futuros. Usamos dos pruebas simples y
+rompería el supuesto de que los meses pasados describen a los futuros. Se usan dos pruebas simples y
 adecuadas a 16 puntos:</p>
 <ul class="simple">
 <li><p><strong>CUSUM</strong>: la suma acumulada de las desviaciones de cada mes respecto a la media,
@@ -960,12 +952,11 @@ enero-abril: 2025 1.24 % (201 renuncias) | 2026 0.96 % (168) | chi-cuadrado 6.3,
 <img alt="_images/70a92104b34632d685e57206f3c1a43a3070a57c03563399ea112513a2d4ef47.png" src="_images/70a92104b34632d685e57206f3c1a43a3070a57c03563399ea112513a2d4ef47.png" />
 </div>
 </div>
-<p>Nótese que las pruebas sin supuesto sobre el mes del cambio no rechazan: el CUSUM alcanza su máximo
+<p>Las pruebas sin supuesto sobre el mes del cambio no rechazan: el CUSUM alcanza su máximo
 (0,90 puntos) en mayo de 2025 y no supera el percentil 95 de las permutaciones (p = 0,19), y el mejor
 corte (después de marzo de 2025: 1,31 % antes y 0,96 % después) tampoco es significativo una vez se
 corrige por haberlo elegido (p = 0,10). La comparación que controla el mes del año sí separa los dos
-años: enero-abril de 2025 tiene 1,24 % y enero-abril de 2026 0,96 % (p = 0,012, optimista por la
-sobredispersión). La lectura es un descenso moderado de nivel, de unos 0,3 puntos, entre el comienzo
+años: enero-abril de 2025 tiene 1,24 % y enero-abril de 2026 0,96 % (p = 0,012). La lectura es un descenso moderado de nivel, de unos 0,3 puntos, entre el comienzo
 de 2025 y el resto del entrenamiento, que no se puede fechar con 16 puntos. Para el modelo tiene una
 consecuencia concreta: un intercepto estimado con todos los meses puede sobrestimar la tasa de los
 meses recientes. Eso afecta la calibración, no el orden de los puntajes (ROC y PR-AUC), y la validación
@@ -973,21 +964,14 @@ de ventana creciente del capítulo 7 lo refleja porque cada pliegue valida un me
 </section>
 <section id="composicion-del-mes-y-tasa-futura">
 <h2><span class="section-number">5.7. </span>Composición del mes y tasa futura<a class="headerlink" href="#composicion-del-mes-y-tasa-futura" title="Permalink to this heading">#</a></h2>
-<p>Agregamos por mes características de la población y las correlacionamos con la tasa del mismo mes y
-de los tres siguientes: una correlación cruzada entre cada predictora agregada y el objetivo con
-rezagos de 0 a 3 meses,</p>
-<div class="math notranslate nohighlight">
-\[
-\rho_k = \operatorname{corr}(x_t,\, y_{t+k}), \qquad k = 0, 1, 2, 3 .
-\]</div>
-<p>Además de variables de composición (término fijo, antigüedad, primer mes, tamaño de la planta) se agregan las de la historia laboral con mayor asociación individual con la
-renuncia (capítulo 3): ingreso frente al pactado, meses con horas extra, horas extra del último mes (la
-huella de la carga de trabajo y de la cosecha; como toda la nómina, llega hasta el mes anterior), días de vacaciones pendientes, privación salarial
-frente al oficio y licencias no remuneradas. Con 16 meses (13 en el rezago 3), una correlación debe
-superar ±0,5 aproximadamente (<span class="math notranslate nohighlight">\(2/\sqrt{n}\)</span>) para distinguirse del azar, y con 40 correlaciones cabe
-esperar unas dos por encima de ese límite solo por azar.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<p>Se agregan por mes variables de composición (término fijo, antigüedad, primer mes, tamaño de la
+planta) y las de la historia laboral con mayor asociación individual con la renuncia (capítulo 3),
+entre ellas las horas extra del último mes, huella de la carga de trabajo y de la cosecha. Se calcula
+su correlación cruzada con la tasa del mismo mes y de los tres siguientes,
+<span class="math notranslate nohighlight">\(\rho_k = \operatorname{corr}(x_t, y_{t+k})\)</span> con <span class="math notranslate nohighlight">\(k = 0, \dots, 3\)</span>. Con 16 meses, una correlación
+debe superar ±0,5 aproximadamente (<span class="math notranslate nohighlight">\(2/\sqrt{n}\)</span>) para distinguirse del azar.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">por_mes</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)</span>
 <span class="n">agregado</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s1">&#39;% término fijo&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">por_mes</span><span class="o">.</span><span class="n">contrato</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="s1">&#39;Termino Fijo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
@@ -1020,6 +1004,11 @@ esperar unas dos por encima de ese límite solo por azar.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <img alt="_images/3d57dbdc8caac6a28ed47dd0430c670d3779c0aa86e06023f3c1900d3cd9a548.png" src="_images/3d57dbdc8caac6a28ed47dd0430c670d3779c0aa86e06023f3c1900d3cd9a548.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>correlaciones con |r| &gt; 0,5: 4 de 40
@@ -1038,25 +1027,21 @@ privación salarial          -0.43  0.40  0.01 -0.01
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p>En niveles, 4 de las 40 correlaciones superan 0,5 en valor absoluto y todas son del mismo tipo: los
-meses con más término fijo (−0,55), más personas activas (−0,50) o mayor antigüedad mediana (0,53, con
-signo contrario) se mueven con la tasa del mismo mes, y los meses con más vacaciones pendientes tienen
-más renuncias al mes siguiente (0,54). El signo del término fijo es el contrario al individual (a nivel
-de persona el término fijo renuncia varias veces más): es una falacia ecológica producida por una
-tendencia común, porque a lo largo de la ventana crecen la planta y el término fijo mientras la tasa
-baja. Al quitar la tendencia con primeras diferencias esas correlaciones desaparecen y quedan otras
-tres sin patrón entre rezagos (las horas extra del último mes, −0,70 con la tasa del mes siguiente,
-pero +0,25 y +0,29 en los rezagos vecinos): tres de 40 es lo que se espera por azar. La composición
-agregada del mes no anticipa la tasa, tampoco la carga de horas extra asociada a la cosecha, y no se
-incluyen agregados mensuales rezagados como predictoras; las variables de la historia ya entran a
-nivel de persona.</p>
+<p>En niveles, 4 de las 40 correlaciones superan 0,5 en valor absoluto. La del término fijo (−0,55)
+tiene el signo contrario al individual: representa una falacia ecológica producida por una tendencia
+común, ya que a lo largo de la ventana crecen la planta y el término fijo mientras la tasa baja. Con
+primeras diferencias esas correlaciones desaparecen y quedan tres sin patrón entre rezagos, lo que se
+espera por azar. La composición agregada del mes no anticipa la tasa, tampoco la carga de horas extra,
+por lo que no se incluyen agregados mensuales como predictoras; las variables de la historia ya
+entran a nivel de persona.</p>
 </section>
 <section id="deriva-de-la-poblacion">
 <h2><span class="section-number">5.8. </span>Deriva de la población<a class="headerlink" href="#deriva-de-la-poblacion" title="Permalink to this heading">#</a></h2>
 <p>Para un corte temporal, el riesgo principal es que la población cambie: si los meses finales tienen
 otra mezcla de contratos, antigüedades o jornadas, el modelo se evalúa sobre personas distintas de
-las que usó para aprender. Lo medimos con el índice de estabilidad poblacional (PSI) de las 105
+las que usó para aprender. Se mide con el índice de estabilidad poblacional (PSI) de las 105
 predictoras entre el primer semestre de 2025 y los meses de 2026 del entrenamiento (enero a abril).
 Con <span class="math notranslate nohighlight">\(a_j\)</span> y <span class="math notranslate nohighlight">\(b_j\)</span> la proporción de filas en la categoría (o el decil) <em>j</em> en cada periodo,</p>
 <div class="math notranslate nohighlight">
@@ -1123,20 +1108,21 @@ grande       8
 moderado     6
 
 por bloque (PSI mediano y máximo):
-                  size  median    max
-bloque                               
-salario_relativo    14   0.043  2.253
-trayectoria          8   0.007  1.453
-atributos           18   0.003  0.340
-ingreso_relativo    13   0.015  0.214
-contrato             6   0.013  0.178
-jornada             27   0.019  0.113
-arraigo              7   0.010  0.076
-ausencias            7   0.025  0.044
-vacaciones           5   0.025  0.041
+                      size  median    max
+bloque                                   
+salario_relativo        14   0.043  2.253
+trayectoria             11   0.011  1.453
+atributos               18   0.003  0.340
+ingreso_relativo        13   0.015  0.214
+contrato                 6   0.013  0.178
+jornada                 27   0.019  0.113
+ausencias                7   0.025  0.044
+vacaciones               5   0.025  0.041
+proyectos_personales     3   0.010  0.019
+origen                   1   0.001  0.001
 </pre></div>
 </div>
-<img alt="_images/a38688826ca9f0713022619dd3cd8b06cd1c5024b4c7a7e61cad1c7025037424.png" src="_images/a38688826ca9f0713022619dd3cd8b06cd1c5024b4c7a7e61cad1c7025037424.png" />
+<img alt="_images/d5faae81395c94f953ad3cd4b9d49b7be4ef21ec2953f00ffbeb8289b064f3bd.png" src="_images/d5faae81395c94f953ad3cd4b9d49b7be4ef21ec2953f00ffbeb8289b064f3bd.png" />
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1441,7 +1427,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>meses_desde_postulacion</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.076</td>
       <td>11.654</td>
       <td>11.063</td>
@@ -1633,7 +1619,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>postulaciones_internas_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.022</td>
       <td>100.000</td>
       <td>100.000</td>
@@ -1673,7 +1659,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.019</td>
       <td>100.000</td>
       <td>100.000</td>
@@ -1801,7 +1787,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.010</td>
       <td>100.000</td>
       <td>100.000</td>
@@ -1897,7 +1883,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>cesantias_educacion_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.003</td>
       <td>100.000</td>
       <td>100.000</td>
@@ -2009,7 +1995,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>0.001</td>
       <td>75.375</td>
       <td>76.465</td>
@@ -2041,7 +2027,7 @@ vacaciones           5   0.025  0.041
     </tr>
     <tr>
       <th>requisicion_promocion_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.001</td>
       <td>100.000</td>
       <td>100.000</td>
@@ -2165,7 +2151,7 @@ vacaciones           5   0.025  0.041
 </details>
 </div>
 <p>De las 105 predictoras, 91 son estables, 6 tienen un cambio moderado y 8 un cambio grande. Ausencias,
-vacaciones y arraigo no tienen ninguna variable por encima de 0,1, y en la jornada la mayor es un cambio
+vacaciones, proyectos personales y origen no tienen ninguna variable por encima de 0,1, y en la jornada la mayor es un cambio
 moderado (horas por turno del último mes, 0,11). Los cambios grandes se concentran en el salario
 relativo y la trayectoria, y todos tienen una causa identificable que no es un cambio en quién trabaja
 en la empresa (siguiente gráfico, que muestra también las dos variables de jornada ya descartadas).</p>
@@ -2208,7 +2194,7 @@ sociedad que más pierde peso: de 3.8 % a 0.1 % de las filas | la que más gana:
 </div>
 </div>
 </div>
-<p>Nótese que las causas son de cuatro tipos:</p>
+<p>Se evidencia que las causas son de cuatro tipos:</p>
 <ul class="simple">
 <li><p><strong>La reducción legal de la jornada (motivo de un descarte).</strong> La Ley 2101 de 2021 baja la semana
 laboral de forma escalonada: 47 horas desde julio de 2023, 46 desde julio de 2024, 44 desde julio de
@@ -2440,7 +2426,7 @@ razón de tasas fijo / indefinido por periodo: {&#39;2025 S1&#39;: 3.17, &#39;20
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>2</td>
       <td>17</td>
       <td>0.196</td>
@@ -2505,7 +2491,7 @@ nan                      0.53     0.51          0.32
 </div>
 </div>
 </div>
-<p>Nótese que la relación de las variables principales con la renuncia se mantiene: el contrato (razón de
+<p>Se observa que la relación de las variables principales con la renuncia se mantiene: el contrato (razón de
 tasas fijo/indefinido de 3,2, 2,7 y 4,6 según el periodo; p = 0,13), la antigüedad (p = 0,91), la edad,
 la línea, las vacaciones pendientes, las licencias no remuneradas y los meses en la función no tienen
 interacción con el periodo. Dos variables sí la tienen después de Holm:</p>
@@ -2524,12 +2510,10 @@ creciente del capítulo 7 son la defensa; allí conviene mirar si sus coeficient
 </section>
 <section id="series-por-linea-de-negocio">
 <h2><span class="section-number">5.10. </span>Series por línea de negocio<a class="headerlink" href="#series-por-linea-de-negocio" title="Permalink to this heading">#</a></h2>
-<p>Como una persona renuncia a lo sumo una vez, no tiene sentido una serie por persona. La
-heterogeneidad temporal se examina por línea de negocio. Para no publicar puntos con muy pocos
-casos, cada punto es una ventana móvil de 3 meses (renuncias de la ventana entre persona-mes de la
-ventana) y se suprime si la ventana tiene menos de 5 renuncias.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<p>Como una persona renuncia a lo sumo una vez, la heterogeneidad temporal se examina por línea de
+negocio, con ventanas móviles de 3 meses que se suprimen si tienen menos de 5 renuncias.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
 <span class="n">suprimidos</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">linea</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;linea&#39;</span><span class="p">):</span>
@@ -2548,15 +2532,21 @@ ventana) y se suprime si la ventana tiene menos de 5 renuncias.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <img alt="_images/acfe6c4d1382cb7dfdffb9729b1f0aaa87a395d6b0de8e8564b3fe9ff64450d4.png" src="_images/acfe6c4d1382cb7dfdffb9729b1f0aaa87a395d6b0de8e8564b3fe9ff64450d4.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ventanas suprimidas por tener menos de 5 renuncias (de 14): {&#39;banano&#39;: 0, &#39;ganaderia&#39;: 14, &#39;industrial&#39;: 0, &#39;palma&#39;: 0, &#39;puerto&#39;: 12, &#39;transporte&#39;: 0}
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filas</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">linea</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">tr</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;linea&#39;</span><span class="p">):</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;mes&#39;</span><span class="p">)[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">])</span>
@@ -2581,6 +2571,11 @@ ventana) y se suprime si la ventana tiene menos de 5 renuncias.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>interacción línea x periodo (líneas con 40 o más renuncias): LR 9.08 con 6 gl, p = 0.169
 </pre></div>
@@ -2676,22 +2671,19 @@ ventana) y se suprime si la ventana tiene menos de 5 renuncias.</p>
   </tbody>
 </table>
 </div></div></div>
+</details>
 </div>
-<p>Nótese que las líneas difieren sobre todo en nivel: banano tiene la tasa más alta (2,44 % mensual, tres
-veces palma) y palma la más baja (0,81 %). Ganadería (14 de 14 ventanas) y puerto (12 de 14) quedan
-fuera del gráfico por tener menos de 5 renuncias por ventana, y se reportan solo en total. Palma y
-banano tienen variación entre meses por encima del azar (chi-cuadrado 37,2 y 32,5 con 15 gl, p = 0,001 y
-0,005; banano, con un pico en la ventana de julio a septiembre de 2025), pero la interacción línea ×
-periodo en las cuatro líneas con 40 o más renuncias no es significativa (p = 0,17): no hay evidencia de
-que las líneas sigan tendencias distintas. La heterogeneidad se captura con la línea como predictora;
-no hace falta un término temporal por línea.</p>
+<p>Se observa que las líneas difieren sobre todo en nivel: banano tiene la tasa más alta (2,44 %
+mensual, tres veces palma) y palma la más baja (0,81 %); ganadería y puerto no alcanzan 5 renuncias
+por ventana y se reportan solo en total. Palma y banano varían entre meses por encima del azar
+(p = 0,001 y 0,005), pero la interacción línea × periodo en las cuatro líneas con 40 o más renuncias
+no es significativa (p = 0,17): no hay evidencia de tendencias distintas por línea. La heterogeneidad
+se captura con la línea como predictora, sin un término temporal por línea.</p>
 </section>
-<section id="consecuencias-para-el-modelado">
-<h2><span class="section-number">5.11. </span>Consecuencias para el modelado<a class="headerlink" href="#consecuencias-para-el-modelado" title="Permalink to this heading">#</a></h2>
 <section id="entra-el-mes-del-ano-como-predictora">
-<h3><span class="section-number">5.11.1. </span>¿Entra el mes del año como predictora?<a class="headerlink" href="#entra-el-mes-del-ano-como-predictora" title="Permalink to this heading">#</a></h3>
+<h2><span class="section-number">5.11. </span>¿Entra el mes del año como predictora?<a class="headerlink" href="#entra-el-mes-del-ano-como-predictora" title="Permalink to this heading">#</a></h2>
 <p>La evidencia de estacionalidad es débil y descansa en dos eneros. Para decidir sin mirar el test,
-repetimos en el entrenamiento la validación de ventana creciente que usará el capítulo 7
+se repite en el entrenamiento la validación de ventana creciente que usará el capítulo 7
 (<code class="docutils literal notranslate"><span class="pre">pliegues_temporales</span></code>: se valida cada mes desde septiembre de 2025 y se entrena con los meses
 anteriores, dejando un mes de separación) con tres modelos que solo usan el calendario: una tasa
 constante, una indicadora de enero y el par seno-coseno del mes del año,
@@ -2838,7 +2830,7 @@ meses en que cada calendario mejora a la constante: {&#39;enero&#39;: 8, &#39;se
 </table>
 </div></div></div>
 </div>
-<p>Nótese que el seno-coseno empeora a la constante en 7 de los 8 meses validados (pérdida media 0,05339
+<p>Se evidencia que el seno-coseno empeora a la constante en 7 de los 8 meses validados (pérdida media 0,05339
 frente a 0,05309): con menos de dos ciclos, dos parámetros de forma anual se ajustan al ruido. La
 indicadora de enero mejora a la constante en los 8 meses (0,05298), pero la mejora es pequeña (0,2 % de
 la pérdida) y en siete de ellos no viene de enero sino de que, al separar enero, la tasa del resto del
@@ -2846,49 +2838,40 @@ año queda más baja y se acerca al nivel reciente; solo en enero de 2026 la mej
 estacional (0,00045, la mayor de todas). Doce indicadoras del mes del año no se pueden evaluar así
 (los primeros pliegues no han visto septiembre ni octubre) y con un solo dato de mayo a diciembre
 serían, en la práctica, un efecto fijo de cada mes concreto.</p>
-<p><strong>Decisiones para el capítulo 7:</strong></p>
-<ol class="arabic simple">
-<li><p><strong>Partición cronológica</strong> (entrenamiento hasta abril de 2026, test de mayo a agosto) y validación
-de ventana creciente por mes con un mes de separación (<code class="docutils literal notranslate"><span class="pre">pliegues_temporales</span></code>). No se usa
-<code class="docutils literal notranslate"><span class="pre">TimeSeriesSplit(gap=...)</span></code>: en un panel el gap cuenta filas, no meses.</p></li>
-<li><p><strong>Calendario: entra solo la indicadora de enero</strong> (un parámetro), no el mes del año con once
-indicadoras ni el seno-coseno. En el test (mayo a agosto) vale 0 en todas las filas, de modo que su
-efecto allí es solo que el intercepto no absorba el pico de enero; su utilidad plena es en el uso
-real, cuando el modelo puntúe un enero.</p></li>
-<li><p><strong>Rezagos solo con información pasada.</strong> Las ventanas de la historia ya terminan en <span class="math notranslate nohighlight">\(t-1\)</span> (<span class="math notranslate nohighlight">\(t-2\)</span> las
-<code class="docutils literal notranslate"><span class="pre">_r2</span></code>); no se agregan rezagos de la tasa global ni agregados mensuales, porque no anticipan la tasa.</p></li>
-<li><p><strong>Variables que marcan la fecha.</strong> <code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code> y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code> siguen la reducción
-legal de la jornada (Ley 2101 de 2021), no a la persona, y en el test tomarían valores nuevos: quedan
-fuera del modelo, como <code class="docutils literal notranslate"><span class="pre">cambios_plan_12m</span></code>. El faltante de <code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code> cambia de significado en 2025 y
-su indicador de faltante debe leerse con cuidado.</p></li>
-<li><p><strong>Calibración.</strong> Con el descenso de nivel de 2025, la tasa prevista puede quedar por encima de la
-observada en los meses recientes; se revisa con la calibración por mes, y no cambia la
-discriminación.</p></li>
-</ol>
 </section>
-</section>
-<section id="sintesis">
-<h2><span class="section-number">5.12. </span>Síntesis<a class="headerlink" href="#sintesis" title="Permalink to this heading">#</a></h2>
+<section id="sintesis-y-decisiones-para-el-modelado">
+<h2><span class="section-number">5.12. </span>Síntesis y decisiones para el modelado<a class="headerlink" href="#sintesis-y-decisiones-para-el-modelado" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>La variable <code class="docutils literal notranslate"><span class="pre">mes</span></code> es mensual, completa y sin huecos ni duplicados; la cobertura de la historia es
-estable salvo el tamaño del equipo del jefe y las marcaciones biométricas.</p></li>
-<li><p>La tasa oscila alrededor de 1,02 %, con variación entre meses por encima del azar (p = 0,002) y un
-descenso moderado de nivel entre enero-abril de 2025 (1,24 %) y enero-abril de 2026 (0,96 %) que ni el
-CUSUM (p = 0,19) ni el corte óptimo (p = 0,10) permiten fechar.</p></li>
-<li><p>ADF y KPSS coinciden en una serie estacionaria en nivel, sin autocorrelación detectable. STL no aplica
-con menos de dos ciclos anuales.</p></li>
-<li><p>Hay indicios de un efecto de calendario ligado a la prima (menos renuncias en junio y diciembre, más en
-enero y julio), apoyado en dos eneros y un solo junio y julio. Fuera de muestra, solo la indicadora de
-enero mejora a la constante: entra al modelo; el mes del año y el seno-coseno no.</p></li>
-<li><p>La composición agregada del mes no anticipa la tasa: las correlaciones en niveles son una tendencia
-común (falacia ecológica) y desaparecen con primeras diferencias.</p></li>
-<li><p>De 105 predictoras, 91 son estables y 8 tienen deriva grande, que viene del ciclo anual del salario,
-del envejecimiento del panel y de cambios de cobertura. <code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code> y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code>
-siguen el calendario de la Ley 2101 de 2021, marcan la fecha y quedan fuera de las predictoras.</p></li>
-<li><p>La relación de contrato, antigüedad, edad y línea con la renuncia es estable entre periodos; dos
-variables (meses al vencimiento y privación salarial) muestran deriva del concepto en el primer
-semestre de 2025.</p></li>
-<li><p>Las líneas difieren en nivel (banano 2,44 %, palma 0,81 %) pero no en tendencia (p = 0,17).</p></li>
+<li><p><strong>Partición.</strong> La variable <code class="docutils literal notranslate"><span class="pre">mes</span></code> es mensual, completa y sin huecos ni duplicados. La partición es
+cronológica (entrenamiento hasta abril de 2026, test de mayo a agosto) y la validación, de ventana
+creciente por mes con un mes de separación (<code class="docutils literal notranslate"><span class="pre">pliegues_temporales</span></code>; su elección se justifica en el
+capítulo 2).</p></li>
+<li><p><strong>Nivel y calibración.</strong> La tasa oscila alrededor de 1,02 %, con variación entre meses por encima del
+azar (p = 0,002) y un descenso moderado de nivel entre enero-abril de 2025 (1,24 %) y enero-abril de
+2026 (0,96 %) que ni el CUSUM (p = 0,19) ni el corte óptimo (p = 0,10) permiten fechar. La tasa
+prevista puede quedar por encima de la observada en los meses recientes: se revisa con la calibración
+por mes, sin efecto sobre la discriminación.</p></li>
+<li><p><strong>Rezagos.</strong> ADF y KPSS coinciden en una serie estacionaria en nivel, sin autocorrelación detectable,
+y STL no aplica con menos de dos ciclos anuales. La composición agregada del mes tampoco anticipa la
+tasa (falacia ecológica que desaparece con primeras diferencias). Solo se usa información pasada: las
+ventanas de la historia terminan en <span class="math notranslate nohighlight">\(t-1\)</span> (<span class="math notranslate nohighlight">\(t-2\)</span> las <code class="docutils literal notranslate"><span class="pre">_r2</span></code>) y no se agregan rezagos de la tasa global
+ni agregados mensuales.</p></li>
+<li><p><strong>Calendario: entra solo la indicadora de enero.</strong> Hay indicios de un efecto ligado a la prima,
+apoyado en dos eneros y un solo junio y julio; fuera de muestra, solo la indicadora de enero mejora a
+la constante, no el mes del año con once indicadoras ni el seno-coseno. En el test vale 0 en todas
+las filas, de modo que allí solo evita que el intercepto absorba el pico de enero; su utilidad plena
+se da cuando el modelo puntúe un enero.</p></li>
+<li><p><strong>Deriva de la población.</strong> De 105 predictoras, 91 son estables y 8 tienen deriva grande, que viene
+del ciclo anual del salario, del envejecimiento del panel y de cambios de cobertura; el faltante de
+<code class="docutils literal notranslate"><span class="pre">tamano_equipo_jefe</span></code> cambia de significado en 2025 y su indicador se lee con cuidado.
+<code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code> y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code> siguen la reducción legal de la jornada (Ley 2101 de 2021),
+no a la persona, y en el test tomarían valores nuevos: quedan fuera del modelo, como
+<code class="docutils literal notranslate"><span class="pre">cambios_plan_12m</span></code>.</p></li>
+<li><p><strong>Deriva del concepto.</strong> La relación de contrato, antigüedad, edad y línea con la renuncia es estable
+entre periodos; meses al vencimiento y privación salarial cambian en el primer semestre de 2025, lo
+que se vigila con la regularización y la validación de ventana creciente.</p></li>
+<li><p><strong>Líneas.</strong> Difieren en nivel (banano 2,44 %, palma 0,81 %) pero no en tendencia (p = 0,17): basta la
+línea como predictora.</p></li>
 <li><p>No hay componente espacial: 2.7 y 2.8 no aplican.</p></li>
 </ul>
 </section>
@@ -2971,11 +2954,8 @@ semestre de 2025.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-de-la-poblacion">5.8. Deriva de la población</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deriva-del-concepto">5.9. Deriva del concepto</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-por-linea-de-negocio">5.10. Series por línea de negocio</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consecuencias-para-el-modelado">5.11. Consecuencias para el modelado</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entra-el-mes-del-ano-como-predictora">5.11.1. ¿Entra el mes del año como predictora?</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis">5.12. Síntesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entra-el-mes-del-ano-como-predictora">5.11. ¿Entra el mes del año como predictora?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis-y-decisiones-para-el-modelado">5.12. Síntesis y decisiones para el modelado</a></li>
 </ul>
   </nav></div>
 

@@ -316,7 +316,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fugas-corregidas-al-construir-el-panel">6.3. Fugas corregidas al construir el panel</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auc-univariado-fuera-de-pliegue">6.4. AUC univariado fuera de pliegue</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#senal-que-se-concentra-antes-de-la-salida">6.5. Señal que se concentra antes de la salida</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos-faltantes-que-delatan-la-salida">6.6. Datos faltantes que delatan la salida</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos-faltantes-que-revelan-la-salida">6.6. Datos faltantes que revelan la salida</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicados-y-entidades-entre-entrenamiento-y-test">6.7. Duplicados y entidades entre entrenamiento y test</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-descartadas-o-en-observacion">6.8. Variables descartadas o en observación</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-ejecutivo-del-eda">6.9. Resumen ejecutivo del EDA</a></li>
@@ -337,9 +337,9 @@ document.write(`
 <div class="tip admonition">
 <p class="admonition-title">Alcance</p>
 <p>Las secciones 6.1 a 6.6 se calculan con el entrenamiento (enero de 2025 a abril de 2026). La sección
-6.7 compara entrenamiento y test solo por sus predictoras y personas, sin mirar las etiquetas del
-test. Las revisiones hechas al construir el panel sobre las tablas de origen se citan como tales:
-sus cifras no se pueden recalcular desde el panel, porque las columnas con fuga no están en él.</p>
+6.7 remite al capítulo 2 para la comparación entre entrenamiento y test. Las revisiones hechas al
+construir el panel sobre las tablas de origen se citan como tales: sus cifras no se pueden
+recalcular desde el panel, porque las columnas con fuga no están en él.</p>
 </div>
 <p>Una variable tiene fuga cuando contiene información que no estaría disponible en el momento de
 predecir, casi siempre porque se registra a causa del desenlace. La predicción de este proyecto se
@@ -382,7 +382,7 @@ cada variable sola y si su señal se concentra justo antes de la salida.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>entrenamiento: 67,416 filas | 688 renuncias | predictoras: 105 (85 numéricas, 3 binarias de atributos, 17 categóricas)
 fuera de la historia por el capítulo 1: [&#39;contrato_fijo&#39;, &#39;horas_bajo_legal&#39;, &#39;cambios_plan_12m&#39;, &#39;horas_diarias_teoricas&#39;, &#39;plan_horario&#39;]
-columnas del panel que no son predictoras: [&#39;persona_id&#39;, &#39;mes&#39;, &#39;contrato_fijo&#39;, &#39;plan_horario&#39;, &#39;horas_diarias_teoricas&#39;, &#39;horas_bajo_legal&#39;, &#39;cambios_plan_12m&#39;, &#39;preaviso_no_renovacion&#39;, &#39;evento&#39;, &#39;tipo_retiro&#39;, &#39;y_renuncia&#39;]
+columnas del panel que no son predictoras: [&#39;persona_id&#39;, &#39;mes&#39;, &#39;contrato_fijo&#39;, &#39;plan_horario&#39;, &#39;horas_diarias_teoricas&#39;, &#39;horas_bajo_legal&#39;, &#39;cambios_plan_12m&#39;, &#39;preaviso_no_renovacion&#39;, &#39;evento&#39;, &#39;y_renuncia&#39;]
 </pre></div>
 </div>
 </div>
@@ -391,13 +391,13 @@ columnas del panel que no son predictoras: [&#39;persona_id&#39;, &#39;mes&#39;,
 <h2><span class="section-number">6.1. </span>Disponibilidad en el momento de la predicción<a class="headerlink" href="#disponibilidad-en-el-momento-de-la-prediccion" title="Permalink to this heading">#</a></h2>
 <p>La tabla siguiente dice, para cada una de las 105 predictoras, <strong>de qué ventana sale</strong> (columna
 <code class="docutils literal notranslate"><span class="pre">disponible</span></code> del diccionario del capítulo 1) y si se conoce el día 1 del mes <em>t</em>. La ventana se
-verificó en los programas que construyen cada bloque del panel. Hay tres reglas de fondo:</p>
+verificó en los programas que construyen cada bloque del panel. Hay tres reglas generales:</p>
 <ul class="simple">
 <li><p><strong>Foto del día 1.</strong> Los atributos, el contrato, la trayectoria, el salario relativo, el horario
 teórico y el saldo de vacaciones se leen del registro vigente el día 1 (o el primer día activo).
 Un cambio que empieza ese mismo día ya se conoce; uno que empieza el día 15 no cuenta hasta <em>t+1</em>.</p></li>
 <li><p><strong>Rezago de un mes en nómina y marcaciones.</strong> La nómina del mes <em>m</em> se liquida al cierre de <em>m</em> y
-el mes en curso es, justamente, el de la salida: por eso las horas extra, recargos, bonos, ingreso
+el mes en curso es el de la salida: por eso las horas extra, recargos, bonos, ingreso
 y marcaciones biométricas de la fila <em>t</em> terminan en <em>t−1</em> (ventanas de 1, 3 y 12 meses). La fecha
 de las últimas vacaciones pagadas va con dos meses de rezago, porque se suelen tomar justo antes
 de salir.</p></li>
@@ -475,25 +475,13 @@ ve en la sección 6.2.</p></li>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>¿se conoce el día 1 de t?</th>
+      <th>bloque / ¿se conoce el día 1 de t?</th>
       <th>sí</th>
       <th>sí, con reserva</th>
       <th>total</th>
     </tr>
-    <tr>
-      <th>bloque</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>arraigo</th>
-      <td>6</td>
-      <td>1</td>
-      <td>7</td>
-    </tr>
     <tr>
       <th>atributos</th>
       <td>18</td>
@@ -525,6 +513,18 @@ ve en la sección 6.2.</p></li>
       <td>27</td>
     </tr>
     <tr>
+      <th>origen</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>proyectos_personales</th>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
       <th>salario_relativo</th>
       <td>14</td>
       <td>0</td>
@@ -532,9 +532,9 @@ ve en la sección 6.2.</p></li>
     </tr>
     <tr>
       <th>trayectoria</th>
-      <td>8</td>
+      <td>11</td>
       <td>0</td>
-      <td>8</td>
+      <td>11</td>
     </tr>
     <tr>
       <th>vacaciones</th>
@@ -1344,7 +1344,7 @@ estima con los perfiles actuales de quienes trabajan en ella.</p></li>
       <td>saldo reconstruido; la compensación en dinero ...</td>
     </tr>
     <tr>
-      <th rowspan="7" valign="top">arraigo</th>
+      <th>origen</th>
       <th>nacido_en_depto_sede</th>
       <td>perfil del trabajador (fijo)</td>
       <td>lugar de nacimiento del perfil; no cambia en e...</td>
@@ -1352,6 +1352,7 @@ estima con los perfiles actuales de quienes trabajan en ella.</p></li>
       <td>el departamento de la sede se estima con los p...</td>
     </tr>
     <tr>
+      <th rowspan="3" valign="top">trayectoria</th>
       <th>postulaciones_internas_12m</th>
       <td>antes del día 1 del mes t</td>
       <td>eventos con fecha anterior al día 1</td>
@@ -1373,6 +1374,7 @@ estima con los perfiles actuales de quienes trabajan en ella.</p></li>
       <td></td>
     </tr>
     <tr>
+      <th rowspan="3" valign="top">proyectos_personales</th>
       <th>cesantias_vivienda_12m</th>
       <td>antes del día 1 del mes t</td>
       <td>eventos con fecha anterior al día 1</td>
@@ -1408,8 +1410,6 @@ no son predictoras: dos describen la salida, una es el propio objetivo, dos son 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evento frente al objetivo (entrenamiento):&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">evento</span><span class="p">,</span> <span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">])</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">tipo_retiro (solo en otras salidas):&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">tipo_retiro</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">preaviso de no renovación frente al objetivo:&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">preaviso_no_renovacion</span><span class="p">,</span> <span class="n">tr</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">])</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 <span class="n">pre</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">preaviso_no_renovacion</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
@@ -1427,13 +1427,6 @@ otra_salida                441    0
 renuncia                     0  688
 renuncia_administrativa     31    0
 
-tipo_retiro (solo en otras salidas):
-tipo_retiro
-NaN                66975
-despido              243
-fin_de_contrato      181
-otra                  17
-
 preaviso de no renovación frente al objetivo:
 y_renuncia                  0    1
 preaviso_no_renovacion            
@@ -1448,17 +1441,12 @@ otra_salida    199
 </div>
 </div>
 </div>
-<p>Nótese que <code class="docutils literal notranslate"><span class="pre">evento</span></code> reproduce el objetivo exactamente: sus 688 renuncias son las 688 de <code class="docutils literal notranslate"><span class="pre">y_renuncia</span></code>,
-y las otras salidas y las renuncias administrativas (31 filas) quedan en 0. <code class="docutils literal notranslate"><span class="pre">tipo_retiro</span></code> solo existe
-en las 441 otras salidas. Ambas se conocen al cerrar el mes <em>t</em>, con la salida ya ocurrida: son el
-desenlace, no predictoras.</p>
-<p><code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> es el caso más peligroso porque <strong>sí</strong> se conoce el día 1: es la decisión,
-registrada antes, de no renovar un contrato que termina en <em>t</em> o después. Pero el objetivo se definió
-de modo que una salida con preaviso no cuenta como renuncia (capítulo 2): en las 469 filas con
-preaviso hay 0 renuncias, 199 terminan en otra salida en el mismo mes y 270 siguen activas (el
-contrato vence más adelante). Como predictora, la variable «adivinaría» ceros por construcción de la
-etiqueta, no por el comportamiento de la persona. Se descarta y queda solo para la sensibilidad del
-objetivo.</p>
+<p>Se observa que <code class="docutils literal notranslate"><span class="pre">evento</span></code> reproduce el objetivo exactamente: sus 688 renuncias son las 688 de <code class="docutils literal notranslate"><span class="pre">y_renuncia</span></code>,
+y las otras salidas y las renuncias administrativas (31 filas) quedan en 0. Se conoce al cerrar el mes <em>t</em>, con la salida ya ocurrida: es el desenlace, no una
+predictora.</p>
+<p><code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> se conoce el día 1, pero con preaviso el objetivo es 0 por construcción:
+las 469 filas con preaviso tienen 0 renuncias. Por eso no es predictora y queda solo para el análisis
+de sensibilidad del objetivo (capítulo 2).</p>
 <p><code class="docutils literal notranslate"><span class="pre">persona_id</span></code> es un seudónimo al azar: no entra al modelo y solo agrupa filas. <code class="docutils literal notranslate"><span class="pre">mes</span></code> tampoco entra
 como tal (identificaría el periodo y no se repite en el test); el calendario entra solo como una
 indicadora de enero, que es la decisión del capítulo 5.</p>
@@ -1466,8 +1454,8 @@ indicadora de enero, que es la decisión del capítulo 5.</p>
 remunerada con rezago de un mes. Su AUC univariado era de 0,643 (3 meses) y 0,606 (12 meses), pero
 bajaba a 0,591 y 0,561 con el valor de un mes antes, y a 0,585 y 0,553 con el de dos: la señal se
 concentraba en el mes previo a la salida, donde parte de la licencia es trámite de la propia salida
-y parte se registra después del día 1. Esas dos versiones se descartaron (quedaron solo para
-sensibilidad fuera del libro) y entran las de rezago de dos meses, <code class="docutils literal notranslate"><span class="pre">_r2</span></code>. La sección 6.5 repite la
+y parte se registra después del día 1. Esas dos versiones se descartaron (quedaron solo para un
+análisis de sensibilidad fuera del libro) y entran las de rezago de dos meses, <code class="docutils literal notranslate"><span class="pre">_r2</span></code>. La sección 6.5 repite la
 prueba con el panel del libro.</p>
 </section>
 <section id="fugas-corregidas-al-construir-el-panel">
@@ -1495,7 +1483,7 @@ construcción:</p>
 <td><p>contrato vigente el día 1 de cada mes según la historia de contratos</p></td>
 </tr>
 <tr class="row-even"><td><p>tipo de personal</p></td>
-<td><p>la base de costos de personal solo registra al personal activo, y la ausencia de fila delata la salida</p></td>
+<td><p>la base de costos de personal solo registra al personal activo, y la ausencia de fila revela la salida</p></td>
 <td><p>faltantes concentrados en los meses de salida</p></td>
 <td><p>se recalcula con la misma regla contable sobre el centro de costo del mes, que siempre existe</p></td>
 </tr>
@@ -1634,12 +1622,12 @@ AUC fuera de pliegue
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/88784e583ae770d1f8a081d4c652fde3a82a2e6a51aa5d8c9f80f8531d69c83b.png" src="_images/88784e583ae770d1f8a081d4c652fde3a82a2e6a51aa5d8c9f80f8531d69c83b.png" />
+<img alt="_images/20475ba6fe7c2816373ec4e22d7de0bbd67267e75eafa2d146b3bc5942da4384.png" src="_images/20475ba6fe7c2816373ec4e22d7de0bbd67267e75eafa2d146b3bc5942da4384.png" />
 </div>
 </div>
-<p>Nótese que <strong>ninguna variable supera 0,8, ni siquiera 0,75</strong>. La máxima es la antigüedad reconocida
+<p><strong>Ninguna variable supera 0,8, ni siquiera 0,75</strong>. La máxima es la antigüedad reconocida
 (0,711) y la mediana de las 106 es 0,530: 60 variables quedan por debajo de 0,55 y solo siete pasan de
-0,65. Las seis primeras son relojes de la relación laboral (antigüedad, meses en la función y en la
+0,65. Las seis primeras miden el tiempo en la empresa (antigüedad, meses en la función y en la
 posición, meses desde el último cambio de contrato) y la edad, más el oficio: todas miden lo mismo,
 cuánto lleva la persona, y la renuncia se concentra en el primer año (capítulo 3). Un AUC de 0,7 para
 esa variable es el esperado en rotación de personal y no es indicio de fuga: se conoce el día 1 sin
@@ -1804,7 +1792,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>cesantias_vivienda_historico</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.638</td>
       <td>0.595</td>
       <td>0.697</td>
@@ -2013,7 +2001,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>cesantias_vivienda_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.579</td>
       <td>0.549</td>
       <td>0.633</td>
@@ -2024,7 +2012,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>0.578</td>
       <td>0.532</td>
       <td>0.646</td>
@@ -2453,7 +2441,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>meses_desde_postulacion</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.513</td>
       <td>0.459</td>
       <td>0.536</td>
@@ -2530,7 +2518,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>postulaciones_internas_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.506</td>
       <td>0.492</td>
       <td>0.524</td>
@@ -2596,7 +2584,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>requisicion_promocion_12m</th>
-      <td>arraigo</td>
+      <td>trayectoria</td>
       <td>0.503</td>
       <td>0.472</td>
       <td>0.526</td>
@@ -2695,7 +2683,7 @@ primeras es la licencia no remunerada con rezago de dos meses (0,598).</p>
     </tr>
     <tr>
       <th>cesantias_educacion_12m</th>
-      <td>arraigo</td>
+      <td>proyectos_personales</td>
       <td>0.498</td>
       <td>0.489</td>
       <td>0.511</td>
@@ -2926,9 +2914,9 @@ oficio                        0.027
     </tr>
     <tr>
       <th>trayectoria</th>
-      <td>8</td>
+      <td>11</td>
       <td>0.695</td>
-      <td>0.502</td>
+      <td>0.505</td>
       <td>2</td>
       <td>meses_en_funcion</td>
     </tr>
@@ -2957,10 +2945,10 @@ oficio                        0.027
       <td>ingreso_vs_pactado_3m</td>
     </tr>
     <tr>
-      <th>arraigo</th>
-      <td>7</td>
+      <th>proyectos_personales</th>
+      <td>3</td>
       <td>0.638</td>
-      <td>0.513</td>
+      <td>0.579</td>
       <td>1</td>
       <td>cesantias_vivienda_historico</td>
     </tr>
@@ -2989,6 +2977,14 @@ oficio                        0.027
       <td>dias_vacaciones_pendientes</td>
     </tr>
     <tr>
+      <th>origen</th>
+      <td>1</td>
+      <td>0.578</td>
+      <td>0.578</td>
+      <td>0</td>
+      <td>nacido_en_depto_sede</td>
+    </tr>
+    <tr>
       <th>calendario</th>
       <td>1</td>
       <td>0.531</td>
@@ -3000,7 +2996,7 @@ oficio                        0.027
 </table>
 </div></div></div>
 </div>
-<p>Nótese que el AUC en muestra y el fuera de pliegue, evaluados sobre las mismas filas, difieren en
+<p>Se evidencia que el AUC en muestra y el fuera de pliegue, evaluados sobre las mismas filas, difieren en
 0,053 como máximo (<code class="docutils literal notranslate"><span class="pre">meses_desde_aumento_merito</span></code>, cuya imputación con la mediana mueve a casi la mitad
 de las filas y cambia según el pliegue). Entre las categóricas, las de muchas categorías (área
 funcional, ubicación, sociedad) pierden entre 0,03 y 0,04 fuera de pliegue: parte de
@@ -3164,24 +3160,24 @@ variables con caída &gt;= 0,05: 1 de 88
 </table>
 </div></div></div>
 </div>
-<p>Nótese que, con 56.566 filas y 528 renuncias que tienen los dos meses previos, <strong>solo una de las 88
+<p>Se observa que, con 56.566 filas y 528 renuncias que tienen los dos meses previos, <strong>solo una de las 88
 numéricas y binarias cae 0,05 o más</strong>: <code class="docutils literal notranslate"><span class="pre">turnos_1m</span></code>, los turnos marcados en el mes anterior (0,595 en <em>t</em>, 0,533
 en <em>t−1</em>, 0,531 en <em>t−2</em>). No es fuga en sentido estricto: las marcaciones de <em>t−1</em> están completas
 el día 1 de <em>t</em>, porque las registra el biométrico, no una persona. Lo que dice es que quien va a
 renunciar marca menos turnos el mes antes (posiblemente vacaciones o permisos antes de irse); las
 variables de marcaciones de tres meses caen 0,02 o menos. Queda en observación.</p>
 <p>Las dos licencias no remuneradas <code class="docutils literal notranslate"><span class="pre">_r2</span></code> caen 0,044 y 0,046, por debajo del umbral. El rezago de dos
-meses deja fuera el mes del trámite (en la versión de un mes la caída era de 0,058 y 0,053), pero la
+meses deja fuera el mes del trámite (con rezago de un mes la caída era de 0,058 y 0,053), pero la
 licencia sigue anticipando la salida con uno o dos meses: esa parte es señal disponible el día 1, no
 fuga.</p>
 </section>
-<section id="datos-faltantes-que-delatan-la-salida">
-<h2><span class="section-number">6.6. </span>Datos faltantes que delatan la salida<a class="headerlink" href="#datos-faltantes-que-delatan-la-salida" title="Permalink to this heading">#</a></h2>
+<section id="datos-faltantes-que-revelan-la-salida">
+<h2><span class="section-number">6.6. </span>Datos faltantes que revelan la salida<a class="headerlink" href="#datos-faltantes-que-revelan-la-salida" title="Permalink to this heading">#</a></h2>
 <p>La otra forma habitual de fuga es el faltante que aparece <em>porque</em> la persona se va: el registro se
 cierra o se vacía en el mes de la salida. Entre quienes renuncian y tienen fila tres meses antes, se
 compara el porcentaje de faltantes en el mes de la renuncia con el de tres meses antes. Un salto de
-cinco puntos o más sería una alerta. Se muestra también la tasa de renuncia con y sin dato, que no
-es fuga pero dice si el faltante es informativo (y justifica el indicador de faltante del capítulo 7).</p>
+cinco puntos o más sería una alerta. Que el faltante sea informativo, es decir, que la tasa de
+renuncia difiera con y sin dato, se analiza en el capítulo 1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ren</span> <span class="o">=</span> <span class="n">t_ord</span><span class="p">[</span><span class="n">t_ord</span><span class="p">[</span><span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
@@ -3193,18 +3189,14 @@ es fuga pero dice si el faltante es informativo (y justifica el indicador de fal
     <span class="n">atras</span> <span class="o">=</span> <span class="n">gpid</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ren</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="n">mes_atras</span> <span class="o">=</span> <span class="n">gpid</span><span class="o">.</span><span class="n">mes</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ren</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">((</span><span class="n">per_r</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">(</span><span class="n">mes_atras</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;1900-01&#39;</span><span class="p">),</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">nul</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
-    <span class="n">filas</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s1">&#39;bloque&#39;</span><span class="p">:</span> <span class="n">BLOQUE</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="s1">&#39;nulos %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">nul</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+    <span class="n">filas</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s1">&#39;bloque&#39;</span><span class="p">:</span> <span class="n">BLOQUE</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="s1">&#39;nulos %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
                   <span class="s1">&#39;sin dato al renunciar %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">ren</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">ok</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-                  <span class="s1">&#39;sin dato 3 meses antes %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">atras</span><span class="p">[</span><span class="n">ok</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-                  <span class="s1">&#39;renuncia sin dato %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nul</span><span class="p">,</span> <span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-                  <span class="s1">&#39;renuncia con dato %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">tr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">nul</span><span class="p">,</span> <span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
+                  <span class="s1">&#39;sin dato 3 meses antes %&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">atras</span><span class="p">[</span><span class="n">ok</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
 <span class="n">falt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">filas</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
 <span class="n">falt</span><span class="p">[</span><span class="s1">&#39;salto&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">falt</span><span class="p">[</span><span class="s1">&#39;sin dato al renunciar %&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">falt</span><span class="p">[</span><span class="s1">&#39;sin dato 3 meses antes %&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;variables con faltantes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">falt</span><span class="p">)</span><span class="si">}</span><span class="s1"> | con salto &gt;= 5 puntos: </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">falt</span><span class="o">.</span><span class="n">salto</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1"> | &#39;</span>
       <span class="sa">f</span><span class="s1">&#39;salto máximo: </span><span class="si">{</span><span class="n">falt</span><span class="o">.</span><span class="n">salto</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> puntos&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;renuncias con fila tres meses antes: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">ok</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1"> de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ren</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">falt</span><span class="p">[</span><span class="s1">&#39;razón&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">falt</span><span class="p">[</span><span class="s1">&#39;renuncia sin dato %&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">falt</span><span class="p">[</span><span class="s1">&#39;renuncia con dato %&#39;</span><span class="p">]</span>
 <span class="n">cols_salto</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bloque&#39;</span><span class="p">,</span> <span class="s1">&#39;nulos %&#39;</span><span class="p">,</span> <span class="s1">&#39;sin dato al renunciar %&#39;</span><span class="p">,</span> <span class="s1">&#39;sin dato 3 meses antes %&#39;</span><span class="p">,</span> <span class="s1">&#39;salto&#39;</span><span class="p">]</span>
 <span class="n">falt</span><span class="p">[</span><span class="n">falt</span><span class="p">[</span><span class="s1">&#39;nulos %&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;salto&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="n">cols_salto</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -3259,7 +3251,7 @@ renuncias con fila tres meses antes: 452 de 688
     </tr>
     <tr>
       <th>nacido_en_depto_sede</th>
-      <td>arraigo</td>
+      <td>origen</td>
       <td>24.06</td>
       <td>11.06</td>
       <td>11.06</td>
@@ -3309,346 +3301,23 @@ renuncias con fila tres meses antes: 452 de 688
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># regla de privacidad del libro: el grupo sin dato necesita 300 filas y 5 renuncias para mostrarse</span>
-<span class="n">falt</span><span class="p">[</span><span class="s1">&#39;filas sin dato&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">falt</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-<span class="n">falt</span><span class="p">[</span><span class="s1">&#39;renuncias sin dato&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tr</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">OBJETIVO</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">falt</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-<span class="n">visible</span> <span class="o">=</span> <span class="p">(</span><span class="n">falt</span><span class="p">[</span><span class="s1">&#39;filas sin dato&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">falt</span><span class="p">[</span><span class="s1">&#39;renuncias sin dato&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;variables con menos de 300 filas o 5 renuncias sin dato (no se muestran): &#39;</span>
-      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">visible</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">, con </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">falt</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">visible</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;filas sin dato&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">}</span><span class="s1"> filas sin dato como máximo&#39;</span><span class="p">)</span>
-<span class="n">informativo</span> <span class="o">=</span> <span class="n">falt</span><span class="p">[</span><span class="n">visible</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">falt</span><span class="o">.</span><span class="n">razón</span> <span class="o">&gt;=</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">falt</span><span class="o">.</span><span class="n">razón</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">))]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;razón&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;variables con faltante informativo (razón de tasas &gt;= 1,5 o &lt;= 1/1,5): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">informativo</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span>
-      <span class="sa">f</span><span class="s1">&#39;de </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">visible</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="c1"># muchas comparten el mismo patrón de faltante (la misma fuente ausente): se agrupan</span>
-<span class="n">informativo</span> <span class="o">=</span> <span class="n">informativo</span><span class="o">.</span><span class="n">round</span><span class="p">({</span><span class="s1">&#39;nulos %&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;renuncia sin dato %&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;renuncia con dato %&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;razón&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-<span class="n">patrones</span> <span class="o">=</span> <span class="p">(</span><span class="n">informativo</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;nulos %&#39;</span><span class="p">,</span> <span class="s1">&#39;renuncia sin dato %&#39;</span><span class="p">,</span> <span class="s1">&#39;renuncia con dato %&#39;</span><span class="p">,</span> <span class="s1">&#39;razón&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">variables</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">),</span> <span class="n">bloques</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;bloque&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">)))),</span>
-                 <span class="n">ejemplo</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">,</span> <span class="s1">&#39;first&#39;</span><span class="p">))</span>
-            <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;razón&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;ejemplo&#39;</span><span class="p">))</span>
-<span class="n">patrones</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>variables con menos de 300 filas o 5 renuncias sin dato (no se muestran): 4, con 18 filas sin dato como máximo
-variables con faltante informativo (razón de tasas &gt;= 1,5 o &lt;= 1/1,5): 54 de 59
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>ejemplo</th>
-      <th>nulos %</th>
-      <th>renuncia sin dato %</th>
-      <th>renuncia con dato %</th>
-      <th>razón</th>
-      <th>variables</th>
-      <th>bloques</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>meses_desde_vacaciones</th>
-      <td>34.6</td>
-      <td>1.81</td>
-      <td>0.60</td>
-      <td>3.01</td>
-      <td>1</td>
-      <td>vacaciones</td>
-    </tr>
-    <tr>
-      <th>cambio_ingreso_3m_vs_9m</th>
-      <td>17.5</td>
-      <td>2.24</td>
-      <td>0.76</td>
-      <td>2.94</td>
-      <td>1</td>
-      <td>ingreso_relativo</td>
-    </tr>
-    <tr>
-      <th>var_sueldo_smmlv_12m</th>
-      <td>26.9</td>
-      <td>1.90</td>
-      <td>0.70</td>
-      <td>2.74</td>
-      <td>1</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>meses_desde_aumento_merito</th>
-      <td>44.9</td>
-      <td>1.55</td>
-      <td>0.59</td>
-      <td>2.64</td>
-      <td>2</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>volatilidad_ingreso_12m</th>
-      <td>12.1</td>
-      <td>2.19</td>
-      <td>0.86</td>
-      <td>2.54</td>
-      <td>1</td>
-      <td>ingreso_relativo</td>
-    </tr>
-    <tr>
-      <th>situacion_minimo</th>
-      <td>51.9</td>
-      <td>1.42</td>
-      <td>0.59</td>
-      <td>2.38</td>
-      <td>1</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>tamano_equipo_jefe</th>
-      <td>36.1</td>
-      <td>1.57</td>
-      <td>0.71</td>
-      <td>2.22</td>
-      <td>1</td>
-      <td>trayectoria</td>
-    </tr>
-    <tr>
-      <th>posicionamiento</th>
-      <td>38.8</td>
-      <td>1.40</td>
-      <td>0.78</td>
-      <td>1.80</td>
-      <td>1</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>privacion_oficio_nivel</th>
-      <td>38.6</td>
-      <td>1.40</td>
-      <td>0.78</td>
-      <td>1.79</td>
-      <td>2</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>residuo_sueldo</th>
-      <td>34.3</td>
-      <td>1.43</td>
-      <td>0.80</td>
-      <td>1.78</td>
-      <td>2</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>posicionamiento_local</th>
-      <td>34.4</td>
-      <td>1.43</td>
-      <td>0.80</td>
-      <td>1.78</td>
-      <td>3</td>
-      <td>salario_relativo</td>
-    </tr>
-    <tr>
-      <th>meses_desde_ascenso</th>
-      <td>91.5</td>
-      <td>1.06</td>
-      <td>0.63</td>
-      <td>1.69</td>
-      <td>1</td>
-      <td>trayectoria</td>
-    </tr>
-    <tr>
-      <th>auxilios_3m</th>
-      <td>2.4</td>
-      <td>1.66</td>
-      <td>1.00</td>
-      <td>1.66</td>
-      <td>20</td>
-      <td>ingreso_relativo, jornada</td>
-    </tr>
-    <tr>
-      <th>ingreso_vs_pactado_3m</th>
-      <td>2.4</td>
-      <td>1.66</td>
-      <td>1.00</td>
-      <td>1.65</td>
-      <td>1</td>
-      <td>ingreso_relativo</td>
-    </tr>
-    <tr>
-      <th>familia_cargo</th>
-      <td>2.5</td>
-      <td>1.62</td>
-      <td>1.01</td>
-      <td>1.62</td>
-      <td>2</td>
-      <td>atributos</td>
-    </tr>
-    <tr>
-      <th>pct_variable_3m</th>
-      <td>2.5</td>
-      <td>1.60</td>
-      <td>1.01</td>
-      <td>1.59</td>
-      <td>1</td>
-      <td>ingreso_relativo</td>
-    </tr>
-    <tr>
-      <th>meses_desde_postulacion</th>
-      <td>88.6</td>
-      <td>1.06</td>
-      <td>0.69</td>
-      <td>1.54</td>
-      <td>1</td>
-      <td>arraigo</td>
-    </tr>
-    <tr>
-      <th>horas_turno_1m</th>
-      <td>46.0</td>
-      <td>0.65</td>
-      <td>1.33</td>
-      <td>0.49</td>
-      <td>1</td>
-      <td>jornada</td>
-    </tr>
-    <tr>
-      <th>pct_entradas_sin_salida_3m</th>
-      <td>43.4</td>
-      <td>0.63</td>
-      <td>1.32</td>
-      <td>0.48</td>
-      <td>3</td>
-      <td>jornada</td>
-    </tr>
-    <tr>
-      <th>turnos_largos_sin_pago</th>
-      <td>44.4</td>
-      <td>0.63</td>
-      <td>1.33</td>
-      <td>0.48</td>
-      <td>6</td>
-      <td>jornada</td>
-    </tr>
-    <tr>
-      <th>nacido_en_depto_sede</th>
-      <td>24.1</td>
-      <td>0.40</td>
-      <td>1.22</td>
-      <td>0.33</td>
-      <td>1</td>
-      <td>arraigo</td>
-    </tr>
-    <tr>
-      <th>meses_al_vencimiento</th>
-      <td>47.1</td>
-      <td>0.47</td>
-      <td>1.51</td>
-      <td>0.31</td>
-      <td>1</td>
-      <td>contrato</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>Nótese que <strong>ningún faltante aparece al salir</strong>: el salto máximo entre el mes de la renuncia y tres
+<p>Se observa que <strong>ningún faltante aparece al salir</strong>: el salto máximo entre el mes de la renuncia y tres
 meses antes es de 0,2 puntos, lejos de los 5 de la alerta. Así se comprueba que las correcciones del
-cargo y del tipo de personal (sección 6.3) siguen funcionando con el panel nuevo.</p>
-<p>De las 63 variables con faltantes, 4 (<code class="docutils literal notranslate"><span class="pre">nivel</span></code>, <code class="docutils literal notranslate"><span class="pre">tipo_unidad</span></code>, <code class="docutils literal notranslate"><span class="pre">area_funcional</span></code> y <code class="docutils literal notranslate"><span class="pre">estado_civil</span></code>)
-tienen 18 filas sin dato o menos y no se prueban ni se muestran. De las 59 restantes, el faltante es
-<strong>informativo</strong> en 54 (la tasa de renuncia sin dato es al menos 1,5 veces la tasa con dato, o a lo
-sumo dos tercios de ella) y no lo es en 5. Los patrones tienen explicación estructural:</p>
-<ul class="simple">
-<li><p><em>Sin nómina previa</em> (2,4 % de las filas: 20 variables de ingreso y jornada, y el cargo del mes
-anterior): es el primer mes del episodio, con 1,66 % de renuncia frente a 1,00 %.</p></li>
-<li><p><em>Sin sueldo relativo</em> (34-39 %): sueldos que no son básicos o grupos de menos de cinco personas;
-1,4 % frente a 0,8 %.</p></li>
-<li><p><em>Sin vacaciones pagadas desde 2024</em> (34,6 %) y <em>sin aumento de sueldo registrado</em> (44,9 %): sobre todo
-personas nuevas; entre 2,6 y 3 veces la tasa.</p></li>
-<li><p><em>Sin marcación biométrica</em> (43-46 %) y <em>sin vencimiento</em> (47 %, contratos indefinidos): menos
-riesgo, 0,63 % y 0,47 % frente a 1,33 % y 1,51 %.</p></li>
-</ul>
-<p>Imputar solo con la mediana borraría esa información. Por eso el capítulo 7 imputa <strong>con indicador
-de faltante</strong>.</p>
+cargo y del tipo de personal (sección 6.3) se mantienen en el panel. El faltante no revela la
+salida, pero sí es informativo (capítulo 1); por eso el capítulo 7 imputa <strong>con indicador de
+faltante</strong>.</p>
 </section>
 <section id="duplicados-y-entidades-entre-entrenamiento-y-test">
 <h2><span class="section-number">6.7. </span>Duplicados y entidades entre entrenamiento y test<a class="headerlink" href="#duplicados-y-entidades-entre-entrenamiento-y-test" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;filas persona-mes duplicadas en el panel:&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duplicated</span><span class="p">([</span><span class="s1">&#39;persona_id&#39;</span><span class="p">,</span> <span class="s1">&#39;mes&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pares (persona, mes) en entrenamiento y test a la vez:&#39;</span><span class="p">,</span>
-      <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">,</span> <span class="n">tr</span><span class="o">.</span><span class="n">mes</span><span class="p">))</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="p">,</span> <span class="n">te</span><span class="o">.</span><span class="n">mes</span><span class="p">))))</span>
-<span class="n">per_tr</span><span class="p">,</span> <span class="n">per_te</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">persona_id</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;personas: entrenamiento </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">per_tr</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> | test </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">per_te</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> | en ambos </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">per_tr</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">per_te</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> &#39;</span>
-      <span class="sa">f</span><span class="s1">&#39;| solo en test </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">per_te</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">per_tr</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filas de test de personas ya vistas en entrenamiento: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">te</span><span class="o">.</span><span class="n">persona_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">per_tr</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
-
-<span class="n">vec_tr</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="n">PREDICTORAS</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">vec_te</span> <span class="o">=</span> <span class="n">te</span><span class="p">[</span><span class="n">PREDICTORAS</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filas de entrenamiento con un vector de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">PREDICTORAS</span><span class="p">)</span><span class="si">}</span><span class="s1"> predictoras repetido dentro del entrenamiento: &#39;</span>
-      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">vec_tr</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">igual</span> <span class="o">=</span> <span class="n">vec_te</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">vec_tr</span><span class="p">))</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filas de test con un vector idéntico en entrenamiento: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">igual</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">te</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">base18</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">PREDICTORAS</span> <span class="k">if</span> <span class="n">BLOQUE</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;atributos&#39;</span><span class="p">]</span>
-<span class="n">igual18</span> <span class="o">=</span> <span class="n">te</span><span class="p">[</span><span class="n">base18</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="n">base18</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  con solo las 18 de atributos: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">igual18</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">igual18</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %)&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas persona-mes duplicadas en el panel: 0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pares (persona, mes) en entrenamiento y test a la vez: 0
-personas: entrenamiento 5,500 | test 4,611 | en ambos 4,373 | solo en test 238
-filas de test de personas ya vistas en entrenamiento: 96.8 %
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas de entrenamiento con un vector de 105 predictoras repetido dentro del entrenamiento: 301
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filas de test con un vector idéntico en entrenamiento: 53 de 17,652
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  con solo las 18 de atributos: 1,785 (10.1 %)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Nótese que no hay filas persona-mes repetidas ni pares (persona, mes) en los dos lados: el corte es
-limpio. En cambio, <strong>las personas se repiten</strong>, como corresponde a un panel: 4.373 de las 4.611
-personas del test ya estaban en el entrenamiento, y el 96,8 % de las filas del test son suyas. No es
-fuga, porque la etiqueta del test es de meses posteriores y ninguna predictora usa la etiqueta de la
-persona (no hay «renunció antes» ni tasas por persona). Sí significa que el test mide si el modelo
-predice el futuro de la misma plantilla, que es el uso real, y no si generaliza a personas nuevas;
-para eso el capítulo 2 dejó la validación agrupada por persona como complemento.</p>
-<p>Con las 105 predictoras, solo 53 filas del test (0,3 %) repiten un vector del entrenamiento. Con las
-18 de atributos eran 1.785 (10,1 %): la historia laboral distingue a personas que antes tenían el
-mismo perfil, como los operarios de una misma finca. Dentro del entrenamiento hay 301 filas con un
-vector repetido.</p>
+<p>El capítulo 2 verifica que el corte entre entrenamiento y test es limpio y que las personas se
+repiten, como corresponde a un panel. Esa repetición no representa fuga, porque la etiqueta del test
+es de meses posteriores y ninguna predictora usa la etiqueta de la persona.</p>
 </section>
 <section id="variables-descartadas-o-en-observacion">
 <h2><span class="section-number">6.8. </span>Variables descartadas o en observación<a class="headerlink" href="#variables-descartadas-o-en-observacion" title="Permalink to this heading">#</a></h2>
 <p>El panel de construcción tenía 262 columnas; el libro usa 105 predictoras. La diferencia se explica
-por identificadores, columnas del desenlace, versiones redundantes, controles de cobertura y, sobre
-todo, por <strong>categorías completas excluidas por privacidad</strong>: salud e incapacidades, riesgo
-psicosocial, clima individual, sindicato, hijos y familia, quejas, desempeño, sanciones, deudas y
-descuentos, y sueldo o devengado absolutos. Son datos sensibles (Ley 1581 de 2012) o de zona gris, y
-el proyecto no los usa.</p>
+por identificadores, columnas del desenlace, versiones redundantes, controles de cobertura y
+categorías completas excluidas por privacidad, según la justificación del capítulo 1.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>variable</p></th>
@@ -3661,7 +3330,7 @@ el proyecto no los usa.</p>
 <td><p>fuera del modelo</p></td>
 <td><p>identificadores; <code class="docutils literal notranslate"><span class="pre">persona_id</span></code> solo agrupa y <code class="docutils literal notranslate"><span class="pre">mes</span></code> se reemplaza por la indicadora de enero</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">evento</span></code>, <code class="docutils literal notranslate"><span class="pre">tipo_retiro</span></code>, <code class="docutils literal notranslate"><span class="pre">y_renuncia</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">evento</span></code>, <code class="docutils literal notranslate"><span class="pre">y_renuncia</span></code></p></td>
 <td><p>fuera del modelo</p></td>
 <td><p>desenlace: se conocen al cerrar el mes <em>t</em> (sección 6.2)</p></td>
 </tr>
@@ -3675,14 +3344,14 @@ el proyecto no los usa.</p>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code>, <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code></p></td>
 <td><p>descartadas (capítulo 5)</p></td>
-<td><p>siguen el calendario de la reducción legal de la jornada (46 a 44 horas en julio de 2025, 44 a 42 en julio de 2026, dentro del test), no a la persona; en el test toman valores que no existen en el entrenamiento</p></td>
+<td><p>siguen el calendario de la reducción legal de la jornada (capítulo 5), no a la persona</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cambios_plan_12m</span></code></p></td>
 <td><p>descartada (capítulo 1)</p></td>
-<td><p>sigue el calendario de la reducción legal de la jornada (cerca del 80 % de las filas marca cambio y cae a 20 % en julio de 2025), no a la persona</p></td>
+<td><p>sigue el calendario de la reducción legal de la jornada (capítulo 5), no a la persona</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code></p></td>
-<td><p>descartada, solo sensibilidad</p></td>
+<td><p>descartada, solo análisis de sensibilidad</p></td>
 <td><p>con preaviso el objetivo es 0 por construcción: 469 filas, 0 renuncias</p></td>
 </tr>
 <tr class="row-odd"><td><p>días de licencia no remunerada con rezago de un mes</p></td>
@@ -3744,8 +3413,8 @@ que no dominen los coeficientes.</p>
 </section>
 <section id="resumen-ejecutivo-del-eda">
 <h2><span class="section-number">6.9. </span>Resumen ejecutivo del EDA<a class="headerlink" href="#resumen-ejecutivo-del-eda" title="Permalink to this heading">#</a></h2>
-<p>La tabla final sigue la convención del curso: calidad de los datos, variables prometedoras,
-problemas detectados y decisiones que pasan al modelo. Para que se sostenga sola, la celda siguiente
+<p>La tabla final resume la calidad de los datos, variables prometedoras,
+problemas detectados y decisiones que pasan al modelo. Para que pueda leerse sola, la celda siguiente
 recalcula con el entrenamiento los pocos indicadores de calidad que la tabla cita; el detalle está
 en los capítulos 3 a 5.</p>
 <div class="cell docutils container">
@@ -3786,8 +3455,8 @@ categóricas: 17 | categorías (el nulo cuenta como una) con menos de 5 renuncia
 </thead>
 <tbody>
 <tr class="row-even"><td><p>calidad: faltantes</p></td>
-<td><p>63 de 105 predictoras tienen faltantes (13,7 % de las celdas); ninguno aparece al salir (salto máximo de 0,2 puntos) y 54 son informativos</p></td>
-<td><p>capítulos 1 y 3, sección 6.6</p></td>
+<td><p>63 de 105 predictoras tienen faltantes (13,7 % de las celdas); ninguno aparece al salir (salto máximo de 0,2 puntos) y son informativos</p></td>
+<td><p>capítulos 1 y 3 (informativos), sección 6.6 (salto)</p></td>
 <td><p>imputación con la mediana <strong>más indicador de faltante</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>calidad: colas largas</p></td>
@@ -3801,8 +3470,8 @@ categóricas: 17 | categorías (el nulo cuenta como una) con menos de 5 renuncia
 <td><p><strong>one-hot con <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code></strong> (las raras se agrupan)</p></td>
 </tr>
 <tr class="row-odd"><td><p>calidad: duplicados</p></td>
-<td><p>ninguna fila persona-mes repetida ni compartida entre particiones; el 96,8 % de las filas de test son de personas vistas</p></td>
-<td><p>capítulo 2 y sección 6.7</p></td>
+<td><p>ninguna fila persona-mes repetida ni compartida entre particiones; el 95 % de las personas del test ya estaban en el entrenamiento</p></td>
+<td><p>capítulo 2</p></td>
 <td><p>validación agrupada por persona como complemento</p></td>
 </tr>
 <tr class="row-even"><td><p>variables prometedoras</p></td>
@@ -3838,18 +3507,16 @@ en este capítulo con el entrenamiento.</p>
 <section id="sintesis">
 <h2><span class="section-number">6.10. </span>Síntesis<a class="headerlink" href="#sintesis" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Las 105 predictoras se conocen el día 1 del mes que se predice: 93 sin reserva y doce con una
-reserva documentada (las siete ausencias, por registro tardío; cuatro de vacaciones reconstruidas;
-el departamento de la sede).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> (0 renuncias en 469 filas, por construcción) y las licencias no
-remuneradas con rezago de un solo mes se descartan, igual que <code class="docutils literal notranslate"><span class="pre">contrato_fijo</span></code>, <code class="docutils literal notranslate"><span class="pre">horas_bajo_legal</span></code>
-y <code class="docutils literal notranslate"><span class="pre">cambios_plan_12m</span></code> (capítulo 1) y <code class="docutils literal notranslate"><span class="pre">horas_diarias_teoricas</span></code> y <code class="docutils literal notranslate"><span class="pre">plan_horario</span></code> (capítulo 5);
-<code class="docutils literal notranslate"><span class="pre">evento</span></code> y <code class="docutils literal notranslate"><span class="pre">tipo_retiro</span></code> son el desenlace.</p></li>
-<li><p>Ninguna variable predice sola más de lo plausible: AUC máximo de 0,711 (antigüedad), ninguno sobre
-0,8, y la diferencia con el AUC en muestra no pasa de 0,053.</p></li>
-<li><p>Solo <code class="docutils literal notranslate"><span class="pre">turnos_1m</span></code> concentra su señal justo antes de la salida, y ningún faltante aparece al salir.</p></li>
-<li><p>No hay filas compartidas entre entrenamiento y test; las personas sí se repiten, como en todo
-panel, y ninguna predictora usa la etiqueta de la persona.</p></li>
+<li><p>Las 105 predictoras se conocen el día 1 del mes que se predice; doce quedan en observación por una
+reserva documentada.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">evento</span></code> es el desenlace y <code class="docutils literal notranslate"><span class="pre">preaviso_no_renovacion</span></code> fija el objetivo en 0 por construcción: ninguna
+de las dos es predictora.</p></li>
+<li><p>Ninguna variable supera un AUC univariado de 0,8 fuera de pliegue; la máxima es la antigüedad
+(0,711).</p></li>
+<li><p>Solo <code class="docutils literal notranslate"><span class="pre">turnos_1m</span></code> concentra su señal justo antes de la salida; las licencias no remuneradas entran
+con dos meses de rezago.</p></li>
+<li><p>Ningún faltante aparece al salir, y la repetición de personas entre entrenamiento y test no
+representa fuga.</p></li>
 </ul>
 </section>
 </section>
@@ -3926,7 +3593,7 @@ panel, y ninguna predictora usa la etiqueta de la persona.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fugas-corregidas-al-construir-el-panel">6.3. Fugas corregidas al construir el panel</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auc-univariado-fuera-de-pliegue">6.4. AUC univariado fuera de pliegue</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#senal-que-se-concentra-antes-de-la-salida">6.5. Señal que se concentra antes de la salida</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos-faltantes-que-delatan-la-salida">6.6. Datos faltantes que delatan la salida</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos-faltantes-que-revelan-la-salida">6.6. Datos faltantes que revelan la salida</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicados-y-entidades-entre-entrenamiento-y-test">6.7. Duplicados y entidades entre entrenamiento y test</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-descartadas-o-en-observacion">6.8. Variables descartadas o en observación</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-ejecutivo-del-eda">6.9. Resumen ejecutivo del EDA</a></li>
